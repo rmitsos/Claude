@@ -32,6 +32,12 @@ export async function getCategoryItems(category) {
   const feeds = FEEDS.filter((f) => f.categories.includes(category));
   const results = await Promise.allSettled(feeds.map(fetchFeed));
 
+  results.forEach((r, i) => {
+    if (r.status === "rejected") {
+      console.error(`[feeds] ${feeds[i].name} failed:`, r.reason?.message || r.reason);
+    }
+  });
+
   const items = results
     .filter((r) => r.status === "fulfilled")
     .flatMap((r) => r.value);
