@@ -1,5 +1,5 @@
 import Parser from "rss-parser";
-import { FEEDS, CATEGORIES } from "./feeds";
+import { FEEDS } from "./feeds";
 import { classify } from "./classify";
 
 const parser = new Parser({
@@ -7,7 +7,6 @@ const parser = new Parser({
     item: [["media:thumbnail", "mediaThumbnail"]],
   },
 });
-const REVALIDATE_SECONDS = 1800;
 
 function extractImage(item) {
   const mt = item.mediaThumbnail;
@@ -19,7 +18,6 @@ function extractImage(item) {
 
 async function fetchFeed(feed) {
   const res = await fetch(feed.url, {
-    next: { revalidate: REVALIDATE_SECONDS },
     headers: {
       "User-Agent":
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
@@ -41,11 +39,13 @@ async function fetchFeed(feed) {
   }));
 }
 
-// Fetches every configured feed, classifies each article by content, and
-// returns a { [category]: items[] } map. An article can appear under more
-// than one category if it genuinely matches both; articles matching none
-// of our topics are dropped. A single bad feed never breaks the others.
-export async function getAllCategorizedItems() {
+// Fetches every configured feed and classifies each article by content.
+// Returns a flat list of items, each tagged with the categories it matched
+// (possibly more than one, possibly none — callers should drop unmatched
+// items). A single bad feed never breaks the others. Used by the ingestion
+// job (src/app/api/ingest/route.js), not by pages directly — pages read
+// from the database instead (see src/lib/articles.js).
+export async function fetchAllClassifiedItems() {
   const results = await Promise.allSettled(FEEDS.map(fetchFeed));
 
   results.forEach((r, i) => {
@@ -54,28 +54,8 @@ export async function getAllCategorizedItems() {
     }
   });
 
-  const allItems = results
+  return results
     .filter((r) => r.status === "fulfilled")
-    .flatMap((r) => r.value);
-
-  const byCategory = Object.fromEntries(Object.keys(CATEGORIES).map((c) => [c, []]));
-
-  for (const item of allItems) {
-    for (const category of classify(item)) {
-      byCategory[category]?.push(item);
-    }
-  }
-
-  for (const category of Object.keys(byCategory)) {
-    byCategory[category].sort(
-      (a, b) => (b.pubDate?.getTime() || 0) - (a.pubDate?.getTime() || 0)
-    );
-  }
-
-  return byCategory;
-}
-
-export async function getCategoryItems(category) {
-  const all = await getAllCategorizedItems();
-  return all[category] || [];
+    .flatMap((r) => r.value)
+    .map((item) => ({ ...item, categories: classify(item) }));
 }

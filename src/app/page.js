@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { CATEGORIES } from "@/lib/feeds";
-import { getAllCategorizedItems } from "@/lib/getFeedItems";
+import { getAllCategorizedItems } from "@/lib/articles";
 import ArticleList from "@/components/ArticleList";
 
-export const revalidate = 1800;
+export const revalidate = 300;
 
 export default async function HomePage() {
   const itemsByCategory = await getAllCategorizedItems();
@@ -24,7 +24,7 @@ export default async function HomePage() {
           <ArticleList
             items={(itemsByCategory[slug] || []).slice(0, 6)}
             category={slug}
-            emptyMessage="No verified feed sources yet for this category — check back soon."
+            emptyMessage="No articles yet — the ingestion job may not have run yet."
           />
         </section>
       ))}

@@ -1,9 +1,9 @@
 import { notFound } from "next/navigation";
 import { CATEGORIES } from "@/lib/feeds";
-import { getCategoryItems } from "@/lib/getFeedItems";
+import { getCategoryItems } from "@/lib/articles";
 import ArticleList from "@/components/ArticleList";
 
-export const revalidate = 1800;
+export const revalidate = 300;
 
 export function generateStaticParams() {
   return Object.keys(CATEGORIES).map((category) => ({ category }));
@@ -32,7 +32,7 @@ export default async function CategoryPage({ params }) {
       <ArticleList
         items={items}
         category={category}
-        emptyMessage="No verified feed sources yet for this category — check back soon."
+        emptyMessage="No articles yet — the ingestion job may not have run yet."
       />
     </div>
   );

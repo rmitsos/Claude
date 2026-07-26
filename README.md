@@ -9,15 +9,30 @@ A news portal aggregating Greek-market news across three verticals:
 - **Telco Infrastructure** — operators, fiber/FTTH rollout, spectrum, regulator (EETT)
 - **Energy Infrastructure** — grid, renewables, gas, regulator (RAAEY), operators (ADMIE, DESFA, HEDNO)
 
-Built with Next.js. Feeds are pulled server-side from the RSS sources listed
-in `sources/greek-news-sources.md`, grouped by category, and re-fetched on a
-schedule (see `src/lib/feeds.js`).
+## Architecture
+
+- **Ingestion** (`src/lib/fetchAndClassify.js`, `src/lib/ingest.js`): fetches
+  configured RSS feeds (`src/lib/feeds.js`), classifies each article by
+  content — not by which feed/section it came from (see `src/lib/classify.js`)
+  — and upserts matching articles into Postgres (Neon, via Vercel Storage).
+  Triggered on a schedule by Vercel Cron (`vercel.json`) hitting
+  `/api/ingest`.
+- **Website** (`src/app/`, `src/lib/articles.js`): reads articles straight
+  from the database — no live feed-fetching on page render, so the site
+  stays fast and doesn't hammer source sites on every request.
+
+Environment variable needed: `DATABASE_URL` (or `POSTGRES_URL`) — set
+automatically when a Neon database is connected to the Vercel project.
+Optional: `CRON_SECRET` to lock down `/api/ingest` to Vercel's own cron
+requests (without it, the endpoint is open, which is fine for manually
+triggering the first ingest before the schedule kicks in).
 
 ## Status
 
-Actively building the real product (skipped the manual-curation test phase).
-Next milestone: deploy to Vercel, verify which feeds actually resolve in
-production, attach a custom domain.
+Live at Vercel with real Greek news flowing for Finance; Telco
+Infrastructure and Energy Infrastructure are still thin on working sources
+(see `sources/greek-news-sources.md` for what's confirmed vs. blocked).
+Next: attach a custom domain, find more working sources.
 
 ## Getting started (local dev)
 
@@ -26,11 +41,16 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Open [http://localhost:3000](http://localhost:3000). Without `DATABASE_URL`
+set locally, pages render with empty results rather than crashing.
 
 ## Repo contents
 
 - `sources/greek-news-sources.md` — categorized Greek news sources with RSS
-  feed URLs (confidence-rated; some unverified — see file for details)
-- `src/lib/feeds.js` — feed config consumed by the app (name, URL, category)
+  feed URLs (confidence-rated; some confirmed blocked — see file for details)
+- `src/lib/feeds.js` — feed URLs to fetch
+- `src/lib/classify.js` — keyword-based topic classifier
+- `src/lib/fetchAndClassify.js` — fetches + classifies (used by ingestion only)
+- `src/lib/ingest.js` / `src/app/api/ingest/route.js` — the cron-triggered job
+- `src/lib/articles.js` — DB reads used by pages
 - `src/app/` — Next.js App Router pages
