@@ -26,9 +26,8 @@ export const FEEDS = [
     url: "https://www.capital.gr/api/tags/oikonomia/",
     categories: ["finance"],
   },
-  {
-    name: "energypress.gr",
-    url: "https://energypress.gr/index.php/rss",
-    categories: ["energy"],
-  },
+  // energypress.gr returns HTTP 403 to Vercel regardless of path tried
+  // (/rss and /index.php/rss both blocked) — their firewall appears to
+  // reject cloud/datacenter IPs outright. Not fixable by changing the URL.
+  // Revisit only if a proxy/alternate-source approach is worth the complexity.
 ];
