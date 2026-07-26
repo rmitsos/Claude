@@ -28,6 +28,13 @@ async function fetchFeed(feed) {
     throw new Error(`${feed.name}: HTTP ${res.status}`);
   }
   const xml = await res.text();
+
+  // A wrong feed path usually returns the site's HTML page, which the XML
+  // parser reports as a cryptic "Attribute without value". Say what it is.
+  if (/^\s*(<!doctype html|<html)/i.test(xml)) {
+    throw new Error(`${feed.name}: served HTML, not a feed — wrong URL?`);
+  }
+
   const parsed = await parser.parseString(xml);
   return (parsed.items || []).map((item) => ({
     title: item.title || "(untitled)",

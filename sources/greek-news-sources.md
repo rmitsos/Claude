@@ -73,38 +73,51 @@ eett.gr and cosmote.gr.
 
 Researched for deeper coverage of fiber builds, battery storage, substations,
 grid modernization and infrastructure engineering — Greek and international.
-**All URLs below are unverified best guesses** (the dev sandbox blocks
-outbound requests). `/api/ingest` reports per-feed status in production —
-use it to confirm which resolve and prune the rest.
+Status below is from a **real production ingest** (187 articles, 11 of 15
+feeds working). "Relevant" = articles that passed topic classification.
 
-### Greek trade / engineering press
+### Working
 
-| Source | URL | Guessed RSS | Notes |
-|---|---|---|---|
-| Ypodomes | https://ypodomes.com/ | `/feed/` | Dedicated Greek infrastructure/projects trade site |
-| B2Green | https://news.b2green.gr/ | `/feed/` | Green-tech trade: PV, wind, storage, efficiency |
-| Ecopress | https://ecopress.gr/ | `/feed/` | Technical/environmental journalism, covers FTTH + grid |
-| ICTplus | https://www.ictplus.gr/ | `/feed/` | Greek ICT/telecom trade portal |
-| OT.gr (Οικονομικός Ταχυδρόμος) | https://www.ot.gr/ | `/feed/` | Business daily w/ energy + fiber sections |
-| WorldEnergyNews | https://www.worldenergynews.gr/ | `/feed/` | Greek energy sector; backup for blocked energypress.gr |
-| Energia.gr | https://www.energia.gr/ | RSS index: `/article/5/rss-feeds` | Feeds page exists; per-category URLs not identified |
+| Source | Feed URL | Fetched | Relevant | Notes |
+|---|---|---|---|---|
+| Capital.gr (Αγορές) | `/api/tags/agores/` | 99 | 64 | Markets — biggest single contributor |
+| Energy Storage News | `/feed/` | 50 | 42 | Battery/BESS — best relevance ratio of any feed |
+| Capital.gr (Οικονομία) | `/api/tags/oikonomia/` | 99 | 37 | Economy |
+| OT.gr | `/feed/` | 35 | 14 | Business daily, energy + fiber sections |
+| T&D World | `/rss.xml` | 25 | 7 | Substations, transmission & distribution |
+| Naftemporiki | `/feed/` | 30 | 5 | Financial daily |
+| Ypodomes | `/feed/` | 10 | 5 | Greek infrastructure/projects trade |
+| B2Green | `/feed/` | 10 | 5 | PV, wind, storage, efficiency |
+| ICTplus | `/feed/` | 21 | 3 | Only working dedicated telecom feed |
+| PV Magazine | `/feed/` | 10 | 3 | Solar engineering |
+| Balkan Green Energy News | `/feed/` | 8 | 2 | SE Europe renewables/grid |
 
-### International engineering trade press
+### Confirmed unusable
 
-| Source | URL | Guessed RSS | Notes |
-|---|---|---|---|
-| Energy Storage News | https://www.energy-storage.news/ | `/feed/` | Dedicated battery storage / BESS coverage |
-| T&D World | https://www.tdworld.com/ | `/rss.xml` | Transmission & distribution, substations, grid tech |
-| Capacity Media | https://www.capacitymedia.com/ | `/index.rss` | Wholesale carriers, subsea cables |
-| Light Reading | https://www.lightreading.com/ | `/rss_simple.asp` | Comms network engineering, 5G/6G, fiber |
-| Balkan Green Energy News | https://balkangreenenergynews.com/ | `/feed/` | SE Europe renewables/grid, strong Greece coverage |
-| PV Magazine | https://www.pv-magazine.com/ | `/feed/` | Solar industry engineering |
-| Submarine Telecoms Forum | https://subtelforum.com/ | not found | Subsea cable industry trade press |
-| ISE Magazine | https://www.isemag.com/ | not found | Telecom installation/engineering |
-| Fierce Network | https://www.fiercetelecom.com/ | RSS index: `/fiercetelecomcom/rss-feeds` | Feeds page exists; exact URLs not identified |
+| Source | Attempted | Result |
+|---|---|---|
+| energypress.gr | `/rss`, `/index.php/rss` | HTTP 403 — blocks cloud/datacenter IPs |
+| Ecopress | `/feed/` | HTTP 403 |
+| Light Reading | `/rss_simple.asp` | HTTP 403 |
+| Capacity Media | `/index.rss` | Served HTML, not XML |
+| WorldEnergyNews | `/feed/` | Served HTML, not XML |
+
+### Untried candidates
+
+Energia.gr (RSS index at `/article/5/rss-feeds`, per-category URLs not
+identified), Fierce Network (RSS index at `/fiercetelecomcom/rss-feeds`),
+Submarine Telecoms Forum, ISE Magazine.
+
+## Known gap: Telco Infrastructure
+
+Both telco-heavy international sources failed (Light Reading blocked,
+Capacity Media wrong URL), leaving ICTplus as the only working dedicated
+telecom feed at 3 relevant articles. Energy and Finance are well covered;
+telco needs more working sources to be comparable.
 
 ## Next steps
 
-1. Manually verify unconfirmed RSS URLs in a browser before automating against them
-2. For sources with no feed, plan to check manually or revisit once regulators/operators are confirmed to have (or lack) a feed
-3. Once the manual curation phase (Substack) validates interest, this table becomes the seed list for the automated aggregator's feed config
+1. Find more working telco sources — the thinnest category by far
+2. Try alternate URLs for the two HTML-instead-of-XML failures
+3. Sources blocked by HTTP 403 need a different approach entirely, not a
+   different path — their firewalls reject cloud IPs
