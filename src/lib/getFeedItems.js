@@ -7,7 +7,11 @@ const REVALIDATE_SECONDS = 1800;
 async function fetchFeed(feed) {
   const res = await fetch(feed.url, {
     next: { revalidate: REVALIDATE_SECONDS },
-    headers: { "User-Agent": "GRWire/1.0 (+https://github.com/rmitsos/Claude)" },
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
+      Accept: "application/rss+xml, application/xml, text/xml, */*",
+    },
   });
   if (!res.ok) {
     throw new Error(`${feed.name}: HTTP ${res.status}`);
