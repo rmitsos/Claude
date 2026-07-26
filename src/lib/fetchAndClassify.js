@@ -16,7 +16,23 @@ function extractImage(item) {
   return null;
 }
 
+// Retries once on a network-level failure ("fetch failed"), which we see
+// intermittently on otherwise-healthy feeds and which costs a whole feed's
+// articles for that run. Deliberately does not retry HTTP status errors or
+// parse errors — those are configuration problems that won't fix themselves.
 async function fetchFeed(feed) {
+  try {
+    return await fetchFeedOnce(feed);
+  } catch (err) {
+    if (err instanceof TypeError) {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      return fetchFeedOnce(feed);
+    }
+    throw err;
+  }
+}
+
+async function fetchFeedOnce(feed) {
   const res = await fetch(feed.url, {
     headers: {
       "User-Agent":

@@ -28,21 +28,16 @@ export const FEEDS = [
   // --- International engineering trade press (verified working) ---
   { name: "Energy Storage News", url: "https://www.energy-storage.news/feed/" },
   { name: "T&D World", url: "https://www.tdworld.com/rss.xml" },
+  { name: "Capacity Media", url: "https://www.capacitymedia.com/rss" },
   { name: "Balkan Green Energy News", url: "https://balkangreenenergynews.com/feed/" },
   { name: "PV Magazine", url: "https://www.pv-magazine.com/feed/" },
 
-  // --- Telco candidates (UNVERIFIED) ---
-  // Telco is our thinnest category: the two telco-heavy international
-  // sources both failed (Light Reading 403, Capacity Media served HTML),
-  // leaving ICTplus as the only dedicated telecom feed. Trying alternates.
-  { name: "Telecoms.com", url: "https://www.telecoms.com/feed" },
-  { name: "Capacity Media (alt)", url: "https://www.capacitymedia.com/rss" },
-  { name: "WorldEnergyNews (alt)", url: "https://www.worldenergynews.gr/rss" },
-
-  // --- Confirmed unusable, do not re-add without a new URL ---
-  // energypress.gr    — HTTP 403 on /rss and /index.php/rss (blocks cloud IPs)
-  // Ecopress          — HTTP 403 on /feed/
-  // Light Reading     — HTTP 403 on /rss_simple.asp
-  // Capacity Media    — /index.rss served HTML, not XML (parse error)
-  // WorldEnergyNews   — /feed/ served HTML, not XML (parse error)
+  // --- Confirmed unusable, do not re-add without a genuinely new URL ---
+  // Sites returning 403 block cloud/datacenter IPs; a different path will
+  // not help. Sites serving HTML/non-RSS had the wrong path tried.
+  // energypress.gr  — 403 on /rss and /index.php/rss
+  // Ecopress        — 403 on /feed/
+  // Light Reading   — 403 on /rss_simple.asp
+  // Telecoms.com    — 403 on /feed
+  // WorldEnergyNews — /feed/ served HTML; /rss not valid RSS 1 or 2
 ];

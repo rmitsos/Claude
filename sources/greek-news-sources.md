@@ -88,19 +88,23 @@ feeds working). "Relevant" = articles that passed topic classification.
 | Naftemporiki | `/feed/` | 30 | 5 | Financial daily |
 | Ypodomes | `/feed/` | 10 | 5 | Greek infrastructure/projects trade |
 | B2Green | `/feed/` | 10 | 5 | PV, wind, storage, efficiency |
-| ICTplus | `/feed/` | 21 | 3 | Only working dedicated telecom feed |
+| Capacity Media | `/rss` | 10 | 4 | Wholesale carriers, subsea cables |
+| ICTplus | `/feed/` | 21 | 3 | Greek ICT/telecom trade portal |
 | PV Magazine | `/feed/` | 10 | 3 | Solar engineering |
 | Balkan Green Energy News | `/feed/` | 8 | 2 | SE Europe renewables/grid |
 
 ### Confirmed unusable
 
+403 means the site blocks cloud/datacenter IPs — a different path will not
+help. The others had the wrong path tried.
+
 | Source | Attempted | Result |
 |---|---|---|
-| energypress.gr | `/rss`, `/index.php/rss` | HTTP 403 — blocks cloud/datacenter IPs |
+| energypress.gr | `/rss`, `/index.php/rss` | HTTP 403 |
 | Ecopress | `/feed/` | HTTP 403 |
 | Light Reading | `/rss_simple.asp` | HTTP 403 |
-| Capacity Media | `/index.rss` | Served HTML, not XML |
-| WorldEnergyNews | `/feed/` | Served HTML, not XML |
+| Telecoms.com | `/feed` | HTTP 403 |
+| WorldEnergyNews | `/feed/`, `/rss` | HTML, then not valid RSS 1 or 2 |
 
 ### Untried candidates
 
@@ -110,14 +114,18 @@ Submarine Telecoms Forum, ISE Magazine.
 
 ## Known gap: Telco Infrastructure
 
-Both telco-heavy international sources failed (Light Reading blocked,
-Capacity Media wrong URL), leaving ICTplus as the only working dedicated
-telecom feed at 3 relevant articles. Energy and Finance are well covered;
-telco needs more working sources to be comparable.
+Still the thinnest category. ICTplus (3) and Capacity Media (4) are the
+only telecom-focused feeds working; Light Reading and Telecoms.com both
+block us. Energy and Finance are well covered by comparison.
+
+Worth trying next, ideally checked in a browser first (that approach found
+Capital.gr's working tag-based API when guessing had failed): Greek
+operator newsrooms (OTE/Cosmote, Nova), the EETT regulator, Fierce
+Network's RSS index at `/fiercetelecomcom/rss-feeds`, Submarine Telecoms
+Forum, ISE Magazine.
 
 ## Next steps
 
 1. Find more working telco sources — the thinnest category by far
-2. Try alternate URLs for the two HTML-instead-of-XML failures
-3. Sources blocked by HTTP 403 need a different approach entirely, not a
-   different path — their firewalls reject cloud IPs
+2. Energia.gr has an RSS index at `/article/5/rss-feeds`; per-category
+   URLs were never identified
