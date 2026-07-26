@@ -16,10 +16,20 @@ is never duplicated — `isTechnology` in `classify.js` decides, keying off
 build/deploy vocabulary and capacity figures like "100MW" or "400kV".
 
 The interface is a chronological wire: one time-ordered column grouped by
-day, with a single narrow rail carrying the page's only image plus coverage
-tallies. Article thumbnails were deliberately dropped — a card grid forces
-multiple columns, which destroys the newest-first reading order, and feed
-images are hotlinked from publishers so they break and leave holes.
+day, with a narrow rail of coverage tallies. Images appear only in the
+five-story lead block at the top — a card grid forces multiple columns,
+which destroys the newest-first reading order, and feed images are
+hotlinked from publishers so they break and leave holes. Leads are picked
+one-per-category first so a busy Finance day can't supply all five.
+
+`/weekly` connects the week's coverage: volume against the previous week,
+subjects gaining ground, and pairs of subjects appearing in the same
+articles. It is **counted, not generated** — every figure comes from stored
+rows via SQL in `articles.js`, and links through to the articles behind it
+(`/topic/[id]`). Pairs are co-occurrence, deliberately not described as
+correlation: the volumes involved are far too small to support that claim.
+Subjects come from a curated bilingual entity list (`entities.js`) rather
+than general-purpose NER, which is more precise on a domain this narrow.
 
 ## Architecture
 

@@ -41,6 +41,16 @@ export default function Nav({ active, activeSub }) {
                 {label}
               </Link>
             ))}
+            <Link
+              href="/weekly"
+              className={
+                active === "weekly"
+                  ? "font-semibold text-gray-950 dark:text-white"
+                  : "text-gray-600 hover:text-gray-950 dark:text-gray-400 dark:hover:text-white"
+              }
+            >
+              This week
+            </Link>
           </nav>
         </div>
 

@@ -1,6 +1,7 @@
 import Parser from "rss-parser";
 import { FEEDS } from "./feeds";
 import { classify, isTechnology } from "./classify";
+import { extractEntities } from "./entities";
 
 const parser = new Parser({
   customFields: {
@@ -89,6 +90,7 @@ export async function fetchAllClassifiedItems() {
       ...item,
       categories: classify(item),
       technology: isTechnology(item),
+      entities: extractEntities(item),
     }));
 
   return { items, feedStatus };

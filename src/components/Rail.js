@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { CATEGORIES, SUBCATEGORIZED } from "@/lib/feeds";
-import { getTodayCounts, getLeadStory } from "@/lib/articles";
+import { getTodayCounts } from "@/lib/articles";
 
 const DOT = {
   finance: "bg-emerald-500",
@@ -17,32 +17,11 @@ function Heading({ children }) {
 }
 
 export default async function Rail() {
-  const [counts, lead] = await Promise.all([getTodayCounts(), getLeadStory()]);
+  const counts = await getTodayCounts();
   const totalTech = Object.values(counts).reduce((n, c) => n + c.technology, 0);
 
   return (
     <aside className="flex flex-col gap-7 border-gray-200 px-4 py-5 lg:border-l dark:border-gray-800">
-      {lead && (
-        <section>
-          <Heading>Lead story</Heading>
-          <a href={lead.link} target="_blank" rel="noopener noreferrer" className="group block">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={lead.image}
-              alt=""
-              loading="lazy"
-              className="mb-2 aspect-[16/10] w-full rounded-sm object-cover"
-            />
-            <span className="font-serif text-[0.9rem] leading-snug group-hover:underline">
-              {lead.title}
-            </span>
-            <span className="mt-1 block font-mono text-[11px] text-gray-400 dark:text-gray-500">
-              {lead.source}
-            </span>
-          </a>
-        </section>
-      )}
-
       <section>
         <Heading>Last 24 hours</Heading>
         <ul className="flex flex-col gap-1.5">
@@ -80,6 +59,12 @@ export default async function Rail() {
           {totalTech} of the last 24 hours&rsquo; stories are about building or operating
           infrastructure rather than markets and policy.
         </p>
+        <Link
+          href="/weekly"
+          className="mt-2 inline-block text-xs font-medium text-amber-700 hover:underline dark:text-amber-500"
+        >
+          This week&rsquo;s connections →
+        </Link>
       </section>
     </aside>
   );
