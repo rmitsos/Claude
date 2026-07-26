@@ -40,22 +40,29 @@ async function fetchFeed(feed) {
 }
 
 // Fetches every configured feed and classifies each article by content.
-// Returns a flat list of items, each tagged with the categories it matched
-// (possibly more than one, possibly none — callers should drop unmatched
-// items). A single bad feed never breaks the others. Used by the ingestion
-// job (src/app/api/ingest/route.js), not by pages directly — pages read
-// from the database instead (see src/lib/articles.js).
+// Returns { items, feedStatus } — items are tagged with the categories they
+// matched (possibly more than one, possibly none; callers should drop
+// unmatched items), and feedStatus reports per-feed success/failure so
+// /api/ingest can surface which configured feeds actually work. A single
+// bad feed never breaks the others. Used by the ingestion job, not by pages
+// directly — pages read from the database (see src/lib/articles.js).
 export async function fetchAllClassifiedItems() {
   const results = await Promise.allSettled(FEEDS.map(fetchFeed));
 
-  results.forEach((r, i) => {
-    if (r.status === "rejected") {
-      console.error(`[feeds] ${FEEDS[i].name} failed:`, r.reason?.message || r.reason);
+  const feedStatus = results.map((r, i) => {
+    if (r.status === "fulfilled") {
+      const kept = r.value.filter((item) => classify(item).length > 0).length;
+      return { name: FEEDS[i].name, ok: true, fetched: r.value.length, relevant: kept };
     }
+    const error = r.reason?.message || String(r.reason);
+    console.error(`[feeds] ${FEEDS[i].name} failed:`, error);
+    return { name: FEEDS[i].name, ok: false, error };
   });
 
-  return results
+  const items = results
     .filter((r) => r.status === "fulfilled")
     .flatMap((r) => r.value)
     .map((item) => ({ ...item, categories: classify(item) }));
+
+  return { items, feedStatus };
 }

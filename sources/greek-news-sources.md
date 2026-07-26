@@ -69,6 +69,40 @@ eett.gr and cosmote.gr.
 - **PowerGame.gr** — spans Finance and Energy (Energygame vertical)
 - **Naftemporiki / Capital.gr** — occasionally run deep-dives on telecom/energy M&A and capital raises
 
+## Engineering / technology-installation sources (added later)
+
+Researched for deeper coverage of fiber builds, battery storage, substations,
+grid modernization and infrastructure engineering — Greek and international.
+**All URLs below are unverified best guesses** (the dev sandbox blocks
+outbound requests). `/api/ingest` reports per-feed status in production —
+use it to confirm which resolve and prune the rest.
+
+### Greek trade / engineering press
+
+| Source | URL | Guessed RSS | Notes |
+|---|---|---|---|
+| Ypodomes | https://ypodomes.com/ | `/feed/` | Dedicated Greek infrastructure/projects trade site |
+| B2Green | https://news.b2green.gr/ | `/feed/` | Green-tech trade: PV, wind, storage, efficiency |
+| Ecopress | https://ecopress.gr/ | `/feed/` | Technical/environmental journalism, covers FTTH + grid |
+| ICTplus | https://www.ictplus.gr/ | `/feed/` | Greek ICT/telecom trade portal |
+| OT.gr (Οικονομικός Ταχυδρόμος) | https://www.ot.gr/ | `/feed/` | Business daily w/ energy + fiber sections |
+| WorldEnergyNews | https://www.worldenergynews.gr/ | `/feed/` | Greek energy sector; backup for blocked energypress.gr |
+| Energia.gr | https://www.energia.gr/ | RSS index: `/article/5/rss-feeds` | Feeds page exists; per-category URLs not identified |
+
+### International engineering trade press
+
+| Source | URL | Guessed RSS | Notes |
+|---|---|---|---|
+| Energy Storage News | https://www.energy-storage.news/ | `/feed/` | Dedicated battery storage / BESS coverage |
+| T&D World | https://www.tdworld.com/ | `/rss.xml` | Transmission & distribution, substations, grid tech |
+| Capacity Media | https://www.capacitymedia.com/ | `/index.rss` | Wholesale carriers, subsea cables |
+| Light Reading | https://www.lightreading.com/ | `/rss_simple.asp` | Comms network engineering, 5G/6G, fiber |
+| Balkan Green Energy News | https://balkangreenenergynews.com/ | `/feed/` | SE Europe renewables/grid, strong Greece coverage |
+| PV Magazine | https://www.pv-magazine.com/ | `/feed/` | Solar industry engineering |
+| Submarine Telecoms Forum | https://subtelforum.com/ | not found | Subsea cable industry trade press |
+| ISE Magazine | https://www.isemag.com/ | not found | Telecom installation/engineering |
+| Fierce Network | https://www.fiercetelecom.com/ | RSS index: `/fiercetelecomcom/rss-feeds` | Feeds page exists; exact URLs not identified |
+
 ## Next steps
 
 1. Manually verify unconfirmed RSS URLs in a browser before automating against them

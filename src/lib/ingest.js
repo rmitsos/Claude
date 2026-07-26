@@ -11,7 +11,8 @@ export async function runIngest() {
 
   await ensureSchema();
 
-  const items = (await fetchAllClassifiedItems()).filter((i) => i.categories.length > 0);
+  const { items: allItems, feedStatus } = await fetchAllClassifiedItems();
+  const items = allItems.filter((i) => i.categories.length > 0);
 
   let upserted = 0;
   for (const item of items) {
@@ -29,5 +30,5 @@ export async function runIngest() {
     upserted++;
   }
 
-  return { ok: true, fetched: items.length, upserted };
+  return { ok: true, relevant: items.length, upserted, feeds: feedStatus };
 }
