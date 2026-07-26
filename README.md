@@ -9,6 +9,18 @@ A news portal aggregating Greek-market news across three verticals:
 - **Telco Infrastructure** — operators, fiber/FTTH rollout, spectrum, regulator (EETT)
 - **Energy Infrastructure** — grid, renewables, gas, regulator (RAAEY), operators (ADMIE, DESFA, HEDNO)
 
+Telco and Energy each split into **News** (markets, policy, corporate) and
+**Technology** (installations, equipment, engineering projects). The split is
+a `technology` flag per article rather than a separate category, so a story
+is never duplicated — `isTechnology` in `classify.js` decides, keying off
+build/deploy vocabulary and capacity figures like "100MW" or "400kV".
+
+The interface is a chronological wire: one time-ordered column grouped by
+day, with a single narrow rail carrying the page's only image plus coverage
+tallies. Article thumbnails were deliberately dropped — a card grid forces
+multiple columns, which destroys the newest-first reading order, and feed
+images are hotlinked from publishers so they break and leave holes.
+
 ## Architecture
 
 - **Ingestion** (`src/lib/fetchAndClassify.js`, `src/lib/ingest.js`): fetches

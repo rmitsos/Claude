@@ -36,6 +36,10 @@ async function createSchema() {
       first_seen TIMESTAMPTZ NOT NULL DEFAULT now()
     )
   `;
+  // Added after the table already existed in production, so it has to be a
+  // migration rather than part of the CREATE above. Existing rows default
+  // to false and get their real value on the next ingest.
+  await sql`ALTER TABLE articles ADD COLUMN IF NOT EXISTS technology BOOLEAN NOT NULL DEFAULT false`;
   await sql`CREATE INDEX IF NOT EXISTS articles_pub_date_idx ON articles (pub_date DESC)`;
   await sql`CREATE INDEX IF NOT EXISTS articles_categories_idx ON articles USING GIN (categories)`;
   await sql`

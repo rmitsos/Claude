@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
 import { CATEGORIES } from "@/lib/feeds";
 import { getCategoryItems } from "@/lib/articles";
-import ArticleList from "@/components/ArticleList";
+import Shell from "@/components/Shell";
+import WireList from "@/components/WireList";
 
 export const revalidate = 300;
 
@@ -15,7 +16,7 @@ export async function generateMetadata({ params }) {
   if (!label) return {};
   return {
     title: `${label} — GR Wire`,
-    description: `Latest ${label} news from Greek sources.`,
+    description: `Latest ${label} news from Greek and international sources.`,
   };
 }
 
@@ -27,13 +28,12 @@ export default async function CategoryPage({ params }) {
   const items = await getCategoryItems(category);
 
   return (
-    <div>
-      <h1 className="mb-6 text-2xl font-bold tracking-tight">{label}</h1>
-      <ArticleList
+    <Shell active={category} heading={label}>
+      <WireList
         items={items}
-        category={category}
-        emptyMessage="No articles yet — the ingestion job may not have run yet."
+        showCategory={false}
+        emptyMessage="Nothing in this category yet."
       />
-    </div>
+    </Shell>
   );
 }

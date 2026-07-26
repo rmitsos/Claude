@@ -1,12 +1,11 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Nav from "@/components/Nav";
 import InfoBar from "@/components/InfoBar";
 import { scheduleRefreshIfStale } from "@/lib/refresh";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
-  subsets: ["latin"],
+  subsets: ["latin", "greek"],
 });
 
 const geistMono = Geist_Mono({
@@ -32,16 +31,12 @@ export default function RootLayout({ children }) {
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-gray-50 text-gray-950 dark:bg-gray-950 dark:text-gray-50">
+      <body className="flex min-h-full flex-col bg-gray-50 text-gray-950 dark:bg-gray-950 dark:text-gray-50">
         <InfoBar />
-        <Nav />
-        <main className="flex-1 max-w-5xl mx-auto w-full px-4 py-8">
-          {children}
-        </main>
-        <footer className="border-t border-gray-200 dark:border-gray-800 py-6">
-          <p className="max-w-5xl mx-auto px-4 text-xs text-gray-500 dark:text-gray-400">
-            GR Wire aggregates headlines from Greek news sources with links back
-            to the original publisher. See{" "}
+        {children}
+        <footer className="border-t border-gray-200 py-5 dark:border-gray-800">
+          <p className="mx-auto max-w-6xl px-4 text-xs text-gray-500 dark:text-gray-400">
+            GR Wire links to the original publisher for every headline. See{" "}
             <a
               href="https://github.com/rmitsos/Claude/blob/main/sources/greek-news-sources.md"
               className="underline"

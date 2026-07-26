@@ -13,6 +13,16 @@ export const CATEGORIES = {
   energy: "Energy Infrastructure",
 };
 
+export const SUBCATEGORIES = {
+  news: "News",
+  technology: "Technology",
+};
+
+// Only Telco and Energy split into News / Technology — those are the beats
+// where "who announced what" and "what actually got built" are genuinely
+// different reads. Finance stays whole.
+export const SUBCATEGORIZED = ["telco", "energy"];
+
 export const FEEDS = [
   // --- Greek general/business (verified working) ---
   { name: "Naftemporiki", url: "https://www.naftemporiki.gr/feed/" },

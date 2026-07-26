@@ -25,7 +25,7 @@ export default async function InfoBar() {
 
   return (
     <div className="border-b border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
-      <div className="mx-auto flex max-w-5xl flex-wrap items-center gap-x-6 gap-y-1 px-4 py-2">
+      <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-6 gap-y-1 px-4 py-2">
         <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
           Athens · {today}
         </span>

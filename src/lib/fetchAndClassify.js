@@ -1,6 +1,6 @@
 import Parser from "rss-parser";
 import { FEEDS } from "./feeds";
-import { classify } from "./classify";
+import { classify, isTechnology } from "./classify";
 
 const parser = new Parser({
   customFields: {
@@ -85,7 +85,11 @@ export async function fetchAllClassifiedItems() {
   const items = results
     .filter((r) => r.status === "fulfilled")
     .flatMap((r) => r.value)
-    .map((item) => ({ ...item, categories: classify(item) }));
+    .map((item) => ({
+      ...item,
+      categories: classify(item),
+      technology: isTechnology(item),
+    }));
 
   return { items, feedStatus };
 }
