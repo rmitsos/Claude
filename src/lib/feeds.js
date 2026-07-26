@@ -17,8 +17,13 @@ export const FEEDS = [
     categories: ["finance"],
   },
   {
-    name: "Capital.gr",
-    url: "https://www.capital.gr/feed",
+    name: "Capital.gr (Αγορές)",
+    url: "https://www.capital.gr/api/tags/agores/",
+    categories: ["finance"],
+  },
+  {
+    name: "Capital.gr (Οικονομία)",
+    url: "https://www.capital.gr/api/tags/oikonomia/",
     categories: ["finance"],
   },
   {
