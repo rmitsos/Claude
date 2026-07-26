@@ -15,8 +15,12 @@ A news portal aggregating Greek-market news across three verticals:
   configured RSS feeds (`src/lib/feeds.js`), classifies each article by
   content — not by which feed/section it came from (see `src/lib/classify.js`)
   — and upserts matching articles into Postgres (Neon, via Vercel Storage).
-  Triggered on a schedule by Vercel Cron (`vercel.json`) hitting
-  `/api/ingest`.
+- **Refresh cadence**: Vercel's Hobby plan caps cron at once per day, so the
+  daily cron (`vercel.json` → `/api/ingest`) is only a floor. The real
+  cadence is traffic-driven: `src/lib/refresh.js` uses `after()` to run an
+  ingest in the background once a page has rendered, at most every 30
+  minutes. `claimIngestSlot` in `db.js` makes that check atomic so
+  concurrent visitors can't each trigger their own ingest.
 - **Website** (`src/app/`, `src/lib/articles.js`): reads articles straight
   from the database — no live feed-fetching on page render, so the site
   stays fast and doesn't hammer source sites on every request.

@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/Nav";
 import InfoBar from "@/components/InfoBar";
+import { scheduleRefreshIfStale } from "@/lib/refresh";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,7 +20,13 @@ export const metadata = {
     "Greek finance, telecom infrastructure & energy infrastructure news, in one feed.",
 };
 
+// Allow the background ingest kicked off by scheduleRefreshIfStale enough
+// time to fetch every feed; Hobby's ceiling is 60s.
+export const maxDuration = 60;
+
 export default function RootLayout({ children }) {
+  scheduleRefreshIfStale();
+
   return (
     <html
       lang="en"
