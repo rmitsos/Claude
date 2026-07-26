@@ -1,8 +1,7 @@
 // Feed sources for GR Wire, seeded from sources/greek-news-sources.md.
-// Only feeds marked confirmed-ish or likely-unverified there are included —
-// entries marked "not found" are left out until a real feed URL is located.
-// Fetching is defensive (see getFeedItems.js): a dead/wrong URL here just
-// disappears from the site instead of breaking the page.
+// Feeds are fetched without trusting their own broad category (e.g.
+// Capital.gr's "Οικονομία" mixes in world news, wildfires, sports) —
+// each article is classified by content instead, see classify.js.
 
 export const CATEGORIES = {
   finance: "Finance",
@@ -11,23 +10,10 @@ export const CATEGORIES = {
 };
 
 export const FEEDS = [
-  {
-    name: "Naftemporiki",
-    url: "https://www.naftemporiki.gr/feed/",
-    categories: ["finance"],
-  },
-  {
-    name: "Capital.gr (Αγορές)",
-    url: "https://www.capital.gr/api/tags/agores/",
-    categories: ["finance"],
-  },
-  {
-    name: "Capital.gr (Οικονομία)",
-    url: "https://www.capital.gr/api/tags/oikonomia/",
-    categories: ["finance"],
-  },
+  { name: "Naftemporiki", url: "https://www.naftemporiki.gr/feed/" },
+  { name: "Capital.gr (Αγορές)", url: "https://www.capital.gr/api/tags/agores/" },
+  { name: "Capital.gr (Οικονομία)", url: "https://www.capital.gr/api/tags/oikonomia/" },
   // energypress.gr returns HTTP 403 to Vercel regardless of path tried
   // (/rss and /index.php/rss both blocked) — their firewall appears to
   // reject cloud/datacenter IPs outright. Not fixable by changing the URL.
-  // Revisit only if a proxy/alternate-source approach is worth the complexity.
 ];

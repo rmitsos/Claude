@@ -28,9 +28,10 @@ export default async function CategoryPage({ params }) {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-4">{label}</h1>
+      <h1 className="mb-6 text-2xl font-bold tracking-tight">{label}</h1>
       <ArticleList
         items={items}
+        category={category}
         emptyMessage="No verified feed sources yet for this category — check back soon."
       />
     </div>

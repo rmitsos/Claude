@@ -24,13 +24,13 @@ export default function RootLayout({ children }) {
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-white text-gray-950 dark:bg-gray-950 dark:text-gray-50">
+      <body className="min-h-full flex flex-col bg-gray-50 text-gray-950 dark:bg-gray-950 dark:text-gray-50">
         <Nav />
-        <main className="flex-1 max-w-3xl mx-auto w-full px-4 py-8">
+        <main className="flex-1 max-w-5xl mx-auto w-full px-4 py-8">
           {children}
         </main>
         <footer className="border-t border-gray-200 dark:border-gray-800 py-6">
-          <p className="max-w-3xl mx-auto px-4 text-xs text-gray-500 dark:text-gray-400">
+          <p className="max-w-5xl mx-auto px-4 text-xs text-gray-500 dark:text-gray-400">
             GR Wire aggregates headlines from Greek news sources with links back
             to the original publisher. See{" "}
             <a
