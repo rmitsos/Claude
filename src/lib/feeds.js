@@ -28,7 +28,7 @@ export const FEEDS = [
   },
   {
     name: "energypress.gr",
-    url: "https://energypress.gr/rss",
+    url: "https://energypress.gr/index.php/rss",
     categories: ["energy"],
   },
 ];
