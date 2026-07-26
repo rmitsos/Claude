@@ -8,8 +8,22 @@ const connectionString = process.env.DATABASE_URL || process.env.POSTGRES_URL;
 
 export const sql = connectionString ? neon(connectionString) : null;
 
-export async function ensureSchema() {
-  if (!sql) return;
+// Memoised per serverless instance: the statements are all IF NOT EXISTS,
+// but they'd otherwise run on every request that touches the database.
+let schemaPromise = null;
+
+export function ensureSchema() {
+  if (!sql) return Promise.resolve();
+  if (!schemaPromise) {
+    schemaPromise = createSchema().catch((err) => {
+      schemaPromise = null; // let a later call retry after a transient failure
+      throw err;
+    });
+  }
+  return schemaPromise;
+}
+
+async function createSchema() {
   await sql`
     CREATE TABLE IF NOT EXISTS articles (
       id SERIAL PRIMARY KEY,
@@ -40,6 +54,7 @@ export async function ensureSchema() {
 // own ingest at once.
 export async function claimIngestSlot(minIntervalMinutes) {
   if (!sql) return false;
+  await ensureSchema(); // the meta table may not exist yet on a fresh database
   const rows = await sql`
     INSERT INTO meta (key, value)
     VALUES ('last_ingest', now())
