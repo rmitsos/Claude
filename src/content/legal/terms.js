@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { H2, Ul } from "@/components/Prose";
+import { SITE } from "@/lib/site";
 
 export const el = {
   title: "Όροι χρήσης",
@@ -15,6 +16,10 @@ export const el = {
           ενέργειας, τους ταξινομεί χρονολογικά και παραπέμπει τον καθένα στην
           πηγή του. Δεν απασχολεί δημοσιογράφους και δεν παράγει δική του
           ειδησεογραφία.
+        </p>
+        <p>
+          Εκδίδεται από τον {SITE.publisher} ως προσωπικό εγχείρημα. Η χρήση του
+          ιστότοπου σημαίνει αποδοχή αυτών των όρων.
         </p>
 
         <H2>Πνευματικά δικαιώματα</H2>
@@ -132,6 +137,10 @@ export const en = {
           Greek finance, telecommunications infrastructure and energy
           infrastructure, sorts them by time, and links each one to its source.
           It does not employ reporters and produces no journalism of its own.
+        </p>
+        <p>
+          It is published by {SITE.publisher} as a personal project. Using the
+          site means accepting these terms.
         </p>
 
         <H2>Copyright</H2>

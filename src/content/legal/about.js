@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { H2, Ul } from "@/components/Prose";
 import { FEEDS } from "@/lib/feeds";
+import { SITE } from "@/lib/site";
 
 export const el = {
   title: "Σχετικά με το GR Wire",
@@ -96,6 +97,10 @@ export const el = {
         </p>
 
         <H2>Επικοινωνία</H2>
+        <p>
+          Το GR Wire εκδίδεται από τον {SITE.publisher}. Δεν είναι εταιρεία ούτε
+          δημοσιογραφικός οργανισμός — είναι ένα προσωπικό εγχείρημα.
+        </p>
         <p>
           {contact ? (
             <>
@@ -216,6 +221,10 @@ export const en = {
         </p>
 
         <H2>Contact</H2>
+        <p>
+          GR Wire is published by {SITE.publisher}. It is not a company or a news
+          organisation — it is a personal project.
+        </p>
         <p>
           {contact ? (
             <>

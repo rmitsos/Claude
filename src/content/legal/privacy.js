@@ -14,6 +14,23 @@ export const el = {
   Body: function PrivacyEl({ contact }) {
     return (
       <>
+        <H2>Ποιος είναι υπεύθυνος επεξεργασίας</H2>
+        <p>
+          Ο ιστότοπος εκδίδεται από τον {SITE.publisher}, ιδιώτη με έδρα στην{" "}
+          {SITE.country === "Greece" ? "Ελλάδα" : SITE.country}, ο οποίος είναι
+          και ο υπεύθυνος επεξεργασίας για ό,τι περιγράφεται εδώ.
+          {contact ? (
+            <>
+              {" "}
+              Επικοινωνία:{" "}
+              <a href={`mailto:${contact}`} className="underline">
+                {contact}
+              </a>
+              .
+            </>
+          ) : null}
+        </p>
+
         <H2>Τι συλλέγουμε άμεσα</H2>
         <p>
           Τίποτα. Δεν υπάρχουν λογαριασμοί, φόρμες, εγγραφή σε ενημερωτικό δελτίο
@@ -180,6 +197,23 @@ export const en = {
   Body: function PrivacyEn({ contact }) {
     return (
       <>
+        <H2>Who the data controller is</H2>
+        <p>
+          The site is published by {SITE.publisher}, an individual based in{" "}
+          {SITE.country}, who is also the data controller for everything
+          described here.
+          {contact ? (
+            <>
+              {" "}
+              Contact:{" "}
+              <a href={`mailto:${contact}`} className="underline">
+                {contact}
+              </a>
+              .
+            </>
+          ) : null}
+        </p>
+
         <H2>What we collect directly</H2>
         <p>
           Nothing. There are no accounts, no forms, no newsletter sign-up and no

@@ -8,11 +8,11 @@ export const SITE = {
   tagline: "Greek finance, telecom & energy infrastructure — in one feed.",
 
   // The person or company legally responsible for the site.
-  publisher: null, // e.g. "Dimitris Roussos"
+  publisher: "Dimitris Roussos",
 
   // Where privacy requests and corrections go. A working address is a legal
   // requirement once the site is public, not a nicety.
-  contactEmail: null, // e.g. "hello@grwire.gr"
+  contactEmail: "contact@grwire.com",
 
   // Country of establishment — determines which supervisory authority
   // handles complaints. Greece's is the HDPA (dpa.gr).
@@ -28,7 +28,7 @@ export const SITE = {
   // correct, so this stays false while the legal pages still carry the
   // "not ready to publish" warning and the archive is only days old.
   // Flip to true when going live; robots.txt and the sitemap follow it.
-  allowIndexing: false,
+  allowIndexing: true,
 };
 
 // ISO so it can be formatted in whichever language the reader chose.
