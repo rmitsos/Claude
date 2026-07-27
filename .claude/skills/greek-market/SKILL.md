@@ -66,8 +66,14 @@ records:
 
 - **What.** The relation itself, stated once and clearly.
 - **Source.** `publisher` when it came from them, `public` when it is on the
-  record, `inferred` when neither — and inferred entries may not be used as
-  premises in published text without checking first.
+  record, `rumour` when they have heard it but it is not confirmed,
+  `inferred` when none of those. Rumour and inferred entries shape where to
+  look next; neither may be a premise in published text without checking.
+- **Edges.** The same relation in `A --relation[:detail]--> B` form. The
+  publisher wants a map of these connections eventually; writing the edge
+  line at the time of entry means that map can be generated from this file
+  instead of reconstructed from prose a year from now. Entity names must be
+  byte-identical across entries or the graph will double up.
 - **Why it matters.** The cross-category consequence, in one line. An entry
   nobody can act on is filing, not knowledge.
 

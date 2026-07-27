@@ -5,8 +5,19 @@ Grows over time. See SKILL.md for how entries are used and what may be
 stated in published text.
 
 Each entry carries a **source**: `publisher` (told to us directly),
-`public` (on the record and verifiable), or `inferred` (neither — usable
-for thinking, not as a premise in published text without checking).
+`public` (on the record and verifiable), `rumour` (heard but unconfirmed —
+use it to decide where to look, never as a premise in print), or `inferred`
+(none of the above).
+
+Each entry also carries **edges** in a fixed one-line form:
+
+    A --relation[:detail]--> B
+
+That line exists so the map the publisher wants can be generated from this
+file rather than rebuilt by hand from prose. Keep the arrow syntax exact and
+the entity names identical everywhere, including the Greek — `ΔΕΗ` is always
+`ΔΕΗ`, never "PPC" in one entry and "ΔΕΗ" in another, or the graph will show
+two companies where there is one.
 
 ---
 
@@ -20,6 +31,7 @@ electricity supplier in Greece. Now a listed company operating well beyond
 generation and supply.
 **Source.** publisher (identity, English name), public (listing, market
 position)
+**Edges.** `ΔΕΗ --is--> former state utility` · `ΔΕΗ --supplies--> Greek electricity retail market`
 **Why it matters.** "The ex-public company" is not a historical footnote —
 it explains why decisions that read as regulatory are also political, and
 why a story about ΔΕΗ's balance sheet is also a story about household
@@ -37,6 +49,7 @@ shareholders' agreement gives Macquarie **4 seats on an 11-member board**.
 **Source.** publisher (the control relation), public (the percentages, the
 transaction and the board split — PPC Group announcement, Macquarie
 announcement, contemporaneous Greek coverage)
+**Edges.** `ΔΕΗ --owns:51%--> ΔΕΔΔΗΕ` · `Macquarie Asset Management --owns:49%--> ΔΕΔΔΗΕ` · `Macquarie Asset Management --board-seats:4of11--> ΔΕΔΔΗΕ` · `ΔΕΔΔΗΕ --operates--> electricity distribution network`
 **Why it matters.** The most load-bearing relation on the site so far, and
 the 49% is not a footnote — it changes the reading in both directions.
 
@@ -62,6 +75,7 @@ high-voltage network, distinct from ΔΕΔΔΗΕ's distribution network.
 Interconnection, the vehicle for the Crete–Attica link, sold **20% to State
 Grid International Development** in November 2024.
 **Source.** public
+**Edges.** `State Grid Corporation of China --owns:24%--> ΑΔΜΗΕ` · `State Grid International Development --owns:20%--> Ariadne Interconnection` · `ΑΔΜΗΕ --owns--> Ariadne Interconnection` · `ΑΔΜΗΕ --operates--> electricity transmission network`
 **To confirm.** The rest of the cap table — the listed holding company and
 the state's stake — and whether ΔΕΗ retains any interest post-unbundling.
 Do not state those in published text until confirmed.
@@ -82,6 +96,7 @@ network** — and calls it the second-largest fibre network in Greece, with
 coverage targets running to 2028.
 **Source.** publisher (the relation and the aerial method), public (the
 hybrid description, the ranking and the targets)
+**Edges.** `ΔΕΗ --owns--> ΔΕΗ FiberGrid` · `ΔΕΗ FiberGrid --deploys-on--> ΔΕΔΔΗΕ distribution network` · `ΔΕΗ FiberGrid --competes-with--> ΟΤΕ` · `ΔΕΗ FiberGrid --competes-with--> Vodafone` · `ΔΕΗ FiberGrid --competes-with--> Nova`
 **Verify before publishing.** Homes-passed and target figures move quarterly
 and came here from search summaries rather than from primary sources. Use
 the structural claim freely; check any number against a filing first.
@@ -101,24 +116,13 @@ same physical asset serves both. Consequences that follow directly:
   market it entered from the energy side. Stories about those operators'
   infrastructure may have a ΔΕΗ dimension that goes unnamed.
 
-### ΑΔΜΗΕ / IPTO
-
-**What.** The electricity **transmission** system operator — the
-high-voltage network, distinct from ΔΕΔΔΗΕ's distribution network.
-**Source.** public
-**Why it matters.** Transmission and distribution are routinely confused in
-coverage and are different businesses with different owners and different
-regulatory treatment. When ΑΔΜΗΕ and ΔΕΔΔΗΕ tender jointly — as on the Rouf
-super-high-voltage centre — that is two balance sheets, not one.
-**To confirm.** Ownership relative to ΔΕΗ after unbundling. Do not state a
-shareholding in published text until the publisher confirms it.
-
 ### ΡΑΑΕΥ / RAAEY
 
 **What.** Ρυθμιστική Αρχή Αποβλήτων, Ενέργειας και Υδάτων — the independent
 regulatory authority for waste, energy and water. Successor to ΡΑΕ with a
 widened remit.
 **Source.** public
+**Edges.** `ΡΑΑΕΥ --regulates--> ΔΕΗ` · `ΡΑΑΕΥ --regulates--> ΔΕΔΔΗΕ` · `ΡΑΑΕΥ --regulates--> ΑΔΜΗΕ` · `ΡΑΑΕΥ --independent-of--> Ministry of Energy`
 **Why it matters.** Independence is the point. When ΡΑΑΕΥ weighs a measure
 and a minister comments on it, those are two different actors and the
 distinction is worth preserving in the text — the minister is describing,
@@ -142,7 +146,7 @@ the fibre wholesale layer and who has access to whose ducts and poles.*
 
 ## How to extend this file
 
-Add under the relevant heading, in the same shape: **What / Source / Why it
-matters**, plus **Open question** or **To confirm** where something is not
-settled. Keep "why it matters" concrete — the test is whether it would
+Add under the relevant heading, in the same shape: **What / Source / Edges /
+Why it matters**, plus **Open question**, **To confirm** or **Verify before
+publishing** where something is not settled. Keep "why it matters" concrete — the test is whether it would
 change how a specific headline is read.
