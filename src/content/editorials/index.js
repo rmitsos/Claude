@@ -1,4 +1,5 @@
 import { meta as meta2026W30, el as el2026W30, en as en2026W30 } from "./2026-w30";
+import { note as noteW30Pagio } from "./notes/2026-w30-pagio-diktyo-ina";
 
 // A week, not a piece. The lead is the argument of the week and there is at
 // most one; notes are shorter pieces on a single thread, published whenever
@@ -12,7 +13,7 @@ export const WEEKS = [
   {
     meta: meta2026W30,
     lead: { el: el2026W30, en: en2026W30 },
-    notes: [],
+    notes: [noteW30Pagio],
   },
 ];
 
