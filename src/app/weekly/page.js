@@ -6,8 +6,17 @@ import {
   getWeeklyVolume,
   getEntityTrends,
   getCooccurrences,
+  getArchiveStart,
 } from "@/lib/articles";
 import Shell from "@/components/Shell";
+import Editorial from "@/components/Editorial";
+import { getLatestEditorial } from "@/content/editorials";
+
+// Week-over-week figures need a full prior week to compare against. Before
+// that exists, every subject reads as surging simply because the database was
+// empty — accurate arithmetic, false impression. Comparisons stay hidden
+// until the archive is old enough to support them.
+const COMPARISON_MIN_DAYS = 14;
 
 export const revalidate = 900;
 
@@ -53,12 +62,19 @@ function SectionHeading({ children, note }) {
 }
 
 export default async function WeeklyPage() {
-  const [totals, volume, trends, pairs] = await Promise.all([
+  const [totals, volume, trends, pairs, archive] = await Promise.all([
     getWeeklyTotals(),
     getWeeklyVolume(),
     getEntityTrends(),
     getCooccurrences(),
+    getArchiveStart(),
   ]);
+
+  const latest = getLatestEditorial();
+  const archiveDays = archive
+    ? (Date.now() - archive.started.getTime()) / 86400000
+    : 0;
+  const canCompare = archiveDays >= COMPARISON_MIN_DAYS;
 
   const hasData = totals.thisWeek > 0;
   const volumeByCategory = Object.fromEntries(volume.map((v) => [v.category, v]));
@@ -66,12 +82,27 @@ export default async function WeeklyPage() {
   const topThemes = trends.slice(0, 12);
 
   return (
-    <Shell active="weekly" heading="This week">
-      <div className="flex flex-col gap-9 px-4 pb-10 pt-2">
-        <p className="max-w-[62ch] text-sm leading-relaxed text-ink-2">
-          Every figure here is counted from the articles GR Wire has stored — nothing is
-          inferred or written for you. Follow any link to read the stories behind a number.
-        </p>
+    <Shell active="weekly">
+      {latest && <Editorial meta={latest.meta} Body={latest.Body} />}
+
+      <div className="flex flex-col gap-9 px-4 pb-10 pt-7">
+        <div>
+          <h2 className="font-serif text-xl font-bold tracking-tight">
+            The numbers behind it
+          </h2>
+          <p className="mt-1 max-w-[62ch] text-sm leading-relaxed text-ink-2">
+            Counted from the articles GR Wire has stored — nothing inferred. Follow any
+            link to read the stories behind a number.
+            {!canCompare && (
+              <>
+                {" "}
+                Week-on-week comparisons are hidden until the archive is two weeks
+                old; before then they would show growth that is only the database
+                filling up.
+              </>
+            )}
+          </p>
+        </div>
 
         {!hasData && (
           <p className="border border-dashed border-rule px-4 py-10 text-center text-sm text-muted">
@@ -83,7 +114,9 @@ export default async function WeeklyPage() {
           <>
             {/* ---- volume ---- */}
             <section>
-              <SectionHeading note="Last 7 days against the 7 before.">
+              <SectionHeading
+                note={canCompare ? "Last 7 days against the 7 before." : "Last 7 days."}
+              >
                 Volume
               </SectionHeading>
 
@@ -91,7 +124,10 @@ export default async function WeeklyPage() {
                 <div>
                   <div className="font-mono text-2xl tabular-nums">{totals.thisWeek}</div>
                   <div className="flex items-baseline gap-2 text-xs text-muted">
-                    articles <Delta now={totals.thisWeek} before={totals.lastWeek} />
+                    articles
+                    {canCompare && (
+                      <Delta now={totals.thisWeek} before={totals.lastWeek} />
+                    )}
                   </div>
                 </div>
                 <div>
@@ -127,9 +163,11 @@ export default async function WeeklyPage() {
                       <span className="w-8 text-right font-mono text-xs tabular-nums text-muted">
                         {v.thisWeek}
                       </span>
-                      <span className="w-14 text-right">
-                        <Delta now={v.thisWeek} before={v.lastWeek} />
-                      </span>
+                      {canCompare && (
+                        <span className="w-14 text-right">
+                          <Delta now={v.thisWeek} before={v.lastWeek} />
+                        </span>
+                      )}
                     </li>
                   );
                 })}
@@ -137,7 +175,7 @@ export default async function WeeklyPage() {
             </section>
 
             {/* ---- rising ---- */}
-            {rising.length > 0 && (
+            {canCompare && rising.length > 0 && (
               <section>
                 <SectionHeading note="Subjects mentioned more often than last week.">
                   Gaining ground

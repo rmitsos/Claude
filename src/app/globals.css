@@ -76,3 +76,20 @@ body {
 .longform {
   line-height: 1.72;
 }
+
+/* Subheadings and rules inside editorial prose. Styling them here keeps the
+   content modules free of layout classes, so writing one stays about words. */
+.editorial h2 {
+  font-family: ui-serif, Georgia, Cambria, "Times New Roman", serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin-top: 0.75rem;
+}
+
+.editorial hr {
+  border: 0;
+  border-top: 1px solid var(--rule);
+  margin: 0.5rem 0;
+}
