@@ -7,14 +7,40 @@ import { themeInitScript } from "@/components/ThemeToggle";
 import { scheduleRefreshIfStale } from "@/lib/refresh";
 import { getLang } from "@/lib/lang";
 import { t, locale } from "@/lib/i18n";
+import { SITE } from "@/lib/site";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin", "greek"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
 
+const TITLE = "GR Wire — Οικονομία, Τηλεπικοινωνίες & Ενέργεια";
+const DESCRIPTION =
+  "Ελληνική οικονομία, υποδομές τηλεπικοινωνιών και ενέργειας — σε μία ροή.";
+
+// Without an absolute base, Next builds Open Graph and canonical URLs relative
+// to whatever host served the page — which on Vercel means the per-deployment
+// hostname, so a link shared from the site would point at a frozen build
+// rather than at the site. Falls back to the current deployment until a real
+// domain is set in site.js, at which point everything resolves to it.
+const baseUrl = SITE.domain
+  ? `https://${SITE.domain}`
+  : process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "http://localhost:3000";
+
 export const metadata = {
-  title: "GR Wire — Οικονομία, Τηλεπικοινωνίες & Ενέργεια",
-  description:
-    "Ελληνική οικονομία, υποδομές τηλεπικοινωνιών και ενέργειας — σε μία ροή.",
+  metadataBase: new URL(baseUrl),
+  title: TITLE,
+  description: DESCRIPTION,
+  alternates: { canonical: "/" },
+  openGraph: {
+    type: "website",
+    siteName: "GR Wire",
+    title: TITLE,
+    description: DESCRIPTION,
+    locale: "el_GR",
+    alternateLocale: "en_GB",
+    url: "/",
+  },
 };
 
 // Allow the background ingest kicked off by scheduleRefreshIfStale enough
