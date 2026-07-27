@@ -18,8 +18,10 @@ export const SITE = {
   // handles complaints. Greece's is the HDPA (dpa.gr).
   country: "Greece",
 
-  // Set once a custom domain is attached.
-  domain: null, // e.g. "grwire.gr"
+  // Registered 27 July 2026. Canonical and Open Graph URLs resolve against
+  // this, so they only become correct once the domain is attached to the
+  // Vercel project as well as bought.
+  domain: "grwire.com",
 };
 
 // ISO so it can be formatted in whichever language the reader chose.
