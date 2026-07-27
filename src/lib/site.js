@@ -22,6 +22,13 @@ export const SITE = {
   // this, so they only become correct once the domain is attached to the
   // Vercel project as well as bought.
   domain: "grwire.com",
+
+  // Search engines are kept out until the site is genuinely ready to be
+  // found. A first impression in search results is slow and awkward to
+  // correct, so this stays false while the legal pages still carry the
+  // "not ready to publish" warning and the archive is only days old.
+  // Flip to true when going live; robots.txt and the sitemap follow it.
+  allowIndexing: false,
 };
 
 // ISO so it can be formatted in whichever language the reader chose.
