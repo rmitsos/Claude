@@ -32,14 +32,24 @@ export const metadata = {
   title: TITLE,
   description: DESCRIPTION,
   alternates: { canonical: "/" },
+  // Deliberately no title or description here. Anything set on the layout is
+  // inherited by every page and is *not* overridden when a page sets its own
+  // `title` — so spelling them out meant an editorial shared to LinkedIn
+  // showed its own card image above the generic site headline. Left unset,
+  // Next fills og:title and og:description from each page's own title and
+  // description, which is what a share should say.
   openGraph: {
     type: "website",
     siteName: "GR Wire",
-    title: TITLE,
-    description: DESCRIPTION,
     locale: "el_GR",
     alternateLocale: "en_GB",
     url: "/",
+  },
+  // X falls back to the Open Graph image when no twitter:image is set, but
+  // without this it renders the small square card. LinkedIn — the channel that
+  // actually matters here — ignores these tags and reads Open Graph only.
+  twitter: {
+    card: "summary_large_image",
   },
 };
 
