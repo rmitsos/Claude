@@ -21,9 +21,11 @@ export default async function HomePage() {
           className="flex flex-wrap items-baseline gap-x-2 gap-y-1 border-b border-rule bg-tint px-4 py-2.5 hover:bg-hover"
         >
           <span className="font-mono text-[11px] uppercase tracking-widest text-band">
-            This week
+            Αυτή την εβδομάδα
           </span>
-          <span className="font-serif text-[0.95rem] text-ink">{latest.meta.title}</span>
+          <span lang="el" className="font-serif text-[0.95rem] text-ink">
+            {latest.el.title}
+          </span>
           <span className="text-sm text-muted">→</span>
         </Link>
       )}

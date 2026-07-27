@@ -5,8 +5,8 @@ const UPSERT_CONCURRENCY = 20;
 
 async function upsertItem(item) {
   await sql`
-    INSERT INTO articles (link, title, source, categories, image, pub_date, technology, entities, summary)
-    VALUES (${item.link}, ${item.title}, ${item.source}, ${item.categories}, ${item.image}, ${item.pubDate}, ${item.technology}, ${item.entities}, ${item.description || null})
+    INSERT INTO articles (link, title, source, categories, image, pub_date, technology, entities, summary, lang)
+    VALUES (${item.link}, ${item.title}, ${item.source}, ${item.categories}, ${item.image}, ${item.pubDate}, ${item.technology}, ${item.entities}, ${item.description || null}, ${item.lang})
     ON CONFLICT (link) DO UPDATE SET
       title = EXCLUDED.title,
       source = EXCLUDED.source,
@@ -15,7 +15,8 @@ async function upsertItem(item) {
       pub_date = EXCLUDED.pub_date,
       technology = EXCLUDED.technology,
       entities = EXCLUDED.entities,
-      summary = EXCLUDED.summary
+      summary = EXCLUDED.summary,
+      lang = EXCLUDED.lang
   `;
 }
 

@@ -14,6 +14,7 @@ function rowToItem(row) {
     entities: row.entities || [],
     technology: row.technology,
     summary: row.summary || "",
+    lang: row.lang || "el",
     pubDate: row.pub_date ? new Date(row.pub_date) : null,
   };
 }

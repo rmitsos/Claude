@@ -2,6 +2,7 @@ import Parser from "rss-parser";
 import { FEEDS } from "./feeds";
 import { classify, isTechnology } from "./classify";
 import { extractEntities } from "./entities";
+import { detectLanguage } from "./language";
 
 const parser = new Parser({
   customFields: {
@@ -91,6 +92,7 @@ export async function fetchAllClassifiedItems() {
       categories: classify(item),
       technology: isTechnology(item),
       entities: extractEntities(item),
+      lang: detectLanguage(`${item.title} ${item.description}`),
     }));
 
   return { items, feedStatus };

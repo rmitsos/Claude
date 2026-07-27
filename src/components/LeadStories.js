@@ -37,7 +37,9 @@ export default async function LeadStories() {
             alt=""
             className="mb-2 aspect-[16/9] w-full rounded-sm object-cover"
           />
-          <h3 className="font-serif text-lg leading-tight group-hover:underline">{hero.title}</h3>
+          <h3 lang={hero.lang} className="font-serif text-lg leading-tight group-hover:underline">
+            {hero.title}
+          </h3>
           <Meta item={hero} />
         </a>
 
@@ -58,7 +60,10 @@ export default async function LeadStories() {
                 className="aspect-square w-full rounded-sm object-cover"
               />
               <div className="min-w-0">
-                <h3 className="font-serif text-[0.9rem] leading-snug group-hover:underline">
+                <h3
+                  lang={item.lang}
+                  className="font-serif text-[0.9rem] leading-snug group-hover:underline"
+                >
                   {item.title}
                 </h3>
                 <Meta item={item} />

@@ -83,7 +83,7 @@ export default async function WeeklyPage() {
 
   return (
     <Shell active="weekly">
-      {latest && <Editorial meta={latest.meta} Body={latest.Body} />}
+      {latest && <Editorial meta={latest.meta} el={latest.el} en={latest.en} />}
 
       <div className="flex flex-col gap-9 px-4 pb-10 pt-7">
         <div>

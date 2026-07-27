@@ -45,6 +45,9 @@ async function createSchema() {
   // only carry recent items, so a column added in six months would leave
   // six months of articles permanently unsearchable.
   await sql`ALTER TABLE articles ADD COLUMN IF NOT EXISTS summary TEXT`;
+  // Declared per headline so screen readers pronounce Greek correctly and
+  // browsers can offer their own translation.
+  await sql`ALTER TABLE articles ADD COLUMN IF NOT EXISTS lang TEXT NOT NULL DEFAULT 'el'`;
   await sql`CREATE INDEX IF NOT EXISTS articles_pub_date_idx ON articles (pub_date DESC)`;
   await sql`CREATE INDEX IF NOT EXISTS articles_categories_idx ON articles USING GIN (categories)`;
   await sql`CREATE INDEX IF NOT EXISTS articles_entities_idx ON articles USING GIN (entities)`;

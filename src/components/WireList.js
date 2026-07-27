@@ -69,6 +69,7 @@ function Row({ item, showCategory }) {
           href={item.link}
           target="_blank"
           rel="noopener noreferrer"
+          lang={item.lang}
           className="font-serif text-[0.95rem] leading-snug text-ink hover:underline"
         >
           {item.title}

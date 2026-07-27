@@ -13,8 +13,8 @@ export async function generateMetadata({ params }) {
   const entry = getEditorial(slug);
   if (!entry) return {};
   return {
-    title: `${entry.meta.title} — GR Wire`,
-    description: entry.meta.standfirst,
+    title: `${entry.el.title} — GR Wire`,
+    description: entry.el.standfirst,
   };
 }
 
@@ -25,7 +25,7 @@ export default async function EditorialArchivePage({ params }) {
 
   return (
     <Shell active="weekly">
-      <Editorial meta={entry.meta} Body={entry.Body} />
+      <Editorial meta={entry.meta} el={entry.el} en={entry.en} />
       <p className="px-4 py-5 text-sm text-muted">
         <Link href="/weekly" className="underline hover:no-underline">
           Latest week and the numbers behind it
