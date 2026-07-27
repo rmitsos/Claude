@@ -8,6 +8,7 @@ import { scheduleRefreshIfStale } from "@/lib/refresh";
 import { getLang } from "@/lib/lang";
 import { t, locale } from "@/lib/i18n";
 import { SITE } from "@/lib/site";
+import { Analytics } from "@vercel/analytics/next";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin", "greek"] });
 const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
@@ -97,6 +98,7 @@ export default async function RootLayout({ children }) {
           </div>
         </footer>
         <BackToTop lang={lang} />
+        <Analytics />
       </body>
     </html>
   );
