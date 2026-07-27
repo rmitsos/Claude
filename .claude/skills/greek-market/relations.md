@@ -199,9 +199,17 @@ and no reason to price pole access with fibre rivalry in mind.
 
 That gap is a story in itself, and a better one than the note that
 prompted these questions: **the physical layer of Greek fibre competition
-is governed by an energy regulator, or by nobody.** Before writing it,
-confirm with the publisher whether ΡΑΑΕΥ prices pole attachment at all, or
-whether it is left entirely to ΔΕΔΔΗΕ commercially.
+is governed by an energy regulator, or by nobody.**
+
+**Blocked, and the publisher cannot unblock it.** Asked whether ΡΑΑΕΥ
+prices pole attachment or whether it is left to ΔΕΔΔΗΕ commercially, the
+publisher does not know. So this is a research question, not a question for
+them — do not ask again. Where to look: ΡΑΑΕΥ decisions and published
+tariffs, ΔΕΔΔΗΕ's charging code or price list for third-party attachments,
+and any ΕΕΤΤ consultation that touched physical infrastructure access.
+Until one of those produces an answer, the piece cannot distinguish "priced
+by the wrong regulator" from "not priced by any regulator" — and those are
+the two possible arguments, so it cannot be written at all.
 
 ### ΡΑΑΕΥ / RAAEY
 
@@ -240,16 +248,39 @@ the navigation says.
 
 ### Grid Telecom — ΑΔΜΗΕ's fibre arm, on the transmission network
 
-**What.** **Grid Telecom** is a **100% subsidiary of ΑΔΜΗΕ**, carrying fibre
-on the high-voltage transmission system: over **3,000 km** across mainland
-and islands, plus subsea routes. It sells **dark fibre wholesale** to
-telecom operators and describes itself as a leading wholesale carrier. It
-has an MoU with **ESO EAD**, Bulgaria's transmission operator, to
-commercialise the fibre running along the Greece–Bulgaria interconnectors,
-and a strategy to make **Crete an international data gateway between Europe
-and the Middle East**.
-**Source.** publisher (that ΑΔΜΗΕ owns a fibreco), public (name, ownership,
-scale, dark-fibre model, ESO EAD MoU, Crete strategy)
+**What.** **Grid Telecom** is a **100% subsidiary of ΑΔΜΗΕ**, tied to the
+high-voltage transmission system: over **3,000 km** across mainland and
+islands, plus subsea routes. It sells **dark fibre wholesale** to telecom
+operators and describes itself as a leading wholesale carrier. It has an
+MoU with **ESO EAD**, Bulgaria's transmission operator, to commercialise
+fibre along the Greece–Bulgaria interconnectors, and a strategy to make
+**Crete an international data gateway between Europe and the Middle East**.
+**Source.** publisher (that ΑΔΜΗΕ owns a fibreco; that the build is
+underground and subsea), public (name, ownership, scale, dark-fibre model,
+ESO EAD MoU, Crete strategy)
+
+**CONTRADICTION — unresolved, do not write about the physical build.**
+The publisher says Grid Telecom is **underground and subsea, no aerial**.
+Contemporaneous Greek coverage of the ESO EAD memorandum describes
+commercialising "τις οπτικές ίνες που διατρέχουν τις **εναέριες**
+ηλεκτρικές διασυνδέσεις Ελλάδας–Βουλγαρίας" — fibre running along the
+*aerial* interconnectors, i.e. optical ground wire on overhead towers.
+Both can be true if the domestic commercial network is buried and subsea
+while the cross-border link rides existing OPGW, but that is a guess.
+
+The distinction is not cosmetic, which is why it is flagged rather than
+averaged out:
+
+- **If underground and subsea**, Grid Telecom's advantage is *rights of
+  way* — the corridors, easements and landing rights that come with being
+  the transmission operator. It is a conventional carrier with an
+  unconventional parent.
+- **If it also monetises aerial OPGW**, then both electricity network
+  operators sell fibre strung on live infrastructure, the safety-engineering
+  gate that applies to ΔΕΔΔΗΕ's poles has a transmission-level counterpart,
+  and "fibre on the grid" is a single structural story across both networks.
+
+Ask the publisher to reconcile before either version is published.
 **Edges.** `ΑΔΜΗΕ --owns:100%--> Grid Telecom` · `Grid Telecom --deploys-on--> electricity transmission network` · `Grid Telecom --sells--> dark fibre wholesale` · `Grid Telecom --mou-with--> ESO EAD` · `Grid Telecom --builds--> Crete international data gateway`
 **Why it matters.** There are **two** grid-borne fibre businesses in Greece,
 on two different electricity networks, under two different owners — and
@@ -257,8 +288,9 @@ conflating them would be an obvious error to anyone in the market.
 
 | | ΔΕΗ FiberGrid | Grid Telecom |
 |---|---|---|
-| Electricity network | distribution (ΔΕΔΔΗΕ poles) | transmission (ΑΔΜΗΕ lines) |
+| Electricity network | distribution (ΔΕΔΔΗΕ) | transmission (ΑΔΜΗΕ) |
 | Parent | ΔΕΗ | ΑΔΜΗΕ |
+| Build | aerial on poles, hybrid with underground to cabinets | underground and subsea per the publisher — see contradiction above |
 | Layer | last mile, FTTH to the home | long-haul backbone, subsea, cross-border |
 | Sells | wholesale **and** retail today | dark fibre wholesale |
 
