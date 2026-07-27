@@ -13,6 +13,7 @@ function rowToItem(row) {
     categories: row.categories || [],
     entities: row.entities || [],
     technology: row.technology,
+    summary: row.summary || "",
     pubDate: row.pub_date ? new Date(row.pub_date) : null,
   };
 }
