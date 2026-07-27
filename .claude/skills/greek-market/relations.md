@@ -145,6 +145,38 @@ they are proposing to merge their fibre assets. Two consequences:
 **To watch.** Term sheet is non-binding. Until binding agreements and
 regulatory approval, write "proposed" and nothing stronger.
 
+### Wholesale access is open — the JV changes scale, not openness
+
+**What.** Fibre network operators provide wholesale access to other
+operators, so ΔΕΗ FiberGrid's network is in principle available to the
+whole market already, not only to Vodafone. What the JV changes is who the
+dominant user is: Fiber2All will hold the majority of the traffic on it by
+virtue of the agreement.
+**Source.** publisher
+**Edges.** `ΔΕΗ FiberGrid --sells-wholesale-to--> all operators` · `Fiber2All --majority-user-of--> ΔΕΗ FiberGrid network`
+**Why it matters.** Corrects a framing error that reached the site. The
+note said the JV would turn ΔΕΔΔΗΕ's poles from one company's
+infrastructure into a shared platform. Wrong emphasis — the network already
+sells wholesale to everyone. What genuinely changes is **vertical
+structure**: ΔΕΗ FiberGrid today is both wholesale and retail, and the
+proposed JV is wholesale-only and neutral. That is the real transition, and
+it is a smaller and more precise claim than the one published.
+
+**Open questions — needed before writing about the regulatory side.**
+
+1. Is the wholesale obligation a **general duty on every fibre network
+   owner** in Greece, or does it fall on operators designated with
+   significant market power (historically ΟΤΕ), with alternative networks
+   selling wholesale commercially rather than under compulsion? "Forced to"
+   and "chooses to" are different sentences and only one of them is a
+   regulatory claim.
+2. Separately: can **other fibercos hang their own fibre on ΔΕΔΔΗΕ's
+   poles**, on regulated terms? Physical infrastructure access is a
+   different regime from wholesale service access. If the answer is yes,
+   the pole network is shared infrastructure at the physical layer too, and
+   ΔΕΔΔΗΕ's access pricing becomes a telecom competition question — which
+   would be a considerably bigger story than the one written.
+
 ### ΡΑΑΕΥ / RAAEY
 
 **What.** Ρυθμιστική Αρχή Αποβλήτων, Ενέργειας και Υδάτων — the independent
