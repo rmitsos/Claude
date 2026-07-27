@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import InfoBar from "@/components/InfoBar";
@@ -35,16 +36,22 @@ export default function RootLayout({ children }) {
         <InfoBar />
         {children}
         <footer className="border-t border-gray-200 py-5 dark:border-gray-800">
-          <p className="mx-auto max-w-6xl px-4 text-xs text-gray-500 dark:text-gray-400">
-            GR Wire links to the original publisher for every headline. See{" "}
-            <a
-              href="https://github.com/rmitsos/Claude/blob/main/sources/greek-news-sources.md"
-              className="underline"
-            >
-              sources
-            </a>
-            .
-          </p>
+          <div className="mx-auto flex max-w-6xl flex-wrap items-baseline gap-x-5 gap-y-2 px-4 text-xs text-gray-500 dark:text-gray-400">
+            <span>
+              GR Wire links to the original publisher for every headline.
+            </span>
+            <nav className="flex gap-x-4">
+              <Link href="/about" className="underline hover:no-underline">
+                About
+              </Link>
+              <Link href="/privacy" className="underline hover:no-underline">
+                Privacy
+              </Link>
+              <Link href="/terms" className="underline hover:no-underline">
+                Terms
+              </Link>
+            </nav>
+          </div>
         </footer>
       </body>
     </html>
