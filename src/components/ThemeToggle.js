@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { t } from "@/lib/i18n";
 
 export const THEME_KEY = "grwire-theme";
 
@@ -16,7 +17,7 @@ try {
 }
 `;
 
-export default function ThemeToggle() {
+export default function ThemeToggle({ lang = "el" }) {
   const [theme, setTheme] = useState("dark");
 
   // The attribute is already correct by now (set by the script above); this
@@ -37,17 +38,17 @@ export default function ThemeToggle() {
     }
   }
 
-  const goingTo = theme === "dark" ? "light" : "dark";
+  const goingTo = t(lang, theme === "dark" ? "control.themeLight" : "control.themeDark");
 
   return (
     <button
       type="button"
       onClick={toggle}
-      aria-label={`Switch to ${goingTo} theme`}
-      title={`Switch to ${goingTo} theme`}
+      aria-label={t(lang, "control.switchTheme", { theme: goingTo })}
+      title={t(lang, "control.switchTheme", { theme: goingTo })}
       className="rounded-sm border border-rule px-2 py-1 font-mono text-[11px] uppercase tracking-wider text-muted transition-colors hover:border-band hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-band"
     >
-      {theme === "dark" ? "☀ Light" : "☾ Dark"}
+      {t(lang, theme === "dark" ? "control.light" : "control.dark")}
     </button>
   );
 }

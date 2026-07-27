@@ -1,10 +1,10 @@
 import { notFound } from "next/navigation";
 import { CATEGORIES, SUBCATEGORIES, SUBCATEGORIZED } from "@/lib/feeds";
 import { getCategoryItems } from "@/lib/articles";
+import { getLang } from "@/lib/lang";
+import { t } from "@/lib/i18n";
 import Shell from "@/components/Shell";
 import WireList from "@/components/WireList";
-
-export const revalidate = 300;
 
 export function generateStaticParams() {
   return SUBCATEGORIZED.flatMap((category) =>
@@ -14,41 +14,35 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }) {
   const { category, sub } = await params;
-  const label = CATEGORIES[category];
-  const subLabel = SUBCATEGORIES[sub];
-  if (!label || !subLabel) return {};
-  return {
-    title: `${label} · ${subLabel} — GR Wire`,
-    description:
-      sub === "technology"
-        ? `${label}: installations, equipment and engineering projects.`
-        : `${label}: markets, policy and corporate news.`,
-  };
+  if (!CATEGORIES[category] || !SUBCATEGORIES[sub]) return {};
+  const lang = await getLang();
+  return { title: `${t(lang, `cat.${category}`)} · ${t(lang, `sub.${sub}`)} — GR Wire` };
 }
 
 export default async function SubcategoryPage({ params }) {
   const { category, sub } = await params;
-  const label = CATEGORIES[category];
-  const subLabel = SUBCATEGORIES[sub];
-  if (!label || !subLabel || !SUBCATEGORIZED.includes(category)) notFound();
+  if (!CATEGORIES[category] || !SUBCATEGORIES[sub] || !SUBCATEGORIZED.includes(category)) {
+    notFound();
+  }
 
+  const lang = await getLang();
   const items = await getCategoryItems(category, sub);
 
   return (
-    <Shell active={category} activeSub={sub} heading={`${label} · ${subLabel}`}>
+    <Shell
+      lang={lang}
+      active={category}
+      activeSub={sub}
+      heading={`${t(lang, `cat.${category}`)} · ${t(lang, `sub.${sub}`)}`}
+    >
       <p className="px-4 pb-3 text-sm text-muted">
-        {sub === "technology"
-          ? "Installations, equipment and engineering projects."
-          : "Markets, policy and corporate news."}
+        {t(lang, sub === "technology" ? "cat.technologyNote" : "cat.newsNote")}
       </p>
       <WireList
+        lang={lang}
         items={items}
         showCategory={false}
-        emptyMessage={
-          sub === "technology"
-            ? "No engineering stories in this category yet."
-            : "No news stories in this category yet."
-        }
+        emptyMessage={t(lang, "cat.empty")}
       />
     </Shell>
   );

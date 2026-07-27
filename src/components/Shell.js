@@ -1,13 +1,12 @@
 import Nav from "@/components/Nav";
 import Rail from "@/components/Rail";
 
-// The Option B layout: one time-ordered column with a single narrow rail.
-// The rail carries the page's only image plus the coverage tallies, so the
-// main column can stay dense and chronological.
-export default function Shell({ active, activeSub, heading, children }) {
+// The Option B layout: one time-ordered column with a narrow rail. The rail
+// carries the coverage tallies so the main column stays dense and chronological.
+export default function Shell({ lang, active, activeSub, heading, children }) {
   return (
     <>
-      <Nav active={active} activeSub={activeSub} />
+      <Nav lang={lang} active={active} activeSub={activeSub} />
       <div className="mx-auto grid w-full max-w-6xl flex-1 lg:grid-cols-[1fr_17.5rem]">
         <main className="min-w-0 border-rule lg:border-r">
           {heading && (
@@ -17,7 +16,7 @@ export default function Shell({ active, activeSub, heading, children }) {
           )}
           {children}
         </main>
-        <Rail />
+        <Rail lang={lang} />
       </div>
     </>
   );

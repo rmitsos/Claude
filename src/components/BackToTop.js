@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { t } from "@/lib/i18n";
 
 // Stays hidden until the reader is deep enough to need it — a control
 // pinned over the wire permanently is exactly the distraction this site
@@ -8,7 +9,7 @@ import { useEffect, useState } from "react";
 // worth its space.
 const SHOW_AFTER_SCREENS = 2;
 
-export default function BackToTop() {
+export default function BackToTop({ lang = "el" }) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -29,12 +30,12 @@ export default function BackToTop() {
     <button
       type="button"
       onClick={toTop}
-      aria-label="Back to top"
+      aria-label={t(lang, "control.backToTop")}
       className={`fixed bottom-5 right-5 z-20 rounded-full border border-rule bg-surface/90 px-3 py-2 text-sm text-ink-2 shadow-sm backdrop-blur-sm transition-opacity hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-band ${
  visible ? "opacity-100" : "pointer-events-none opacity-0"
  }`}
     >
-      ↑ Top
+      {t(lang, "control.top")}
     </button>
   );
 }

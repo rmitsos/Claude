@@ -1,10 +1,10 @@
 import { notFound } from "next/navigation";
 import { CATEGORIES } from "@/lib/feeds";
 import { getCategoryItems } from "@/lib/articles";
+import { getLang } from "@/lib/lang";
+import { t } from "@/lib/i18n";
 import Shell from "@/components/Shell";
 import WireList from "@/components/WireList";
-
-export const revalidate = 300;
 
 export function generateStaticParams() {
   return Object.keys(CATEGORIES).map((category) => ({ category }));
@@ -12,27 +12,25 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }) {
   const { category } = await params;
-  const label = CATEGORIES[category];
-  if (!label) return {};
-  return {
-    title: `${label} — GR Wire`,
-    description: `Latest ${label} news from Greek and international sources.`,
-  };
+  if (!CATEGORIES[category]) return {};
+  const lang = await getLang();
+  return { title: `${t(lang, `cat.${category}`)} — GR Wire` };
 }
 
 export default async function CategoryPage({ params }) {
   const { category } = await params;
-  const label = CATEGORIES[category];
-  if (!label) notFound();
+  if (!CATEGORIES[category]) notFound();
 
+  const lang = await getLang();
   const items = await getCategoryItems(category);
 
   return (
-    <Shell active={category} heading={label}>
+    <Shell lang={lang} active={category} heading={t(lang, `cat.${category}`)}>
       <WireList
+        lang={lang}
         items={items}
         showCategory={false}
-        emptyMessage="Nothing in this category yet."
+        emptyMessage={t(lang, "cat.empty")}
       />
     </Shell>
   );

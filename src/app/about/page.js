@@ -2,6 +2,7 @@ import Link from "next/link";
 import { SITE } from "@/lib/site";
 import { FEEDS } from "@/lib/feeds";
 import Nav from "@/components/Nav";
+import { getLang } from "@/lib/lang";
 import Prose, { H2, Ul } from "@/components/Prose";
 
 export const metadata = {
@@ -9,12 +10,13 @@ export const metadata = {
   description: "What GR Wire covers, where it gets its news, and how it decides what goes where.",
 };
 
-export default function AboutPage() {
+export default async function AboutPage() {
   const contact = SITE.contactEmail;
+  const lang = await getLang();
 
   return (
     <>
-      <Nav />
+      <Nav lang={lang} />
       <Prose title="About GR Wire" intro={SITE.tagline}>
         <H2>What it covers</H2>
         <p>

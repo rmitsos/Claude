@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { SITE } from "@/lib/site";
 import Nav from "@/components/Nav";
+import { getLang } from "@/lib/lang";
 import Prose, { H2, Ul } from "@/components/Prose";
 
 export const metadata = {
@@ -8,12 +9,13 @@ export const metadata = {
   description: "Terms of use for GR Wire, including copyright and removal requests.",
 };
 
-export default function TermsPage() {
+export default async function TermsPage() {
   const contact = SITE.contactEmail;
+  const lang = await getLang();
 
   return (
     <>
-      <Nav />
+      <Nav lang={lang} />
       <Prose
         title="Terms of use"
         intro="GR Wire is a news aggregator. It indexes headlines from public feeds and links back to the organisations that reported them."

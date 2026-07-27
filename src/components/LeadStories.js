@@ -1,32 +1,33 @@
 import { getLeadStories } from "@/lib/articles";
+import { t, locale } from "@/lib/i18n";
 
-const timeFmt = new Intl.DateTimeFormat("en-GB", {
-  timeZone: "Europe/Athens",
-  hour: "2-digit",
-  minute: "2-digit",
-  hour12: false,
-});
-
-function Meta({ item }) {
+function Meta({ item, fmt, lang }) {
   return (
     <span className="mt-1 block font-mono text-[11px] text-muted">
       {item.source}
-      {item.pubDate && ` · ${timeFmt.format(item.pubDate)}`}
-      {item.technology && <span className="ml-1.5 text-tech">Tech</span>}
+      {item.pubDate && ` · ${fmt.format(item.pubDate)}`}
+      {item.technology && <span className="ml-1.5 text-tech">{t(lang, "tag.tech")}</span>}
     </span>
   );
 }
 
-export default async function LeadStories() {
+export default async function LeadStories({ lang = "el" }) {
   const stories = await getLeadStories(5);
   if (stories.length === 0) return null;
+
+  const fmt = new Intl.DateTimeFormat(locale(lang), {
+    timeZone: "Europe/Athens",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
 
   const [hero, ...rest] = stories;
 
   return (
     <section className="border-b border-rule px-4 pb-5 pt-5">
       <h2 className="mb-3 font-mono text-[11px] uppercase tracking-widest text-muted">
-        Leading stories
+        {t(lang, "lead.heading")}
       </h2>
 
       <div className="grid gap-4 sm:grid-cols-2">
@@ -40,7 +41,7 @@ export default async function LeadStories() {
           <h3 lang={hero.lang} className="font-serif text-lg leading-tight group-hover:underline">
             {hero.title}
           </h3>
-          <Meta item={hero} />
+          <Meta item={hero} fmt={fmt} lang={lang} />
         </a>
 
         <div className="flex flex-col gap-3">
@@ -66,7 +67,7 @@ export default async function LeadStories() {
                 >
                   {item.title}
                 </h3>
-                <Meta item={item} />
+                <Meta item={item} fmt={fmt} lang={lang} />
               </div>
             </a>
           ))}

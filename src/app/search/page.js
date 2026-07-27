@@ -1,28 +1,14 @@
 import { ENTITY_BY_ID } from "@/lib/entities";
-import {
-  searchArticles,
-  getArchiveStart,
-  PERIODS,
-  DEFAULT_PERIOD,
-} from "@/lib/articles";
+import { searchArticles, getArchiveStart, PERIODS, DEFAULT_PERIOD } from "@/lib/articles";
+import { getLang } from "@/lib/lang";
+import { t, locale } from "@/lib/i18n";
 import Shell from "@/components/Shell";
 import WireList from "@/components/WireList";
 import SearchControls from "@/components/SearchControls";
 
-export const metadata = {
-  title: "Search — GR Wire",
-  description: "Filter Greek finance, telecom and energy coverage by subject and period.",
-};
-
-const dateFmt = new Intl.DateTimeFormat("en-GB", {
-  day: "numeric",
-  month: "long",
-  year: "numeric",
-  timeZone: "Europe/Athens",
-});
-
 export default async function SearchPage({ searchParams }) {
   const params = await searchParams;
+  const lang = await getLang();
   const tag = ENTITY_BY_ID[params?.tag] ? params.tag : null;
   const period = PERIODS[params?.period] ? params.period : DEFAULT_PERIOD;
 
@@ -31,35 +17,46 @@ export default async function SearchPage({ searchParams }) {
     getArchiveStart(),
   ]);
 
-  const subject = tag ? ENTITY_BY_ID[tag].label : "Everything";
-  const periodLabel = PERIODS[period].label.toLowerCase();
+  const dateFmt = new Intl.DateTimeFormat(locale(lang), {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "Europe/Athens",
+  });
+
+  const subject = tag ? ENTITY_BY_ID[tag].label : t(lang, "search.everything");
+  const noun = t(lang, items.length === 1 ? "search.story" : "search.stories");
 
   return (
-    <Shell active="search" heading="Search">
+    <Shell lang={lang} active="search" heading={t(lang, "search.title")}>
       <div className="px-4 pb-2 pt-1">
-        <SearchControls tag={tag} period={period} />
+        <SearchControls lang={lang} tag={tag} period={period} />
 
         <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1 pb-1 pt-4">
           <p className="text-sm text-ink-2">
-            <strong className="font-semibold">{items.length}</strong>{" "}
-            {items.length === 1 ? "story" : "stories"} · {subject} · {periodLabel}
+            {t(lang, "search.results", {
+              n: items.length,
+              noun,
+              subject,
+              period: t(lang, `period.${period}`).toLowerCase(),
+            })}
           </p>
           {archive && (
             <p className="text-sm text-muted">
-              GR Wire has been collecting since {dateFmt.format(archive.started)}.
+              {t(lang, "search.archiveSince", { date: dateFmt.format(archive.started) })}
             </p>
           )}
         </div>
 
         {items.length === 0 && (
           <p className="mt-4 border border-dashed border-rule px-4 py-10 text-center text-sm text-muted">
-            Nothing matches {subject.toLowerCase()} in this period.
-            {period !== "all" && " Try a longer period."}
+            {t(lang, "search.empty", { subject })}
+            {period !== "all" && t(lang, "search.tryLonger")}
           </p>
         )}
       </div>
 
-      {items.length > 0 && <WireList items={items} />}
+      {items.length > 0 && <WireList lang={lang} items={items} />}
     </Shell>
   );
 }

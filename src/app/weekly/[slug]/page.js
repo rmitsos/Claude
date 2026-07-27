@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { EDITORIALS, getEditorial } from "@/content/editorials";
+import { getLang } from "@/lib/lang";
+import { t } from "@/lib/i18n";
 import Shell from "@/components/Shell";
 import Editorial from "@/components/Editorial";
 
@@ -23,12 +25,14 @@ export default async function EditorialArchivePage({ params }) {
   const entry = getEditorial(slug);
   if (!entry) notFound();
 
+  const lang = await getLang();
+
   return (
-    <Shell active="weekly">
+    <Shell lang={lang} active="weekly">
       <Editorial meta={entry.meta} el={entry.el} en={entry.en} />
       <p className="px-4 py-5 text-sm text-muted">
         <Link href="/weekly" className="underline hover:no-underline">
-          Latest week and the numbers behind it
+          {t(lang, "weekly.latestLink")}
         </Link>
       </p>
     </Shell>

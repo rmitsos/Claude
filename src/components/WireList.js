@@ -1,4 +1,5 @@
 import { CATEGORIES } from "@/lib/feeds";
+import { t, locale } from "@/lib/i18n";
 
 const CATEGORY_STYLE = {
   finance: "text-fin",
@@ -6,59 +7,54 @@ const CATEGORY_STYLE = {
   energy: "text-enr",
 };
 
-const SHORT_LABEL = {
-  finance: "Finance",
-  telco: "Telco",
-  energy: "Energy",
-};
-
-const athens = (opts) => new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Athens", ...opts });
-
-const timeFmt = athens({ hour: "2-digit", minute: "2-digit", hour12: false });
-const dayKeyFmt = athens({ year: "numeric", month: "2-digit", day: "2-digit" });
-const dayLabelFmt = athens({ weekday: "long", day: "numeric", month: "long" });
-
-function dayLabel(date) {
-  const todayKey = dayKeyFmt.format(new Date());
-  const key = dayKeyFmt.format(date);
-  if (key === todayKey) return `Today · ${dayLabelFmt.format(date)}`;
-
-  const yesterday = new Date(Date.now() - 86400000);
-  if (key === dayKeyFmt.format(yesterday)) return `Yesterday · ${dayLabelFmt.format(date)}`;
-
-  return dayLabelFmt.format(date);
+function makeFormatters(lang) {
+  const opts = { timeZone: "Europe/Athens" };
+  return {
+    time: new Intl.DateTimeFormat(locale(lang), { ...opts, hour: "2-digit", minute: "2-digit", hour12: false }),
+    dayKey: new Intl.DateTimeFormat("en-GB", { ...opts, year: "numeric", month: "2-digit", day: "2-digit" }),
+    dayLabel: new Intl.DateTimeFormat(locale(lang), { ...opts, weekday: "long", day: "numeric", month: "long" }),
+  };
 }
 
-// Groups consecutive items by Athens calendar day. Items arrive already
-// sorted newest-first, so a single pass preserves that ordering.
-function groupByDay(items) {
+// Items arrive newest-first, so one pass preserves that ordering.
+function groupByDay(items, fmt, lang) {
+  const todayKey = fmt.dayKey.format(new Date());
+  const yesterdayKey = fmt.dayKey.format(new Date(Date.now() - 86400000));
   const groups = [];
+
   for (const item of items) {
     if (!item.pubDate) continue;
-    const key = dayKeyFmt.format(item.pubDate);
+    const key = fmt.dayKey.format(item.pubDate);
     const last = groups[groups.length - 1];
-    if (last && last.key === key) last.items.push(item);
-    else groups.push({ key, label: dayLabel(item.pubDate), items: [item] });
+    if (last && last.key === key) {
+      last.items.push(item);
+      continue;
+    }
+    const written = fmt.dayLabel.format(item.pubDate);
+    let label = written;
+    if (key === todayKey) label = `${t(lang, "day.today")} · ${written}`;
+    else if (key === yesterdayKey) label = `${t(lang, "day.yesterday")} · ${written}`;
+    groups.push({ key, label, items: [item] });
   }
   return groups;
 }
 
-function Row({ item, showCategory }) {
+function Row({ item, showCategory, fmt, lang }) {
   const category = Object.keys(CATEGORIES).find((c) => item.categories?.includes(c));
 
   return (
     <li className="grid grid-cols-[3.25rem_1fr] gap-x-3 border-b border-rule/60 px-4 py-2.5 last:border-b-0 hover:bg-hover sm:grid-cols-[3.25rem_5.5rem_1fr]">
       <time className="pt-0.5 font-mono text-xs tabular-nums text-muted">
-        {timeFmt.format(item.pubDate)}
+        {fmt.time.format(item.pubDate)}
       </time>
 
       {showCategory ? (
         <span
           className={`hidden pt-0.5 font-mono text-[11px] uppercase tracking-wider sm:block ${
- CATEGORY_STYLE[category] || "text-muted"
- }`}
+            CATEGORY_STYLE[category] || "text-muted"
+          }`}
         >
-          {SHORT_LABEL[category] || ""}
+          {category ? t(lang, `cat.${category}.short`) : ""}
         </span>
       ) : (
         <span className="hidden sm:block" />
@@ -76,29 +72,29 @@ function Row({ item, showCategory }) {
         </a>
         {item.technology && (
           <span className="ml-1.5 inline-block rounded-sm border border-tech/60 px-1 align-[1px] font-mono text-[10px] uppercase tracking-wide text-tech">
-            Tech
+            {t(lang, "tag.tech")}
           </span>
         )}
-        <span className="ml-1.5 font-mono text-[11px] text-muted">
-          {item.source}
-        </span>
+        <span className="ml-1.5 font-mono text-[11px] text-muted">{item.source}</span>
       </div>
     </li>
   );
 }
 
-export default function WireList({ items, showCategory = true, emptyMessage }) {
+export default function WireList({ lang = "el", items, showCategory = true, emptyMessage }) {
   if (!items || items.length === 0) {
     return (
       <p className="border border-dashed border-rule px-4 py-10 text-center text-sm text-muted">
-        {emptyMessage || "Nothing here yet."}
+        {emptyMessage || t(lang, "list.empty")}
       </p>
     );
   }
 
+  const fmt = makeFormatters(lang);
+
   return (
     <div>
-      {groupByDay(items).map((group) => (
+      {groupByDay(items, fmt, lang).map((group) => (
         <section key={group.key}>
           <h2 className="sticky top-0 z-[5] flex items-center gap-3 border-b border-rule/60 bg-ground/95 px-4 py-1.5 font-mono text-[11px] uppercase tracking-widest text-muted backdrop-blur-sm">
             {group.label}
@@ -106,7 +102,13 @@ export default function WireList({ items, showCategory = true, emptyMessage }) {
           </h2>
           <ul>
             {group.items.map((item, i) => (
-              <Row key={`${item.link}-${i}`} item={item} showCategory={showCategory} />
+              <Row
+                key={`${item.link}-${i}`}
+                item={item}
+                showCategory={showCategory}
+                fmt={fmt}
+                lang={lang}
+              />
             ))}
           </ul>
         </section>

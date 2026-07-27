@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { SITE } from "@/lib/site";
 import Nav from "@/components/Nav";
+import { getLang } from "@/lib/lang";
 import Prose, { H2, Ul } from "@/components/Prose";
 
 export const metadata = {
@@ -8,12 +9,13 @@ export const metadata = {
   description: "What GR Wire collects, what it doesn't, and who else your browser talks to.",
 };
 
-export default function PrivacyPage() {
+export default async function PrivacyPage() {
   const contact = SITE.contactEmail;
+  const lang = await getLang();
 
   return (
     <>
-      <Nav />
+      <Nav lang={lang} />
       <Prose
         title="Privacy"
         intro="GR Wire has no accounts, no sign-up, no advertising and no analytics. This page describes what that means in practice, including the parts that aren't obvious."
@@ -27,18 +29,29 @@ export default function PrivacyPage() {
 
         <H2>Cookies and local storage</H2>
         <p>
-          <strong>This site sets no cookies.</strong> It stores exactly one thing
-          in your browser, and only if you ask it to: which theme you picked.
+          Two things are stored in your browser, and only once you choose them.
+          Both hold a single word. Neither identifies you, and neither is used
+          for tracking, analytics or advertising.
         </p>
         <Ul>
           <li>
-            <code className="font-mono text-[0.85em]">grwire-theme</code> —
-            the value <em>dark</em> or <em>light</em>, saved when you use the
-            theme switch so the site doesn&rsquo;t forget on your next visit. It
-            is never sent to our servers, never read by anyone else, and clearing
-            your browser data removes it.
+            <code className="font-mono text-[0.85em]">grwire-theme</code> —{" "}
+            <em>dark</em> or <em>light</em>, kept in your browser&rsquo;s local
+            storage when you use the theme switch. It is never sent to our
+            servers.
+          </li>
+          <li>
+            <code className="font-mono text-[0.85em]">grwire-lang</code> —{" "}
+            <em>el</em> or <em>en</em>, set when you use the language switch.
+            This one is a cookie rather than local storage because the interface
+            text is built on the server, which has to know your choice before it
+            can render the page. It is sent with requests to this site only.
           </li>
         </Ul>
+        <p>
+          Clearing your browser data removes both, and the site falls back to
+          Greek and the dark theme.
+        </p>
         <p>
           There is no consent banner because nothing here needs consent. Under
           the EU ePrivacy rules, consent is required for non-essential storage;

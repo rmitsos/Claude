@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { ENTITIES } from "@/lib/entities";
 import { PERIODS } from "@/lib/articles";
+import { t } from "@/lib/i18n";
 
 const selectClass =
   "rounded-sm border border-rule bg-surface px-2 py-1.5 text-sm ";
@@ -11,7 +12,7 @@ const selectClass =
 // in the URL, so results are shareable, bookmarkable, and the back button
 // behaves. JS only upgrades it to apply on change — without JS the submit
 // button still works.
-export default function SearchControls({ tag, period }) {
+export default function SearchControls({ lang = "el", tag, period }) {
   const router = useRouter();
 
   const orgs = ENTITIES.filter((e) => e.kind === "org");
@@ -35,18 +36,18 @@ export default function SearchControls({ tag, period }) {
     >
       <label className="flex flex-col gap-1">
         <span className="font-mono text-[11px] uppercase tracking-widest text-muted">
-          Subject
+          {t(lang, "search.subject")}
         </span>
         <select name="tag" defaultValue={tag || ""} onChange={apply} className={selectClass}>
-          <option value="">Everything</option>
-          <optgroup label="Organisations">
+          <option value="">{t(lang, "search.everything")}</option>
+          <optgroup label={t(lang, "search.orgs")}>
             {orgs.map((e) => (
               <option key={e.id} value={e.id}>
                 {e.label}
               </option>
             ))}
           </optgroup>
-          <optgroup label="Themes">
+          <optgroup label={t(lang, "search.themes")}>
             {themes.map((e) => (
               <option key={e.id} value={e.id}>
                 {e.label}
@@ -58,12 +59,12 @@ export default function SearchControls({ tag, period }) {
 
       <label className="flex flex-col gap-1">
         <span className="font-mono text-[11px] uppercase tracking-widest text-muted">
-          Period
+          {t(lang, "search.period")}
         </span>
         <select name="period" defaultValue={period} onChange={apply} className={selectClass}>
-          {Object.entries(PERIODS).map(([value, { label }]) => (
+          {Object.keys(PERIODS).map((value) => (
             <option key={value} value={value}>
-              {label}
+              {t(lang, `period.${value}`)}
             </option>
           ))}
         </select>
@@ -73,7 +74,7 @@ export default function SearchControls({ tag, period }) {
         type="submit"
         className="rounded-sm border border-rule px-3 py-1.5 text-sm font-medium hover:border-band"
       >
-        Apply
+        {t(lang, "search.apply")}
       </button>
 
       {tag && (
@@ -81,7 +82,7 @@ export default function SearchControls({ tag, period }) {
           href="/search"
           className="pb-1.5 text-sm text-muted underline hover:text-ink"
         >
-          Clear
+          {t(lang, "search.clear")}
         </a>
       )}
     </form>
