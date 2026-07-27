@@ -57,11 +57,12 @@ the 49% is not a footnote — it changes the reading in both directions.
   by the largest supplier those rules apply to. A ΔΕΔΔΗΕ announcement about
   tariffs, reconciliation or retroactive charges is never a neutral
   technical matter.
-- But ΔΕΗ does not have it to itself. An infrastructure fund holding 49%
-  and four board seats has its own view on regulated revenue, and that view
-  is about the return on a network asset rather than about retail market
-  share. Anything that caps a regulated revenue stream lands on that
-  investor as well as on ΔΕΗ.
+- The 49% is a fact worth stating and an inference worth resisting. It is
+  tempting to read Macquarie as a counterweight with divergent interests.
+  **The publisher, who works in this market, has never seen or heard of
+  Macquarie interfering in ΔΕΗ's conduct of ΔΕΔΔΗΕ**, and rates ΔΕΗ as the
+  clearly dominant party. State the shareholding; do not build an argument
+  on what the minority holder supposedly wants.
 
 **Note.** deddie.gr returns 403 to cloud IP ranges, like energypress.gr and
 Ecopress. It cannot be fetched from this environment; use public reporting
@@ -112,9 +113,37 @@ same physical asset serves both. Consequences that follow directly:
 - Aerial deployment on distribution poles means ΔΕΔΔΗΕ's asset base is the
   physical substrate of a competing telecom network. Access terms to those
   poles are a competition question, not just an engineering one.
-- ΔΕΗ is therefore a competitor to ΟΤΕ/Cosmote, Vodafone and Nova in a
-  market it entered from the energy side. Stories about those operators'
-  infrastructure may have a ΔΕΗ dimension that goes unnamed.
+- ΔΕΗ entered telecom from the energy side, so stories about the other
+  operators' infrastructure may have a ΔΕΗ dimension that goes unnamed.
+  **But do not call it a competitor** — see the Fiber2All entry below.
+
+### ΔΕΗ FiberGrid + Fiber2All — a 50-50 wholesale JV, at term-sheet stage
+
+**What.** ΔΕΗ and Vodafone Ελλάδας have signed a **non-binding term sheet**
+to merge **ΔΕΗ FiberGrid** (100% ΔΕΗ) and **Fiber2All** (100% Vodafone
+Ελλάδας) into a **50-50 joint venture** providing **wholesale-only** FTTH
+with declared market neutrality. Networks going in: FiberGrid at 1.88m
+homes passed, 1.1m ready to connect; Vodafone's at over 550,000. Still to
+come: due diligence, binding agreements, regulatory approval.
+**Source.** publisher (that the tie-up exists and its commercial logic),
+public (the term sheet, the 50-50 structure, the wholesale-only scope and
+the network figures — joint ΔΕΗ/Vodafone announcement)
+**Edges.** `ΔΕΗ FiberGrid --proposed-jv:50-50--> Fiber2All` · `Vodafone Ελλάδας --owns:100%--> Fiber2All` · `proposed JV --sells--> wholesale FTTH only`
+**Why it matters.** This corrects an inference that was wrong and would have
+been published. ΔΕΗ FiberGrid is **not** simply competing with Vodafone —
+they are proposing to merge their fibre assets. Two consequences:
+
+- The commercial logic the publisher describes: FiberGrid has enormous
+  reach and few customers — an empty network — while Fiber2All has the
+  opposite problem. The deal solves both ends at once. That asymmetry is
+  the reason the JV makes sense and is worth stating in any piece about it.
+- ΔΕΗ FiberGrid is currently **both** wholesale and retail: ΔΕΗ sells
+  broadband to consumers over it. The proposed JV is wholesale-only and
+  neutral, so the structure is mixed today and would not be afterwards.
+  Never describe ΔΕΗ's fibre position in one word.
+
+**To watch.** Term sheet is non-binding. Until binding agreements and
+regulatory approval, write "proposed" and nothing stronger.
 
 ### ΡΑΑΕΥ / RAAEY
 
@@ -132,9 +161,37 @@ not deciding.
 
 ## Telecom
 
-*Thin. The site's telecom sourcing is thin too, which compounds. Anything
-the publisher can add here has outsized value — particularly ownership of
-the fibre wholesale layer and who has access to whose ducts and poles.*
+### The fibercos
+
+**What.** The Greek FTTH wholesale layer is consolidating into operator-
+backed vehicles. **Fiber2All** is Vodafone Ελλάδας'. **UnitedFiber** is
+Nova's. **ΔΕΗ FiberGrid** is ΔΕΗ's, and is the one strung on the
+electricity distribution network.
+**Source.** publisher
+**Edges.** `Vodafone Ελλάδας --owns--> Fiber2All` · `Nova --owns--> UnitedFiber` · `ΔΕΗ --owns--> ΔΕΗ FiberGrid`
+**Why it matters.** "Fibre in Greece" is not one market. There is a
+wholesale layer and a retail layer, and the same groups sit on both — which
+is why a fibre story needs the layer named before anything else in it can
+be read correctly.
+
+### ΟΤΕ and UnitedFiber — RUMOUR, NOT FOR PUBLICATION
+
+**What.** Market talk that **ΟΤΕ will reach an agreement with UnitedFiber**
+similar to the ΔΕΗ FiberGrid / Fiber2All tie-up.
+**Source.** **rumour** — the publisher reports it as market talk, with no
+confirmation and no announcement.
+**Edges.** *(none recorded — an edge here would put an unconfirmed relation
+into the map as though it were established)*
+**Why it matters.** As a signal, it says the whole wholesale layer may be
+consolidating into two or three neutral platforms rather than four
+operator-owned ones, and that is worth watching for.
+
+**Handling.** This does not go on the site, in any form, until it is
+announced or independently confirmed — not as a hedge, not as "reportedly",
+not as "sources suggest". It concerns a listed company and a possible
+transaction, an unsourced claim about it is market-sensitive, and the site
+has a named individual as publisher with no newsroom and no lawyer behind
+it. Use it to decide what to watch for. Nothing else.
 
 ---
 

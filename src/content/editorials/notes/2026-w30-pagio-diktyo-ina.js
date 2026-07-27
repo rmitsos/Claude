@@ -5,13 +5,19 @@
 //
 // The connection this piece turns on comes from the publisher, not from the
 // articles: ΔΕΗ controls ΔΕΔΔΗΕ, and ΔΕΗ FiberGrid's network is strung on the
-// distribution grid. The 51/49 split with Macquarie and the board composition
-// are public record and are stated because they cut both ways — the same fact
-// that makes ΔΕΔΔΗΕ's proposals non-neutral also puts an infrastructure
-// investor on the receiving end of any cap. See
-// .claude/skills/greek-market/relations.md. Structure is stated plainly, the
-// implication is shown with its premise, and the forward look is left as a
-// question rather than an imputed motive.
+// distribution grid. See .claude/skills/greek-market/relations.md.
+//
+// Two things were cut in review, both on the publisher's judgement. Macquarie's
+// 49% of ΔΕΔΔΗΕ is public record but was carrying an inference — that a minority
+// infrastructure holder pulls against ΔΕΗ — which the publisher has never seen
+// in this market. And the fibre paragraph called ΔΕΗ a competitor to Vodafone
+// while the two were signing a term sheet to merge their fibre companies. The
+// fix for the second was not to soften the claim but to replace it with the
+// announced fact, which says more.
+//
+// Not here and not going here: market talk that ΟΤΕ will do something similar
+// with UnitedFiber. Unconfirmed, about a listed company, and recorded in
+// relations.md as rumour only.
 
 function A({ href, children }) {
   return (
@@ -64,18 +70,14 @@ const el = {
 
         <p>
           Εδώ χρειάζεται μια διευκρίνιση που δεν υπάρχει σε καμία από τις
-          ειδήσεις. Ο ΔΕΔΔΗΕ ελέγχεται από τη ΔΕΗ, που κρατά το 51%· το υπόλοιπο
-          49% ανήκει από το 2022 στη Macquarie Asset Management, με τέσσερις από
-          τις έντεκα θέσεις του διοικητικού συμβουλίου. Ο διαχειριστής δηλαδή
-          που προτείνει πώς θα διορθωθούν οι αναδρομικές χρεώσεις ελέγχεται από
-          τον μεγαλύτερο προμηθευτή στον οποίο αυτές οι χρεώσεις καταλήγουν —
-          και ταυτόχρονα έχει μέτοχο ένα διεθνές fund υποδομών, που κοιτάζει την
-          απόδοση ενός δικτύου και όχι μερίδια λιανικής. Δεν είναι κατηγορία·
-          είναι η δομή της αγοράς, και αλλάζει το πώς διαβάζεται μια ανακοίνωση
-          που αλλιώς μοιάζει καθαρά τεχνική. Το πλαφόν, αντίθετα, δεν το
-          αποφασίζει ούτε η ΔΕΗ ούτε το υπουργείο: το ζυγίζει η ΡΑΑΕΥ, που είναι
-          ανεξάρτητη αρχή. Ο υπουργός περιέγραψε μια συζήτηση, δεν ανακοίνωσε
-          απόφαση.
+          ειδήσεις: ο ΔΕΔΔΗΕ ανήκει κατά 51% στη ΔΕΗ. Ο διαχειριστής δηλαδή που
+          προτείνει πώς θα διορθωθούν οι αναδρομικές χρεώσεις ελέγχεται από τον
+          μεγαλύτερο προμηθευτή στον οποίο αυτές οι χρεώσεις καταλήγουν. Δεν
+          είναι κατηγορία· είναι η δομή της αγοράς, και αλλάζει το πώς
+          διαβάζεται μια ανακοίνωση που αλλιώς μοιάζει καθαρά τεχνική. Το
+          πλαφόν, αντίθετα, δεν το αποφασίζει ούτε η ΔΕΗ ούτε το υπουργείο: το
+          ζυγίζει η ΡΑΑΕΥ, που είναι ανεξάρτητη αρχή. Ο υπουργός περιέγραψε μια
+          συζήτηση, δεν ανακοίνωσε απόφαση.
         </p>
 
         <p>
@@ -89,21 +91,27 @@ const el = {
         <p>
           Το τρίτο κομμάτι δεν το φιλοξενεί καμία ενεργειακή στήλη. Πάνω στο ίδιο
           δίκτυο διανομής — εναέρια, στους ίδιους στύλους του ΔΕΔΔΗΕ — η ΔΕΗ
-          FiberGrid απλώνει οπτικές ίνες μέχρι το σπίτι. Το δίκτυο που συζητείται
-          ως ηλεκτρολογικό περιουσιακό στοιχείο είναι ταυτόχρονα
-          τηλεπικοινωνιακή υποδομή, ανταγωνιστική σε εκείνες που χτίζουν ο ΟΤΕ,
-          η Vodafone και η Nova. Αυτό δεν το λέει κανένα από τα τέσσερα
-          δημοσιεύματα, επειδή τρία από αυτά είναι ενεργειακά και το τέταρτο
-          είναι χρηματοοικονομικό.
+          FiberGrid απλώνει οπτικές ίνες μέχρι το σπίτι. Το δίκτυο που
+          συζητείται ως ηλεκτρολογικό περιουσιακό στοιχείο είναι ταυτόχρονα
+          τηλεπικοινωνιακή υποδομή. Και δεν είναι μικρή: η ΔΕΗ και η Vodafone
+          Ελλάδας{" "}
+          <A href="https://www.vodafone.gr/digital-press-office/deltia-typou/fiber2all-deifiber">
+            υπέγραψαν μη δεσμευτικό term sheet
+          </A>{" "}
+          για τη συγχώνευση της ΔΕΗ FiberGrid με τη Fiber2All σε κοινή εταιρεία
+          50-50, που θα παρέχει αποκλειστικά χονδρική FTTH. Αυτό δεν το λέει
+          κανένα από τα τέσσερα δημοσιεύματα, επειδή τρία από αυτά είναι
+          ενεργειακά και το τέταρτο είναι χρηματοοικονομικό.
         </p>
 
         <p>
           Δεν προδικάζουμε πού θα καταλήξει το πλαφόν ούτε ποιον θα ευνοήσει.
-          Αλλά η ερώτηση που προκύπτει από τη δομή αξίζει να τεθεί ρητά: αν
-          περιοριστεί ένα ρυθμιζόμενο έσοδο που χρηματοδοτεί επενδύσεις σε ένα
-          δίκτυο το οποίο εξυπηρετεί δύο αγορές, η επίπτωση δεν σταματά στο
-          ρεύμα. Είναι μια απόφαση για το ρεύμα που αγγίζει, σε δεύτερο χρόνο,
-          τον ρυθμό ανάπτυξης των ινών.
+          Αλλά η ερώτηση που προκύπτει από τη δομή αξίζει να τεθεί ρητά: ένα
+          ρυθμιζόμενο έσοδο που χρηματοδοτεί επενδύσεις σε ένα δίκτυο το οποίο
+          εξυπηρετεί δύο αγορές δεν είναι ζήτημα μόνο του ρεύματος. Και αν η
+          κοινή εταιρεία χονδρικής προχωρήσει, οι στύλοι του ΔΕΔΔΗΕ δεν θα
+          κρατούν πια την υποδομή μιας εταιρείας αλλά μιας πλατφόρμας που θα
+          εξυπηρετεί όλη την αγορά.
         </p>
 
         <p>
@@ -162,17 +170,14 @@ const en = {
         </p>
 
         <p>
-          That needs one piece of context none of the four supplies. ΔΕΔΔΗΕ is
-          controlled by ΔΕΗ, which holds 51%; the other 49% has belonged since
-          2022 to Macquarie Asset Management, with four of eleven board seats.
-          So the operator proposing how retroactive charges should be fixed is
-          controlled by the largest supplier those charges flow through — and
-          also answers to an international infrastructure fund whose interest is
-          the return on a network, not retail share. This is not an accusation;
-          it is the shape of the market, and it changes how an otherwise purely
-          technical announcement reads. The cap is different: neither ΔΕΗ nor the
-          ministry decides it. ΡΑΑΕΥ does, and ΡΑΑΕΥ is an independent authority.
-          The minister described a discussion; he did not announce a decision.
+          That needs one piece of context none of the four supplies: ΔΕΔΔΗΕ is
+          51% owned by ΔΕΗ. So the operator proposing how retroactive charges
+          should be fixed is controlled by the largest supplier those charges
+          flow through. This is not an accusation; it is the shape of the
+          market, and it changes how an otherwise purely technical announcement
+          reads. The cap is different: neither ΔΕΗ nor the ministry decides it.
+          ΡΑΑΕΥ does, and ΡΑΑΕΥ is an independent authority. The minister
+          described a discussion; he did not announce a decision.
         </p>
 
         <p>
@@ -187,19 +192,24 @@ const en = {
           The third piece appears in no energy column at all. Strung along that
           same distribution network — overhead, on ΔΕΔΔΗΕ&rsquo;s own poles — ΔΕΗ
           FiberGrid runs fibre to the home. The network being discussed as an
-          electricity asset is simultaneously telecom infrastructure, competing
-          with what ΟΤΕ, Vodafone and Nova are building. None of the four reports
-          says so, because three of them are energy stories and the fourth is a
-          financial one.
+          electricity asset is simultaneously telecom infrastructure. And not a
+          small one: ΔΕΗ and Vodafone Ελλάδας have{" "}
+          <A href="https://www.vodafone.gr/digital-press-office/deltia-typou/fiber2all-deifiber">
+            signed a non-binding term sheet
+          </A>{" "}
+          to merge ΔΕΗ FiberGrid with Fiber2All into a 50-50 company supplying
+          wholesale FTTH only. None of the four reports says so, because three
+          of them are energy stories and the fourth is a financial one.
         </p>
 
         <p>
           We are not predicting where the cap lands or whom it favours. But the
-          question the structure raises is worth putting plainly: if you
-          constrain a regulated revenue that funds investment in a network
-          serving two markets, the effect does not stop at electricity. It is a
-          decision about power that reaches, at one remove, the pace of the
-          fibre rollout.
+          question the structure raises is worth putting plainly: a regulated
+          revenue that funds investment in a network serving two markets is not
+          only an electricity matter. And if the wholesale joint venture goes
+          ahead, ΔΕΔΔΗΕ&rsquo;s poles will no longer be carrying one
+          company&rsquo;s infrastructure but a platform serving the whole
+          market.
         </p>
 
         <p>
