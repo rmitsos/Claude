@@ -134,6 +134,61 @@ export async function getLeadStories(limit = 5) {
     .sort((a, b) => (b.pubDate?.getTime() || 0) - (a.pubDate?.getTime() || 0));
 }
 
+// --- Search ----------------------------------------------------------
+
+export const PERIODS = {
+  "7d": { label: "Last 7 days", interval: "7 days" },
+  "30d": { label: "Last 30 days", interval: "30 days" },
+  "3m": { label: "Last 3 months", interval: "3 months" },
+  "12m": { label: "Last 12 months", interval: "12 months" },
+  all: { label: "Everything", interval: null },
+};
+
+export const DEFAULT_PERIOD = "30d";
+
+export async function searchArticles({ tag = null, period = DEFAULT_PERIOD }) {
+  const interval = PERIODS[period]?.interval ?? PERIODS[DEFAULT_PERIOD].interval;
+
+  const rows = await safeQuery(`search ${tag ?? "any"}/${period}`, () => {
+    if (tag && interval) {
+      return sql`
+        SELECT * FROM articles
+        WHERE ${tag} = ANY(entities)
+          AND pub_date > now() - (${interval})::interval
+        ORDER BY pub_date DESC LIMIT 200
+      `;
+    }
+    if (tag) {
+      return sql`
+        SELECT * FROM articles WHERE ${tag} = ANY(entities)
+        ORDER BY pub_date DESC LIMIT 200
+      `;
+    }
+    if (interval) {
+      return sql`
+        SELECT * FROM articles
+        WHERE pub_date > now() - (${interval})::interval
+        ORDER BY pub_date DESC LIMIT 200
+      `;
+    }
+    return sql`SELECT * FROM articles ORDER BY pub_date DESC LIMIT 200`;
+  });
+
+  return rows.map(rowToItem);
+}
+
+// When collection actually began. Without this, "last 12 months: 6 results"
+// reads as a quiet year rather than a young archive — the results are
+// accurate and the impression is false.
+export async function getArchiveStart() {
+  const rows = await safeQuery("read archive start", () => sql`
+    SELECT min(first_seen) AS started, count(*) AS total FROM articles
+  `);
+  const row = rows[0];
+  if (!row?.started) return null;
+  return { started: new Date(row.started), total: Number(row.total) };
+}
+
 export async function getEntityItems(entityId, days = 30) {
   const rows = await safeQuery(`read entity ${entityId}`, () => sql`
     SELECT * FROM articles

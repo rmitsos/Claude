@@ -41,6 +41,10 @@ async function createSchema() {
   // to false and get their real value on the next ingest.
   await sql`ALTER TABLE articles ADD COLUMN IF NOT EXISTS technology BOOLEAN NOT NULL DEFAULT false`;
   await sql`ALTER TABLE articles ADD COLUMN IF NOT EXISTS entities TEXT[] NOT NULL DEFAULT '{}'`;
+  // Stored now so free-text search has something to match later — feeds
+  // only carry recent items, so a column added in six months would leave
+  // six months of articles permanently unsearchable.
+  await sql`ALTER TABLE articles ADD COLUMN IF NOT EXISTS summary TEXT`;
   await sql`CREATE INDEX IF NOT EXISTS articles_pub_date_idx ON articles (pub_date DESC)`;
   await sql`CREATE INDEX IF NOT EXISTS articles_categories_idx ON articles USING GIN (categories)`;
   await sql`CREATE INDEX IF NOT EXISTS articles_entities_idx ON articles USING GIN (entities)`;

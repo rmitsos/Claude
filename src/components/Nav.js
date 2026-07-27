@@ -42,6 +42,16 @@ export default function Nav({ active, activeSub }) {
               </Link>
             ))}
             <Link
+              href="/search"
+              className={
+                active === "search"
+                  ? "font-semibold text-gray-950 dark:text-white"
+                  : "text-gray-600 hover:text-gray-950 dark:text-gray-400 dark:hover:text-white"
+              }
+            >
+              Search
+            </Link>
+            <Link
               href="/weekly"
               className={
                 active === "weekly"

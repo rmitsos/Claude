@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import InfoBar from "@/components/InfoBar";
+import BackToTop from "@/components/BackToTop";
 import { scheduleRefreshIfStale } from "@/lib/refresh";
 
 const geistSans = Geist({
@@ -53,6 +54,7 @@ export default function RootLayout({ children }) {
             </nav>
           </div>
         </footer>
+        <BackToTop />
       </body>
     </html>
   );

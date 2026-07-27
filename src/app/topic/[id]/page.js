@@ -32,8 +32,12 @@ export default async function TopicPage({ params }) {
     <Shell heading={entity.label}>
       <p className="px-4 pb-3 text-sm text-gray-500 dark:text-gray-400">
         {items.length} {items.length === 1 ? "story" : "stories"} in the last 30 days ·{" "}
+        <Link href={`/search?tag=${id}&period=12m`} className="underline hover:no-underline">
+          change period
+        </Link>{" "}
+        ·{" "}
         <Link href="/weekly" className="underline hover:no-underline">
-          back to this week
+          this week
         </Link>
       </p>
       <WireList
