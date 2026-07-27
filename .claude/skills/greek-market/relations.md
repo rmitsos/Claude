@@ -76,7 +76,7 @@ high-voltage network, distinct from ΔΕΔΔΗΕ's distribution network.
 Interconnection, the vehicle for the Crete–Attica link, sold **20% to State
 Grid International Development** in November 2024.
 **Source.** public
-**Edges.** `State Grid Corporation of China --owns:24%--> ΑΔΜΗΕ` · `State Grid International Development --owns:20%--> Ariadne Interconnection` · `ΑΔΜΗΕ --owns--> Ariadne Interconnection` · `ΑΔΜΗΕ --operates--> electricity transmission network`
+**Edges.** `State Grid Corporation of China --owns:24%--> ΑΔΜΗΕ` · `State Grid International Development --owns:20%--> Ariadne Interconnection` · `ΑΔΜΗΕ --owns--> Ariadne Interconnection` · `ΑΔΜΗΕ --owns:100%--> Grid Telecom` · `ΑΔΜΗΕ --operates--> electricity transmission network`
 **To confirm.** The rest of the cap table — the listed holding company and
 the state's stake — and whether ΔΕΗ retains any interest post-unbundling.
 Do not state those in published text until confirmed.
@@ -223,14 +223,60 @@ not deciding.
 
 **What.** The Greek FTTH wholesale layer is consolidating into operator-
 backed vehicles. **Fiber2All** is Vodafone Ελλάδας'. **UnitedFiber** is
-Nova's. **ΔΕΗ FiberGrid** is ΔΕΗ's, and is the one strung on the
-electricity distribution network.
+Nova's. **ΔΕΗ FiberGrid** is ΔΕΗ's, strung on the electricity distribution
+network. Separately and at a different layer, **Grid Telecom** is ΑΔΜΗΕ's,
+on the transmission network.
 **Source.** publisher
-**Edges.** `Vodafone Ελλάδας --owns--> Fiber2All` · `Nova --owns--> UnitedFiber` · `ΔΕΗ --owns--> ΔΕΗ FiberGrid`
+**Edges.** `Vodafone Ελλάδας --owns--> Fiber2All` · `Nova --owns--> UnitedFiber` · `ΔΕΗ --owns--> ΔΕΗ FiberGrid` · `ΑΔΜΗΕ --owns--> Grid Telecom`
 **Why it matters.** "Fibre in Greece" is not one market. There is a
-wholesale layer and a retail layer, and the same groups sit on both — which
-is why a fibre story needs the layer named before anything else in it can
-be read correctly.
+wholesale layer and a retail layer, and a backbone layer beneath both, and
+the same groups sit on more than one — which is why a fibre story needs the
+layer named before anything else in it can be read correctly.
+
+**Two of the four fibercos are owned by electricity network operators.**
+That is the single most distinctive feature of this market and the reason
+GR Wire's Energy and Telco beats cannot be kept apart in analysis, whatever
+the navigation says.
+
+### Grid Telecom — ΑΔΜΗΕ's fibre arm, on the transmission network
+
+**What.** **Grid Telecom** is a **100% subsidiary of ΑΔΜΗΕ**, carrying fibre
+on the high-voltage transmission system: over **3,000 km** across mainland
+and islands, plus subsea routes. It sells **dark fibre wholesale** to
+telecom operators and describes itself as a leading wholesale carrier. It
+has an MoU with **ESO EAD**, Bulgaria's transmission operator, to
+commercialise the fibre running along the Greece–Bulgaria interconnectors,
+and a strategy to make **Crete an international data gateway between Europe
+and the Middle East**.
+**Source.** publisher (that ΑΔΜΗΕ owns a fibreco), public (name, ownership,
+scale, dark-fibre model, ESO EAD MoU, Crete strategy)
+**Edges.** `ΑΔΜΗΕ --owns:100%--> Grid Telecom` · `Grid Telecom --deploys-on--> electricity transmission network` · `Grid Telecom --sells--> dark fibre wholesale` · `Grid Telecom --mou-with--> ESO EAD` · `Grid Telecom --builds--> Crete international data gateway`
+**Why it matters.** There are **two** grid-borne fibre businesses in Greece,
+on two different electricity networks, under two different owners — and
+conflating them would be an obvious error to anyone in the market.
+
+| | ΔΕΗ FiberGrid | Grid Telecom |
+|---|---|---|
+| Electricity network | distribution (ΔΕΔΔΗΕ poles) | transmission (ΑΔΜΗΕ lines) |
+| Parent | ΔΕΗ | ΑΔΜΗΕ |
+| Layer | last mile, FTTH to the home | long-haul backbone, subsea, cross-border |
+| Sells | wholesale **and** retail today | dark fibre wholesale |
+
+They are **complementary layers, not competitors**. Backbone and last mile.
+A piece that treats "fibre on the electricity grid" as one thing is wrong
+about both.
+
+**The chain worth holding, and handling carefully.** State Grid Corporation
+of China holds 24% of ΑΔΜΗΕ; ΑΔΜΗΕ holds 100% of Grid Telecom; Grid Telecom
+is building the Crete data gateway and commercialising cross-border fibre
+with Bulgaria. Every link there is documented structure and may be stated.
+What may **not** be stated is any claim about intent, influence or strategy
+on anyone's part — that is exactly the motive-imputation the house rule
+forbids, and the subject makes it more sensitive rather than less.
+
+**Also.** This reopens the data centre thread that was set aside in week 30
+for having no Greek angle. Crete as a Europe–Middle East data gateway, with
+AI infrastructure demand as the backdrop, is that angle.
 
 ### ΟΤΕ and UnitedFiber — RUMOUR, NOT FOR PUBLICATION
 
