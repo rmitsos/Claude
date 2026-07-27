@@ -4,10 +4,14 @@
 // flattens first.
 //
 // The connection this piece turns on comes from the publisher, not from the
-// articles: ΔΕΗ owns ΔΕΔΔΗΕ, and ΔΕΗ's fibre network is strung on the
-// distribution grid. See .claude/skills/greek-market/relations.md. Structure
-// is stated plainly, the implication is shown with its premise, and the
-// forward look is left as a question rather than an imputed motive.
+// articles: ΔΕΗ controls ΔΕΔΔΗΕ, and ΔΕΗ FiberGrid's network is strung on the
+// distribution grid. The 51/49 split with Macquarie and the board composition
+// are public record and are stated because they cut both ways — the same fact
+// that makes ΔΕΔΔΗΕ's proposals non-neutral also puts an infrastructure
+// investor on the receiving end of any cap. See
+// .claude/skills/greek-market/relations.md. Structure is stated plainly, the
+// implication is shown with its premise, and the forward look is left as a
+// question rather than an imputed motive.
 
 function A({ href, children }) {
   return (
@@ -60,14 +64,18 @@ const el = {
 
         <p>
           Εδώ χρειάζεται μια διευκρίνιση που δεν υπάρχει σε καμία από τις
-          ειδήσεις. Ο ΔΕΔΔΗΕ ανήκει στη ΔΕΗ. Ο διαχειριστής δηλαδή που προτείνει
-          πώς θα διορθωθούν οι αναδρομικές χρεώσεις ελέγχεται από τον μεγαλύτερο
-          προμηθευτή στον οποίο αυτές οι χρεώσεις καταλήγουν. Δεν είναι
-          κατηγορία· είναι η δομή της αγοράς, και αλλάζει το πώς διαβάζεται μια
-          ανακοίνωση που αλλιώς μοιάζει καθαρά τεχνική. Το πλαφόν, αντίθετα,
-          δεν το αποφασίζει ούτε η ΔΕΗ ούτε το υπουργείο: το ζυγίζει η ΡΑΑΕΥ, που
-          είναι ανεξάρτητη αρχή. Ο υπουργός περιέγραψε μια συζήτηση, δεν
-          ανακοίνωσε απόφαση.
+          ειδήσεις. Ο ΔΕΔΔΗΕ ελέγχεται από τη ΔΕΗ, που κρατά το 51%· το υπόλοιπο
+          49% ανήκει από το 2022 στη Macquarie Asset Management, με τέσσερις από
+          τις έντεκα θέσεις του διοικητικού συμβουλίου. Ο διαχειριστής δηλαδή
+          που προτείνει πώς θα διορθωθούν οι αναδρομικές χρεώσεις ελέγχεται από
+          τον μεγαλύτερο προμηθευτή στον οποίο αυτές οι χρεώσεις καταλήγουν —
+          και ταυτόχρονα έχει μέτοχο ένα διεθνές fund υποδομών, που κοιτάζει την
+          απόδοση ενός δικτύου και όχι μερίδια λιανικής. Δεν είναι κατηγορία·
+          είναι η δομή της αγοράς, και αλλάζει το πώς διαβάζεται μια ανακοίνωση
+          που αλλιώς μοιάζει καθαρά τεχνική. Το πλαφόν, αντίθετα, δεν το
+          αποφασίζει ούτε η ΔΕΗ ούτε το υπουργείο: το ζυγίζει η ΡΑΑΕΥ, που είναι
+          ανεξάρτητη αρχή. Ο υπουργός περιέγραψε μια συζήτηση, δεν ανακοίνωσε
+          απόφαση.
         </p>
 
         <p>
@@ -80,12 +88,13 @@ const el = {
 
         <p>
           Το τρίτο κομμάτι δεν το φιλοξενεί καμία ενεργειακή στήλη. Πάνω στο ίδιο
-          δίκτυο διανομής — εναέρια, στους ίδιους στύλους — η ΔΕΗ αναπτύσσει
-          οπτικές ίνες. Το δίκτυο που συζητείται ως ηλεκτρολογικό περιουσιακό
-          στοιχείο είναι ταυτόχρονα τηλεπικοινωνιακή υποδομή, και ανταγωνιστική
-          σε εκείνες που χτίζουν ο ΟΤΕ, η Vodafone και η Nova. Αυτό δεν το λέει
-          κανένα από τα τέσσερα δημοσιεύματα, επειδή τρία από αυτά είναι
-          ενεργειακά και το τέταρτο είναι χρηματοοικονομικό.
+          δίκτυο διανομής — εναέρια, στους ίδιους στύλους του ΔΕΔΔΗΕ — η ΔΕΗ
+          FiberGrid απλώνει οπτικές ίνες μέχρι το σπίτι. Το δίκτυο που συζητείται
+          ως ηλεκτρολογικό περιουσιακό στοιχείο είναι ταυτόχρονα
+          τηλεπικοινωνιακή υποδομή, ανταγωνιστική σε εκείνες που χτίζουν ο ΟΤΕ,
+          η Vodafone και η Nova. Αυτό δεν το λέει κανένα από τα τέσσερα
+          δημοσιεύματα, επειδή τρία από αυτά είναι ενεργειακά και το τέταρτο
+          είναι χρηματοοικονομικό.
         </p>
 
         <p>
@@ -154,13 +163,16 @@ const en = {
 
         <p>
           That needs one piece of context none of the four supplies. ΔΕΔΔΗΕ is
-          owned by ΔΕΗ. The operator proposing how retroactive charges should be
-          fixed is controlled by the largest supplier those charges flow
-          through. This is not an accusation; it is the shape of the market, and
-          it changes how an otherwise purely technical announcement reads. The
-          cap is different: neither ΔΕΗ nor the ministry decides it. ΡΑΑΕΥ does,
-          and ΡΑΑΕΥ is an independent authority. The minister described a
-          discussion; he did not announce a decision.
+          controlled by ΔΕΗ, which holds 51%; the other 49% has belonged since
+          2022 to Macquarie Asset Management, with four of eleven board seats.
+          So the operator proposing how retroactive charges should be fixed is
+          controlled by the largest supplier those charges flow through — and
+          also answers to an international infrastructure fund whose interest is
+          the return on a network, not retail share. This is not an accusation;
+          it is the shape of the market, and it changes how an otherwise purely
+          technical announcement reads. The cap is different: neither ΔΕΗ nor the
+          ministry decides it. ΡΑΑΕΥ does, and ΡΑΑΕΥ is an independent authority.
+          The minister described a discussion; he did not announce a decision.
         </p>
 
         <p>
@@ -173,12 +185,12 @@ const en = {
 
         <p>
           The third piece appears in no energy column at all. Strung along that
-          same distribution network — overhead, on the same poles — ΔΕΗ is
-          building fibre. The network being discussed as an electricity asset is
-          simultaneously telecom infrastructure, competing with what ΟΤΕ,
-          Vodafone and Nova are building. None of the four reports says so,
-          because three of them are energy stories and the fourth is a financial
-          one.
+          same distribution network — overhead, on ΔΕΔΔΗΕ&rsquo;s own poles — ΔΕΗ
+          FiberGrid runs fibre to the home. The network being discussed as an
+          electricity asset is simultaneously telecom infrastructure, competing
+          with what ΟΤΕ, Vodafone and Nova are building. None of the four reports
+          says so, because three of them are energy stories and the fourth is a
+          financial one.
         </p>
 
         <p>

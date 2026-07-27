@@ -25,27 +25,66 @@ it explains why decisions that read as regulatory are also political, and
 why a story about ΔΕΗ's balance sheet is also a story about household
 bills.
 
-### ΔΕΗ owns ΔΕΔΔΗΕ
+### ΔΕΗ controls ΔΕΔΔΗΕ — 51%, with Macquarie at 49%
 
-**What.** ΔΕΔΔΗΕ / HEDNO, the operator responsible for the electricity
-**distribution** network, is owned by ΔΕΗ.
-**Source.** publisher
-**Open question.** Public record as we have it says the holding is a
-majority rather than the whole — 49% was sold to an infrastructure investor
-in 2021. Confirm with the publisher before any published text leans on the
-exact shareholding; the majority-control point stands either way.
-**Why it matters.** This is the single most load-bearing relation on the
-site so far. It means the operator that sets distribution and metering
-rules is controlled by the largest supplier those rules apply to. Any story
-about ΔΕΔΔΗΕ tariffs, meter reconciliation or retroactive charges is
-therefore also a story about ΔΕΗ's revenue, and should never be filed
-mentally as a neutral technical matter.
+**What.** ΔΕΔΔΗΕ / HEDNO is the sole electricity **distribution** network
+operator in Greece — roughly 7.6m customers over about 242,000 km of lines,
+interconnectors and substations. ΔΕΗ holds **51%**. **Macquarie Asset
+Management holds 49%**, bought through Spear WTE Investments (Macquarie
+Infrastructure and Real Assets) and completed in 2022: €1.32bn cash plus a
+pro-rata share of net debt, around €2.1bn enterprise value. The
+shareholders' agreement gives Macquarie **4 seats on an 11-member board**.
+**Source.** publisher (the control relation), public (the percentages, the
+transaction and the board split — PPC Group announcement, Macquarie
+announcement, contemporaneous Greek coverage)
+**Why it matters.** The most load-bearing relation on the site so far, and
+the 49% is not a footnote — it changes the reading in both directions.
+
+- The operator that proposes distribution and metering rules is controlled
+  by the largest supplier those rules apply to. A ΔΕΔΔΗΕ announcement about
+  tariffs, reconciliation or retroactive charges is never a neutral
+  technical matter.
+- But ΔΕΗ does not have it to itself. An infrastructure fund holding 49%
+  and four board seats has its own view on regulated revenue, and that view
+  is about the return on a network asset rather than about retail market
+  share. Anything that caps a regulated revenue stream lands on that
+  investor as well as on ΔΕΗ.
+
+**Note.** deddie.gr returns 403 to cloud IP ranges, like energypress.gr and
+Ecopress. It cannot be fetched from this environment; use public reporting
+or ask the publisher.
+
+### ΑΔΜΗΕ / IPTO
+
+**What.** The electricity **transmission** system operator — the
+high-voltage network, distinct from ΔΕΔΔΗΕ's distribution network.
+**State Grid Corporation of China holds 24%.** Its subsidiary Ariadne
+Interconnection, the vehicle for the Crete–Attica link, sold **20% to State
+Grid International Development** in November 2024.
+**Source.** public
+**To confirm.** The rest of the cap table — the listed holding company and
+the state's stake — and whether ΔΕΗ retains any interest post-unbundling.
+Do not state those in published text until confirmed.
+**Why it matters.** Transmission and distribution are routinely conflated
+in coverage and are different businesses with different owners. When ΑΔΜΗΕ
+and ΔΕΔΔΗΕ tender jointly — as on the Rouf super-high-voltage centre — that
+is two balance sheets, not one. And a Chinese state utility holding a
+quarter of the transmission operator makes grid decisions geopolitical in a
+way distribution decisions are not.
 
 ### ΔΕΗ operates telecom infrastructure through FiberGrid
 
-**What.** ΔΕΗ has a telecoms infrastructure business, FiberGrid, whose
-network is built **mostly aerially, on the existing electricity grid**.
-**Source.** publisher
+**What.** ΔΕΗ has a telecoms infrastructure subsidiary, ΔΕΗ FiberGrid,
+whose network is built **mostly aerially, on the existing electricity
+grid**. Public reporting describes a hybrid build: underground runs to the
+street cabinets, then aerial to the home over **ΔΕΔΔΗΕ's existing
+network** — and calls it the second-largest fibre network in Greece, with
+coverage targets running to 2028.
+**Source.** publisher (the relation and the aerial method), public (the
+hybrid description, the ranking and the targets)
+**Verify before publishing.** Homes-passed and target figures move quarterly
+and came here from search summaries rather than from primary sources. Use
+the structural claim freely; check any number against a filing first.
 **Why it matters.** This breaks the site's own category structure, and in a
 useful way. GR Wire files Telco and Energy as separate beats; in Greece the
 same physical asset serves both. Consequences that follow directly:
