@@ -12,7 +12,9 @@ import { getLang } from "@/lib/lang";
 import { t } from "@/lib/i18n";
 import Shell from "@/components/Shell";
 import Editorial from "@/components/Editorial";
-import { getLatestEditorial } from "@/content/editorials";
+import NoteList from "@/components/NoteList";
+import LeadPending from "@/components/LeadPending";
+import { getLatestWeek, getLatestLead, weekNotes } from "@/content/editorials";
 
 // Week-over-week figures need a full prior week to compare against. Before
 // that exists, every subject reads as surging simply because the database was
@@ -69,7 +71,14 @@ export default async function WeeklyPage() {
     getArchiveStart(),
   ]);
 
-  const latest = getLatestEditorial();
+  // The newest week, whatever state it is in. When its lead has not been
+  // written yet — notes can land days before it — the previous lead is still
+  // the standing argument, so the page points at it rather than opening with
+  // a gap where the week's piece should be.
+  const week = getLatestWeek();
+  const notes = weekNotes(week);
+  const standingLead = week?.lead ? null : getLatestLead();
+
   const archiveDays = archive ? (Date.now() - archive.started.getTime()) / 86400000 : 0;
   const canCompare = archiveDays >= COMPARISON_MIN_DAYS;
 
@@ -80,7 +89,18 @@ export default async function WeeklyPage() {
 
   return (
     <Shell lang={lang} active="weekly">
-      {latest && <Editorial meta={latest.meta} el={latest.el} en={latest.en} />}
+      {week?.lead && (
+        <Editorial meta={week.meta} el={week.lead.el} en={week.lead.en} />
+      )}
+      {standingLead && <LeadPending lang={lang} week={standingLead} />}
+
+      <NoteList
+        lang={lang}
+        week={week?.meta.week}
+        notes={notes}
+        heading={t(lang, "weekly.notes")}
+        note={t(lang, "weekly.notesNote")}
+      />
 
       <div className="flex flex-col gap-9 px-4 pb-10 pt-7">
         <div>

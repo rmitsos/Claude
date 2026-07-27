@@ -1,5 +1,5 @@
 import { ogCard, size, contentType } from "@/lib/og";
-import { getLatestEditorial } from "@/content/editorials";
+import { getLatestLead } from "@/content/editorials";
 
 // /weekly always shows the newest editorial, so its card does too. Rebuilt on
 // every deploy, which is also when a new editorial lands — the two move
@@ -9,7 +9,7 @@ export const alt = "GR Wire — εβδομαδιαίο σχόλιο";
 export { size, contentType };
 
 export default function Image() {
-  const latest = getLatestEditorial();
+  const latest = getLatestLead();
 
   // Before the first editorial exists there is nothing to name, and a card
   // promising commentary that isn't there is worse than a plain one.
@@ -23,8 +23,8 @@ export default function Image() {
 
   return ogCard({
     kicker: "Εβδομαδιαίο σχόλιο",
-    title: latest.el.title,
-    standfirst: latest.el.standfirst,
+    title: latest.lead.el.title,
+    standfirst: latest.lead.el.standfirst,
     footnote: latest.meta.weekOf.el,
   });
 }

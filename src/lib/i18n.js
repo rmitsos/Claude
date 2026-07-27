@@ -90,6 +90,14 @@ const STRINGS = {
     "weekly.storyMany": "ειδήσεις",
     "weekly.new": "νέο",
     "weekly.latestLink": "Η τελευταία εβδομάδα και τα νούμερά της",
+    "weekly.note": "Σημείωση",
+    "weekly.notes": "Σημειώσεις",
+    "weekly.notesNote":
+      "Σύντομα κείμενα σε ένα θέμα, όποτε υπάρχει κάτι να ειπωθεί.",
+    "weekly.noLead":
+      "Το θέμα της εβδομάδας δεν έχει γραφτεί ακόμη.",
+    "weekly.readPrevious": "Διαβάστε το προηγούμενο",
+    "weekly.backToWeek": "Όλη η εβδομάδα",
 
     // topic
     "topic.count": "{n} {noun} τις τελευταίες 30 ημέρες",
@@ -195,6 +203,12 @@ const STRINGS = {
     "weekly.storyMany": "stories",
     "weekly.new": "new",
     "weekly.latestLink": "Latest week and the numbers behind it",
+    "weekly.note": "Note",
+    "weekly.notes": "Notes",
+    "weekly.notesNote": "Short pieces on a single thread, whenever there is one.",
+    "weekly.noLead": "This week's lead piece hasn't been written yet.",
+    "weekly.readPrevious": "Read the previous one",
+    "weekly.backToWeek": "The whole week",
 
     "topic.count": "{n} {noun} in the last 30 days",
     "topic.changePeriod": "change period",

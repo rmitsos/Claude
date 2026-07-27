@@ -2,8 +2,18 @@ import EditorialLangSwitch from "./EditorialLangSwitch";
 import { DEFAULT_EDITORIAL_LANG } from "@/content/editorials";
 
 const BYLINE = {
-  el: { by: "Από", written: "Δικό μας κείμενο, όχι αναδημοσίευση", week: "Αυτή την εβδομάδα" },
-  en: { by: "By", written: "Written by us, not aggregated", week: "This week" },
+  el: {
+    by: "Από",
+    written: "Δικό μας κείμενο, όχι αναδημοσίευση",
+    week: "Αυτή την εβδομάδα",
+    note: "Σημείωση",
+  },
+  en: {
+    by: "By",
+    written: "Written by us, not aggregated",
+    week: "This week",
+    note: "Note",
+  },
 };
 
 function formatDate(iso, lang) {
@@ -19,15 +29,18 @@ function formatDate(iso, lang) {
 // byline. This is the one place GR Wire writes in its own voice, so it sits on
 // its own surface and says so explicitly — a reader should never be unsure
 // whether they are reading us or a publisher we link to.
-function Version({ lang, meta, version, headingLevel }) {
+function Version({ lang, meta, version, headingLevel, variant, published }) {
   const Heading = headingLevel;
   const t = BYLINE[lang];
 
   return (
     <article lang={lang} className="px-4 pb-7 pt-3">
       <div className="mx-auto max-w-[68ch]">
+        {/* A note carries its own label because it arrives mid-week and is a
+            shorter piece on one thread; without the distinction a reader who
+            clicked expecting the week's argument would think it had shrunk. */}
         <div className="font-mono text-[11px] uppercase tracking-widest text-band">
-          {t.week} · {meta.weekOf[lang]}
+          {variant === "note" ? t.note : t.week} · {meta.weekOf[lang]}
         </div>
 
         <Heading className="mt-2 font-serif text-2xl font-bold leading-tight tracking-tight text-ink sm:text-3xl">
@@ -41,7 +54,7 @@ function Version({ lang, meta, version, headingLevel }) {
         )}
 
         <div className="mt-3 border-y border-rule py-1.5 font-mono text-[11px] text-muted">
-          {t.by} {meta.author} · {formatDate(meta.published, lang)} ·{" "}
+          {t.by} {meta.author} · {formatDate(published || meta.published, lang)} ·{" "}
           <span className="text-ink-2">{t.written}</span>
         </div>
 
@@ -53,12 +66,20 @@ function Version({ lang, meta, version, headingLevel }) {
   );
 }
 
-export default function Editorial({ meta, el, en, headingLevel = "h1" }) {
+export default function Editorial({
+  meta,
+  el,
+  en,
+  headingLevel = "h1",
+  variant = "lead",
+  published,
+}) {
+  const shared = { meta, headingLevel, variant, published };
   return (
     <EditorialLangSwitch
       defaultLang={DEFAULT_EDITORIAL_LANG}
-      el={<Version lang="el" meta={meta} version={el} headingLevel={headingLevel} />}
-      en={<Version lang="en" meta={meta} version={en} headingLevel={headingLevel} />}
+      el={<Version lang="el" version={el} {...shared} />}
+      en={<Version lang="en" version={en} {...shared} />}
     />
   );
 }

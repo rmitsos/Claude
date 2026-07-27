@@ -6,7 +6,7 @@
 // Greek is the default: the readership is the Greek market.
 
 export const meta = {
-  slug: "2026-w30",
+  week: "2026-w30",
   published: "2026-07-27T12:00:00+03:00",
   weekOf: { el: "21–27 Ιουλίου 2026", en: "21–27 July 2026" },
   author: "GR Wire",

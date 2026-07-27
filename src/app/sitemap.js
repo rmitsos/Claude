@@ -1,7 +1,7 @@
 import { SITE } from "@/lib/site";
 import { CATEGORIES, SUBCATEGORIES, SUBCATEGORIZED } from "@/lib/feeds";
 import { ENTITIES } from "@/lib/entities";
-import { EDITORIALS } from "@/content/editorials";
+import { allPieces } from "@/content/editorials";
 
 const baseUrl = SITE.domain ? `https://${SITE.domain}` : "http://localhost:3000";
 
@@ -41,14 +41,16 @@ export default function sitemap() {
     });
   }
 
-  // Editorials carry their real publication date; everything else is a live
-  // view whose "last modified" is simply now.
-  for (const editorial of EDITORIALS) {
+  // Written pieces carry their real publication date; everything else is a
+  // live view whose "last modified" is simply now. A week's page keeps
+  // changing while notes are still being filed against it, so it is not
+  // "never" the way an individual note is.
+  for (const piece of allPieces()) {
     entries.push({
-      url: `/weekly/${editorial.meta.slug}`,
-      lastModified: new Date(editorial.meta.published),
-      changeFrequency: "never",
-      priority: 0.7,
+      url: piece.href,
+      lastModified: new Date(piece.published),
+      changeFrequency: piece.kind === "lead" ? "weekly" : "never",
+      priority: piece.kind === "lead" ? 0.7 : 0.6,
     });
   }
 
