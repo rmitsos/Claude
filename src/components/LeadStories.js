@@ -9,10 +9,10 @@ const timeFmt = new Intl.DateTimeFormat("en-GB", {
 
 function Meta({ item }) {
   return (
-    <span className="mt-1 block font-mono text-[11px] text-gray-400 dark:text-gray-500">
+    <span className="mt-1 block font-mono text-[11px] text-muted">
       {item.source}
       {item.pubDate && ` · ${timeFmt.format(item.pubDate)}`}
-      {item.technology && <span className="ml-1.5 text-violet-600 dark:text-violet-400">Tech</span>}
+      {item.technology && <span className="ml-1.5 text-tech">Tech</span>}
     </span>
   );
 }
@@ -24,8 +24,8 @@ export default async function LeadStories() {
   const [hero, ...rest] = stories;
 
   return (
-    <section className="border-b border-gray-200 px-4 pb-5 pt-5 dark:border-gray-800">
-      <h2 className="mb-3 font-mono text-[11px] uppercase tracking-widest text-gray-500 dark:text-gray-400">
+    <section className="border-b border-rule px-4 pb-5 pt-5">
+      <h2 className="mb-3 font-mono text-[11px] uppercase tracking-widest text-muted">
         Leading stories
       </h2>
 

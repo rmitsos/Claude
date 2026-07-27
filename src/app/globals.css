@@ -1,26 +1,78 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* The reader's choice wins over their OS setting, so `dark:` is switched from
+   prefers-color-scheme to an explicit attribute. In practice components rarely
+   need the variant at all — the tokens below flip themselves — but keeping it
+   correct avoids a trap for anything added later. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-ground: var(--ground);
+  --color-surface: var(--surface);
+  --color-tint: var(--tint);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-muted: var(--muted);
+  --color-rule: var(--rule);
+  --color-hover: var(--hover);
+  --color-fin: var(--fin);
+  --color-tel: var(--tel);
+  --color-enr: var(--enr);
+  --color-tech: var(--tech);
+  --color-band: var(--band);
+  --color-band-ink: var(--band-ink);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Terminal — the default. Unset visitors get this, which is why it lives on
+   :root rather than behind an attribute: nothing has to run before the first
+   paint for the default to be correct. */
+:root,
+:root[data-theme="dark"] {
+  --ground: #0c1015;
+  --surface: #131a22;
+  --tint: #17202b;
+  --ink: #e7ebf0;
+  --ink-2: #a8b2bd;
+  --muted: #6f7b88;
+  --rule: #1f2730;
+  --hover: rgba(255, 255, 255, 0.035);
+  --fin: #4fb098;
+  --tel: #6e9be0;
+  --enr: #d2954b;
+  --tech: #a37fc2;
+  --band: #c9873c;
+  --band-ink: #140d04;
+  color-scheme: dark;
+}
+
+/* Paper — for readers who ask for it. */
+:root[data-theme="light"] {
+  --ground: #faf9f6;
+  --surface: #ffffff;
+  --tint: #f3efe7;
+  --ink: #14171a;
+  --ink-2: #4a5158;
+  --muted: #838a90;
+  --rule: #e6e3dd;
+  --hover: rgba(0, 0, 0, 0.025);
+  --fin: #146b57;
+  --tel: #2c5c93;
+  --enr: #a85d1b;
+  --tech: #6b4e8f;
+  --band: #a85d1b;
+  --band-ink: #fff6ec;
+  color-scheme: light;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--ground);
+  color: var(--ink);
+}
+
+/* Sustained reading on a dark ground is the real cost of Terminal, so
+   long-form text gets looser leading and a slightly softened ink. */
+.longform {
+  line-height: 1.72;
 }

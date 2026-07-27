@@ -1,9 +1,9 @@
 import { CATEGORIES } from "@/lib/feeds";
 
 const CATEGORY_STYLE = {
-  finance: "text-emerald-700 dark:text-emerald-400",
-  telco: "text-blue-700 dark:text-blue-400",
-  energy: "text-amber-700 dark:text-amber-500",
+  finance: "text-fin",
+  telco: "text-tel",
+  energy: "text-enr",
 };
 
 const SHORT_LABEL = {
@@ -47,16 +47,16 @@ function Row({ item, showCategory }) {
   const category = Object.keys(CATEGORIES).find((c) => item.categories?.includes(c));
 
   return (
-    <li className="grid grid-cols-[3.25rem_1fr] gap-x-3 border-b border-gray-100 px-4 py-2.5 last:border-b-0 hover:bg-gray-50 sm:grid-cols-[3.25rem_5.5rem_1fr] dark:border-gray-800/70 dark:hover:bg-gray-900/50">
-      <time className="pt-0.5 font-mono text-xs tabular-nums text-gray-400 dark:text-gray-500">
+    <li className="grid grid-cols-[3.25rem_1fr] gap-x-3 border-b border-rule/60 px-4 py-2.5 last:border-b-0 hover:bg-hover sm:grid-cols-[3.25rem_5.5rem_1fr]">
+      <time className="pt-0.5 font-mono text-xs tabular-nums text-muted">
         {timeFmt.format(item.pubDate)}
       </time>
 
       {showCategory ? (
         <span
           className={`hidden pt-0.5 font-mono text-[11px] uppercase tracking-wider sm:block ${
-            CATEGORY_STYLE[category] || "text-gray-400"
-          }`}
+ CATEGORY_STYLE[category] || "text-muted"
+ }`}
         >
           {SHORT_LABEL[category] || ""}
         </span>
@@ -69,16 +69,16 @@ function Row({ item, showCategory }) {
           href={item.link}
           target="_blank"
           rel="noopener noreferrer"
-          className="font-serif text-[0.95rem] leading-snug text-gray-900 hover:underline dark:text-gray-100"
+          className="font-serif text-[0.95rem] leading-snug text-ink hover:underline"
         >
           {item.title}
         </a>
         {item.technology && (
-          <span className="ml-1.5 inline-block rounded-sm border border-violet-500/60 px-1 align-[1px] font-mono text-[10px] uppercase tracking-wide text-violet-700 dark:text-violet-400">
+          <span className="ml-1.5 inline-block rounded-sm border border-tech/60 px-1 align-[1px] font-mono text-[10px] uppercase tracking-wide text-tech">
             Tech
           </span>
         )}
-        <span className="ml-1.5 font-mono text-[11px] text-gray-400 dark:text-gray-500">
+        <span className="ml-1.5 font-mono text-[11px] text-muted">
           {item.source}
         </span>
       </div>
@@ -89,7 +89,7 @@ function Row({ item, showCategory }) {
 export default function WireList({ items, showCategory = true, emptyMessage }) {
   if (!items || items.length === 0) {
     return (
-      <p className="border border-dashed border-gray-300 px-4 py-10 text-center text-sm text-gray-500 dark:border-gray-700 dark:text-gray-400">
+      <p className="border border-dashed border-rule px-4 py-10 text-center text-sm text-muted">
         {emptyMessage || "Nothing here yet."}
       </p>
     );
@@ -99,9 +99,9 @@ export default function WireList({ items, showCategory = true, emptyMessage }) {
     <div>
       {groupByDay(items).map((group) => (
         <section key={group.key}>
-          <h2 className="sticky top-0 z-[5] flex items-center gap-3 border-b border-gray-100 bg-gray-50/95 px-4 py-1.5 font-mono text-[11px] uppercase tracking-widest text-gray-500 backdrop-blur-sm dark:border-gray-800/70 dark:bg-gray-950/95 dark:text-gray-400">
+          <h2 className="sticky top-0 z-[5] flex items-center gap-3 border-b border-rule/60 bg-ground/95 px-4 py-1.5 font-mono text-[11px] uppercase tracking-widest text-muted backdrop-blur-sm">
             {group.label}
-            <span className="h-px flex-1 bg-gray-200 dark:bg-gray-800" />
+            <span className="h-px flex-1 bg-rule" />
           </h2>
           <ul>
             {group.items.map((item, i) => (

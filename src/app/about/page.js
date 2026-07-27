@@ -117,7 +117,7 @@ export default function AboutPage() {
           )}
         </p>
 
-        <p className="border-t border-gray-200 pt-5 text-sm text-gray-500 dark:border-gray-800 dark:text-gray-400">
+        <p className="border-t border-rule pt-5 text-sm text-muted">
           See also <Link href="/privacy" className="underline">privacy</Link> and{" "}
           <Link href="/terms" className="underline">terms</Link>.
         </p>

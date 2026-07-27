@@ -40,19 +40,19 @@ export default async function SearchPage({ searchParams }) {
         <SearchControls tag={tag} period={period} />
 
         <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1 pb-1 pt-4">
-          <p className="text-sm text-gray-700 dark:text-gray-300">
+          <p className="text-sm text-ink-2">
             <strong className="font-semibold">{items.length}</strong>{" "}
             {items.length === 1 ? "story" : "stories"} · {subject} · {periodLabel}
           </p>
           {archive && (
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="text-sm text-muted">
               GR Wire has been collecting since {dateFmt.format(archive.started)}.
             </p>
           )}
         </div>
 
         {items.length === 0 && (
-          <p className="mt-4 border border-dashed border-gray-300 px-4 py-10 text-center text-sm text-gray-500 dark:border-gray-700 dark:text-gray-400">
+          <p className="mt-4 border border-dashed border-rule px-4 py-10 text-center text-sm text-muted">
             Nothing matches {subject.toLowerCase()} in this period.
             {period !== "all" && " Try a longer period."}
           </p>

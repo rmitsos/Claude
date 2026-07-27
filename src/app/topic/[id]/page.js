@@ -30,7 +30,7 @@ export default async function TopicPage({ params }) {
 
   return (
     <Shell heading={entity.label}>
-      <p className="px-4 pb-3 text-sm text-gray-500 dark:text-gray-400">
+      <p className="px-4 pb-3 text-sm text-muted">
         {items.length} {items.length === 1 ? "story" : "stories"} in the last 30 days ·{" "}
         <Link href={`/search?tag=${id}&period=12m`} className="underline hover:no-underline">
           change period

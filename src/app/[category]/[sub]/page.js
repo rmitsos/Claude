@@ -36,7 +36,7 @@ export default async function SubcategoryPage({ params }) {
 
   return (
     <Shell active={category} activeSub={sub} heading={`${label} · ${subLabel}`}>
-      <p className="px-4 pb-3 text-sm text-gray-500 dark:text-gray-400">
+      <p className="px-4 pb-3 text-sm text-muted">
         {sub === "technology"
           ? "Installations, equipment and engineering projects."
           : "Markets, policy and corporate news."}

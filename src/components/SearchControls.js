@@ -5,7 +5,7 @@ import { ENTITIES } from "@/lib/entities";
 import { PERIODS } from "@/lib/articles";
 
 const selectClass =
-  "rounded-sm border border-gray-300 bg-white px-2 py-1.5 text-sm dark:border-gray-700 dark:bg-gray-900";
+  "rounded-sm border border-rule bg-surface px-2 py-1.5 text-sm ";
 
 // A real <form method="get"> rather than client-side state: the query lands
 // in the URL, so results are shareable, bookmarkable, and the back button
@@ -31,10 +31,10 @@ export default function SearchControls({ tag, period }) {
     <form
       action="/search"
       method="get"
-      className="flex flex-wrap items-end gap-3 border-b border-gray-200 pb-5 dark:border-gray-800"
+      className="flex flex-wrap items-end gap-3 border-b border-rule pb-5"
     >
       <label className="flex flex-col gap-1">
-        <span className="font-mono text-[11px] uppercase tracking-widest text-gray-500 dark:text-gray-400">
+        <span className="font-mono text-[11px] uppercase tracking-widest text-muted">
           Subject
         </span>
         <select name="tag" defaultValue={tag || ""} onChange={apply} className={selectClass}>
@@ -57,7 +57,7 @@ export default function SearchControls({ tag, period }) {
       </label>
 
       <label className="flex flex-col gap-1">
-        <span className="font-mono text-[11px] uppercase tracking-widest text-gray-500 dark:text-gray-400">
+        <span className="font-mono text-[11px] uppercase tracking-widest text-muted">
           Period
         </span>
         <select name="period" defaultValue={period} onChange={apply} className={selectClass}>
@@ -71,7 +71,7 @@ export default function SearchControls({ tag, period }) {
 
       <button
         type="submit"
-        className="rounded-sm border border-gray-300 px-3 py-1.5 text-sm font-medium hover:border-gray-500 dark:border-gray-700 dark:hover:border-gray-500"
+        className="rounded-sm border border-rule px-3 py-1.5 text-sm font-medium hover:border-band"
       >
         Apply
       </button>
@@ -79,7 +79,7 @@ export default function SearchControls({ tag, period }) {
       {tag && (
         <a
           href="/search"
-          className="pb-1.5 text-sm text-gray-500 underline hover:text-gray-950 dark:text-gray-400 dark:hover:text-white"
+          className="pb-1.5 text-sm text-muted underline hover:text-ink"
         >
           Clear
         </a>

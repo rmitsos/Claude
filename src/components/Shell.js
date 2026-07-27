@@ -9,7 +9,7 @@ export default function Shell({ active, activeSub, heading, children }) {
     <>
       <Nav active={active} activeSub={activeSub} />
       <div className="mx-auto grid w-full max-w-6xl flex-1 lg:grid-cols-[1fr_17.5rem]">
-        <main className="min-w-0 border-gray-200 lg:border-r dark:border-gray-800">
+        <main className="min-w-0 border-rule lg:border-r">
           {heading && (
             <h1 className="px-4 pb-1 pt-5 font-serif text-2xl font-bold tracking-tight">
               {heading}

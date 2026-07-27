@@ -30,9 +30,9 @@ export default function BackToTop() {
       type="button"
       onClick={toTop}
       aria-label="Back to top"
-      className={`fixed bottom-5 right-5 z-20 rounded-full border border-gray-300 bg-white/90 px-3 py-2 text-sm text-gray-600 shadow-sm backdrop-blur-sm transition-opacity hover:text-gray-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600 dark:border-gray-700 dark:bg-gray-900/90 dark:text-gray-300 dark:hover:text-white ${
-        visible ? "opacity-100" : "pointer-events-none opacity-0"
-      }`}
+      className={`fixed bottom-5 right-5 z-20 rounded-full border border-rule bg-surface/90 px-3 py-2 text-sm text-ink-2 shadow-sm backdrop-blur-sm transition-opacity hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-band ${
+ visible ? "opacity-100" : "pointer-events-none opacity-0"
+ }`}
     >
       ↑ Top
     </button>

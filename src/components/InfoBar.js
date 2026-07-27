@@ -3,7 +3,7 @@ import { getAthensWeather, getFxRates } from "@/lib/marketData";
 function Stat({ label, value }) {
   return (
     <div className="flex items-baseline gap-1.5">
-      <span className="text-[11px] uppercase tracking-wide text-gray-400 dark:text-gray-500">
+      <span className="text-[11px] uppercase tracking-wide text-muted">
         {label}
       </span>
       <span className="text-sm font-semibold tabular-nums">{value}</span>
@@ -24,9 +24,9 @@ export default async function InfoBar() {
   }).format(new Date());
 
   return (
-    <div className="border-b border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
+    <div className="border-b border-rule bg-surface">
       <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-6 gap-y-1 px-4 py-2">
-        <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
+        <span className="text-sm font-medium text-muted">
           Athens · {today}
         </span>
         {weather && (

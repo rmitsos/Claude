@@ -1,19 +1,20 @@
 import Link from "next/link";
 import { CATEGORIES, SUBCATEGORIES, SUBCATEGORIZED } from "@/lib/feeds";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const DOT = {
-  finance: "bg-emerald-500",
-  telco: "bg-blue-500",
-  energy: "bg-amber-500",
+  finance: "bg-fin",
+  telco: "bg-tel",
+  energy: "bg-enr",
 };
 
 export default function Nav({ active, activeSub }) {
   return (
-    <header className="sticky top-0 z-10 border-b border-gray-200 bg-white/90 backdrop-blur-sm dark:border-gray-800 dark:bg-gray-950/90">
+    <header className="sticky top-0 z-10 border-b border-rule bg-surface/90 backdrop-blur-sm">
       <div className="mx-auto max-w-6xl px-4">
-        <div className="flex flex-wrap items-baseline gap-x-7 gap-y-2 py-3">
+        <div className="flex flex-wrap items-center gap-x-7 gap-y-2 py-3">
           <Link href="/" className="font-serif text-xl font-bold tracking-tight">
-            GR<span className="text-amber-600 dark:text-amber-500">Wire</span>
+            GR<span className="text-band">Wire</span>
           </Link>
 
           <nav className="flex flex-wrap items-baseline gap-x-5 gap-y-1 text-sm">
@@ -21,8 +22,8 @@ export default function Nav({ active, activeSub }) {
               href="/"
               className={
                 active === undefined
-                  ? "font-semibold text-gray-950 dark:text-white"
-                  : "text-gray-600 hover:text-gray-950 dark:text-gray-400 dark:hover:text-white"
+                  ? "font-semibold text-ink"
+                  : "text-ink-2 hover:text-ink"
               }
             >
               Wire
@@ -32,10 +33,10 @@ export default function Nav({ active, activeSub }) {
                 key={slug}
                 href={`/${slug}`}
                 className={`flex items-center gap-1.5 ${
-                  active === slug
-                    ? "font-semibold text-gray-950 dark:text-white"
-                    : "text-gray-600 hover:text-gray-950 dark:text-gray-400 dark:hover:text-white"
-                }`}
+ active === slug
+ ? "font-semibold text-ink"
+ : "text-ink-2 hover:text-ink"
+ }`}
               >
                 <span className={`h-1.5 w-1.5 rounded-full ${DOT[slug]}`} />
                 {label}
@@ -45,8 +46,8 @@ export default function Nav({ active, activeSub }) {
               href="/search"
               className={
                 active === "search"
-                  ? "font-semibold text-gray-950 dark:text-white"
-                  : "text-gray-600 hover:text-gray-950 dark:text-gray-400 dark:hover:text-white"
+                  ? "font-semibold text-ink"
+                  : "text-ink-2 hover:text-ink"
               }
             >
               Search
@@ -55,13 +56,17 @@ export default function Nav({ active, activeSub }) {
               href="/weekly"
               className={
                 active === "weekly"
-                  ? "font-semibold text-gray-950 dark:text-white"
-                  : "text-gray-600 hover:text-gray-950 dark:text-gray-400 dark:hover:text-white"
+                  ? "font-semibold text-ink"
+                  : "text-ink-2 hover:text-ink"
               }
             >
               This week
             </Link>
           </nav>
+
+          <div className="ml-auto">
+            <ThemeToggle />
+          </div>
         </div>
 
         {/* Sub-navigation appears only inside a category that has one, so the
@@ -72,8 +77,8 @@ export default function Nav({ active, activeSub }) {
               href={`/${active}`}
               className={
                 !activeSub
-                  ? "font-semibold text-gray-950 dark:text-white"
-                  : "text-gray-500 hover:text-gray-950 dark:text-gray-400 dark:hover:text-white"
+                  ? "font-semibold text-ink"
+                  : "text-muted hover:text-ink"
               }
             >
               All
@@ -84,8 +89,8 @@ export default function Nav({ active, activeSub }) {
                 href={`/${active}/${slug}`}
                 className={
                   activeSub === slug
-                    ? "font-semibold text-gray-950 dark:text-white"
-                    : "text-gray-500 hover:text-gray-950 dark:text-gray-400 dark:hover:text-white"
+                    ? "font-semibold text-ink"
+                    : "text-muted hover:text-ink"
                 }
               >
                 {label}

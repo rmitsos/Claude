@@ -25,17 +25,30 @@ export default function PrivacyPage() {
           identify you.
         </p>
 
-        <H2>Cookies</H2>
+        <H2>Cookies and local storage</H2>
         <p>
-          <strong>This site sets no cookies</strong> and stores nothing in your
-          browser&rsquo;s local storage.
+          <strong>This site sets no cookies.</strong> It stores exactly one thing
+          in your browser, and only if you ask it to: which theme you picked.
+        </p>
+        <Ul>
+          <li>
+            <code className="font-mono text-[0.85em]">grwire-theme</code> —
+            the value <em>dark</em> or <em>light</em>, saved when you use the
+            theme switch so the site doesn&rsquo;t forget on your next visit. It
+            is never sent to our servers, never read by anyone else, and clearing
+            your browser data removes it.
+          </li>
+        </Ul>
+        <p>
+          There is no consent banner because nothing here needs consent. Under
+          the EU ePrivacy rules, consent is required for non-essential storage;
+          a preference you set yourself, doing only what you asked it to do, is
+          not that. A banner would be theatre rather than compliance.
         </p>
         <p>
-          That is why you will not see a cookie consent banner. Under the EU
-          ePrivacy rules, consent is required for non-essential storage — since
-          there is none, a banner would be theatre rather than compliance. If
-          analytics are ever added, this page will be updated and consent will be
-          requested properly at that point.
+          If analytics or advertising are ever added, that changes — this page
+          will be updated and consent will be requested properly, before the
+          change goes live rather than after.
         </p>
 
         <H2>What happens automatically</H2>
@@ -124,7 +137,7 @@ export default function PrivacyPage() {
           this page will be updated before that change goes live, not after.
         </p>
 
-        <p className="border-t border-gray-200 pt-5 text-sm text-gray-500 dark:border-gray-800 dark:text-gray-400">
+        <p className="border-t border-rule pt-5 text-sm text-muted">
           Written to describe this site accurately rather than to cover every
           eventuality with boilerplate. It is not legal advice; if GR Wire starts
           carrying advertising or subscriptions, have a lawyer review it. See
