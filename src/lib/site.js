@@ -22,7 +22,8 @@ export const SITE = {
   domain: null, // e.g. "grwire.gr"
 };
 
-export const LAST_UPDATED = "27 July 2026";
+// ISO so it can be formatted in whichever language the reader chose.
+export const LAST_UPDATED = "2026-07-27";
 
 // True only when every value a legal page needs has been supplied.
 export const SITE_DETAILS_COMPLETE = Boolean(
