@@ -145,37 +145,63 @@ they are proposing to merge their fibre assets. Two consequences:
 **To watch.** Term sheet is non-binding. Until binding agreements and
 regulatory approval, write "proposed" and nothing stronger.
 
-### Wholesale access is open — the JV changes scale, not openness
+### Wholesale access — only the incumbent is obliged
 
-**What.** Fibre network operators provide wholesale access to other
-operators, so ΔΕΗ FiberGrid's network is in principle available to the
-whole market already, not only to Vodafone. What the JV changes is who the
-dominant user is: Fiber2All will hold the majority of the traffic on it by
-virtue of the agreement.
+**What.** The mandatory wholesale obligation falls on **the incumbent (ΟΤΕ)
+alone**. No other operator carries it unless and until it is designated a
+dominant carrier. ΔΕΗ FiberGrid's network is therefore **open** to other
+operators as a commercial matter, not because it is compelled.
 **Source.** publisher
-**Edges.** `ΔΕΗ FiberGrid --sells-wholesale-to--> all operators` · `Fiber2All --majority-user-of--> ΔΕΗ FiberGrid network`
-**Why it matters.** Corrects a framing error that reached the site. The
-note said the JV would turn ΔΕΔΔΗΕ's poles from one company's
-infrastructure into a shared platform. Wrong emphasis — the network already
-sells wholesale to everyone. What genuinely changes is **vertical
-structure**: ΔΕΗ FiberGrid today is both wholesale and retail, and the
-proposed JV is wholesale-only and neutral. That is the real transition, and
-it is a smaller and more precise claim than the one published.
+**Edges.** `ΟΤΕ --obliged-to-offer--> wholesale access` · `ΔΕΗ FiberGrid --offers-commercially--> wholesale access`
+**Why it matters.** "Forced to" and "chooses to" are different claims, and
+only one of them is about the law. Never write that Greek fibre operators
+are *required* to sell wholesale — that is true of the incumbent and false
+of everyone else. Write that a network is open, or that it sells wholesale,
+and leave compulsion out of it unless ΟΤΕ is the subject.
 
-**Open questions — needed before writing about the regulatory side.**
+Also worth holding in mind: FiberGrid being open and FiberGrid being **used**
+are not the same thing. The publisher describes it as an empty network short
+of customers, which is the commercial logic behind the Fiber2All JV. Say
+"open to" rather than "sold to" unless there is a specific customer to name.
 
-1. Is the wholesale obligation a **general duty on every fibre network
-   owner** in Greece, or does it fall on operators designated with
-   significant market power (historically ΟΤΕ), with alternative networks
-   selling wholesale commercially rather than under compulsion? "Forced to"
-   and "chooses to" are different sentences and only one of them is a
-   regulatory claim.
-2. Separately: can **other fibercos hang their own fibre on ΔΕΔΔΗΕ's
-   poles**, on regulated terms? Physical infrastructure access is a
-   different regime from wholesale service access. If the answer is yes,
-   the pole network is shared infrastructure at the physical layer too, and
-   ΔΕΔΔΗΕ's access pricing becomes a telecom competition question — which
-   would be a considerably bigger story than the one written.
+### ΔΕΔΔΗΕ pole access — a safety bottleneck, not a tariff
+
+**What.** Attaching fibre to ΔΕΔΔΗΕ's poles is not a regulated wholesale
+product. The poles carry live power conductors, so anyone wanting to string
+cable on them must pay ΔΕΔΔΗΕ for **design, feasibility studies and
+engineering expertise** — the work that keeps the attachment from killing
+someone. The constraint is physical: cable tension and clearances against
+energised lines.
+**Source.** publisher
+**Edges.** `ΔΕΔΔΗΕ --controls-access-to--> distribution poles` · `third-party fibre operators --must-pay--> ΔΕΔΔΗΕ for design and engineering` · `ΔΕΗ FiberGrid --sister-company-of--> ΔΕΔΔΗΕ`
+**Why it matters.** This is the answer to the question of whether the poles
+are shared infrastructure, and it is more interesting than a yes or a no.
+They are reachable, but through a gate whose keeper is a sister company of
+the largest tenant. Both ΔΕΔΔΗΕ and ΔΕΗ FiberGrid sit under ΔΕΗ. A rival
+fibreco pays ΔΕΗ's subsidiary for the engineering that lets it compete with
+ΔΕΗ's other subsidiary. Nothing improper follows from that automatically —
+the safety requirement is real and non-negotiable — but it is a structural
+asymmetry, and no telecom regulator sets the price of it.
+
+### ΕΕΤΤ, and the boundary that leaves the poles uncovered
+
+**What.** ΕΕΤΤ is the telecom regulator. There **was** an attempt to
+regulate access to ΟΤΕ's own pole and duct infrastructure, prompted by
+state-subsidised rural fibre deployment. **ΕΕΤΤ never produced an
+outcome.**
+**Source.** publisher
+**Edges.** `ΕΕΤΤ --regulates--> telecom market` · `ΡΑΑΕΥ --regulates--> ΔΕΔΔΗΕ` · `ΕΕΤΤ --attempted-and-abandoned--> regulation of ΟΤΕ physical infrastructure access`
+**Why it matters.** Two different bottlenecks, neither with a telecom
+regulator over it. ΟΤΕ's physical infrastructure was looked at and left
+alone. ΔΕΔΔΗΕ's poles were never ΕΕΤΤ's to look at — ΔΕΔΔΗΕ is regulated by
+ΡΑΑΕΥ, the *energy* authority, which has no remit over telecom competition
+and no reason to price pole access with fibre rivalry in mind.
+
+That gap is a story in itself, and a better one than the note that
+prompted these questions: **the physical layer of Greek fibre competition
+is governed by an energy regulator, or by nobody.** Before writing it,
+confirm with the publisher whether ΡΑΑΕΥ prices pole attachment at all, or
+whether it is left entirely to ΔΕΔΔΗΕ commercially.
 
 ### ΡΑΑΕΥ / RAAEY
 

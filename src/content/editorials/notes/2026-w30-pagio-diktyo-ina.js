@@ -109,11 +109,11 @@ const el = {
           Αλλά η ερώτηση που προκύπτει από τη δομή αξίζει να τεθεί ρητά: ένα
           ρυθμιζόμενο έσοδο που χρηματοδοτεί επενδύσεις σε ένα δίκτυο το οποίο
           εξυπηρετεί δύο αγορές δεν είναι ζήτημα μόνο του ρεύματος. Η ίνα πάνω
-          στους στύλους του ΔΕΔΔΗΕ πωλείται ήδη χονδρικά και σε άλλους παρόχους,
-          όχι μόνο στη ΔΕΗ. Αν η κοινή εταιρεία προχωρήσει, θα πάψει να είναι
-          και λιανικός πωλητής: θα λειτουργεί αποκλειστικά ως χονδρέμπορος. Και
-          τότε το ερώτημα ποιος πληρώνει τη συντήρηση αυτού του δικτύου παύει να
-          αφορά μία εταιρεία.
+          στους στύλους του ΔΕΔΔΗΕ είναι ανοιχτή σε χονδρική και προς άλλους
+          παρόχους, όχι μόνο προς τη ΔΕΗ. Αν η κοινή εταιρεία προχωρήσει, θα
+          πάψει να είναι και λιανικός πωλητής: θα λειτουργεί αποκλειστικά ως
+          χονδρέμπορος. Και τότε το ερώτημα ποιος πληρώνει τη συντήρηση αυτού
+          του δικτύου παύει να αφορά μία εταιρεία.
         </p>
 
         <p>
@@ -208,11 +208,11 @@ const en = {
           We are not predicting where the cap lands or whom it favours. But the
           question the structure raises is worth putting plainly: a regulated
           revenue that funds investment in a network serving two markets is not
-          only an electricity matter. The fibre on ΔΕΔΔΗΕ&rsquo;s poles is
-          already sold wholesale to other operators, not only to ΔΕΗ. If the
-          joint venture goes ahead it stops being a retailer too, and operates
-          purely as a wholesaler. At which point who pays to maintain that
-          network is no longer a question about one company.
+          only an electricity matter. The fibre on ΔΕΔΔΗΕ&rsquo;s poles is open
+          for wholesale to other operators, not only to ΔΕΗ. If the joint
+          venture goes ahead it stops being a retailer too, and operates purely
+          as a wholesaler. At which point who pays to maintain that network is
+          no longer a question about one company.
         </p>
 
         <p>
