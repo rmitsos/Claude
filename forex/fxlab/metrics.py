@@ -122,6 +122,48 @@ def annual_turnover(positions: pd.Series, periods_per_year: int = TRADING_DAYS) 
     return float(p.diff().abs().sum() / len(p) * periods_per_year)
 
 
+def trade_spans(positions: pd.Series) -> pd.DataFrame:
+    """Split a position series into trades: runs of constant direction.
+
+    A trade starts when the direction changes and ends when it changes again.
+    Resizing within a direction is not a new trade -- it is the same opinion,
+    held at a different size.
+    """
+    sign = np.sign(positions.fillna(0.0))
+    episode = (sign != sign.shift()).cumsum()
+
+    rows = []
+    for _, seg in sign.groupby(episode):
+        if seg.iloc[0] == 0.0:
+            continue  # flat stretches are not trades
+        rows.append({"start": seg.index[0], "end": seg.index[-1],
+                     "direction": float(seg.iloc[0]), "bars": len(seg)})
+    return pd.DataFrame(rows, columns=["start", "end", "direction", "bars"])
+
+
+def trade_stats(positions: pd.Series, returns: pd.Series | None = None) -> dict:
+    """Trade-level view: how many, how long, and how they turned out.
+
+    Average holding period is the number to check against your intended
+    horizon. A rule you believe is a "two week" strategy will often turn out
+    to hold for three months, because holding period is an *output* of how
+    often the signal changes its mind, not something you set directly.
+    """
+    spans = trade_spans(positions)
+    if spans.empty:
+        return {"Trades": 0, "AvgHold": float("nan"), "MedHold": float("nan")}
+
+    out = {
+        "Trades": int(len(spans)),
+        "AvgHold": float(spans["bars"].mean()),
+        "MedHold": float(spans["bars"].median()),
+    }
+    if returns is not None:
+        pnl = [float((1.0 + returns.loc[r.start:r.end]).prod() - 1.0) for r in spans.itertuples()]
+        out["TradeWin"] = float(np.mean([p > 0 for p in pnl])) if pnl else float("nan")
+    return out
+
+
 def summary(
     returns: pd.Series,
     positions: pd.Series | None = None,
@@ -140,4 +182,5 @@ def summary(
     if positions is not None:
         out["TimeInMkt"] = time_in_market(positions)
         out["Turnover"] = annual_turnover(positions, periods_per_year)
+        out.update(trade_stats(positions, returns))
     return out

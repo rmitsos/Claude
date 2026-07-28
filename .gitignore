@@ -43,3 +43,8 @@ next-env.d.ts
 # python
 __pycache__/
 *.py[cod]
+
+# fxlab runtime state (account details, live positions)
+forex/config.json
+forex/state.json
+forex/log/

@@ -17,7 +17,7 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from fxlab import data, strategies  # noqa: E402
+from fxlab import data, metrics, strategies  # noqa: E402
 from fxlab.engine import Config, run, walk_forward  # noqa: E402
 
 # vol_target high enough that the sizer always saturates, so position == signal
@@ -149,6 +149,61 @@ def test_rebalance_band_cuts_turnover_without_changing_direction():
     same = np.sign(loose.loc[both, "position"]) == np.sign(banded.loc[both, "position"])
     assert float(same.mean()) > 0.95, "band changed which way the strategy is leaning"
     print(f"PASS  rebalance band ({loose['traded'].sum():.0f} -> {banded['traded'].sum():.0f} units traded)")
+
+
+def test_trade_spans_counts_direction_changes():
+    """Known-answer test: resizing is not a new trade, a flip is."""
+    idx = pd.bdate_range("2020-01-01", periods=9)
+    pos = pd.Series([0.0, 0.0, 1.0, 0.5, 1.0, -1.0, -1.0, 0.0, 1.0], index=idx)
+
+    spans = metrics.trade_spans(pos)
+    assert list(spans["bars"]) == [3, 2, 1], list(spans["bars"])
+    assert list(spans["direction"]) == [1.0, -1.0, 1.0]
+
+    stats = metrics.trade_stats(pos)
+    assert stats["Trades"] == 3
+    assert abs(stats["AvgHold"] - 2.0) < 1e-12
+    print("PASS  trade spans")
+
+
+def test_max_hold_caps_holding_period():
+    """No trade may run longer than the cap, and the cap must actually bind."""
+    px = data.synthetic(n=252 * 10, seed=9, trend_strength=0.95)
+    cap = 10
+
+    uncapped = run(px, strategies.tsm(px), Config())
+    capped = run(px, strategies.with_max_hold(strategies.tsm, cap)(px), Config())
+
+    spans = metrics.trade_spans(capped["position"])
+    assert spans["bars"].max() <= cap, f"trade ran {spans['bars'].max()} bars, cap was {cap}"
+
+    base = metrics.trade_spans(uncapped["position"])["bars"].mean()
+    assert base > cap, f"cap never binds -- base holding period is only {base:.1f} bars"
+    print(f"PASS  max hold ({base:.0f} bars -> {spans['bars'].mean():.1f}, cap {cap})")
+
+
+def test_max_hold_does_not_re_enter_immediately():
+    """After the cap fires, stay flat until the rule genuinely changes its mind.
+
+    Re-entering on the next bar would make the cap a no-op that only adds
+    transaction costs -- the most expensive kind of bug.
+    """
+    px = data.synthetic(n=252 * 6, seed=10, trend_strength=0.95)
+    capped = strategies.with_max_hold(strategies.tsm, 5)(px)
+    raw = strategies.tsm(px)
+
+    forced_flat = (capped == 0.0) & (raw != 0.0)
+    assert forced_flat.any(), "the cap never fired, so this proves nothing"
+
+    # Wherever we were forced flat, the next bar may only re-enter if the
+    # underlying opinion changed on that bar. Note the astype(bool): shifting
+    # a boolean series yields object dtype, and `~` on object dtype is Python's
+    # bitwise not, so ~True is -2 -- truthy, and every check silently inverts.
+    reentered = forced_flat & (capped.shift(-1) == raw)
+    changed_next = (raw != raw.shift(1)).shift(-1).fillna(False).astype(bool)
+    violations = int((reentered & ~changed_next).sum())
+    assert violations == 0, f"re-entered on {violations} bars while the rule still held the same view"
+    print(f"PASS  max hold re-entry ({int(forced_flat.sum())} bars held flat by the cap)")
 
 
 def test_random_walk_is_unprofitable_after_costs():

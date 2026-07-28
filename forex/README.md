@@ -91,14 +91,52 @@ The three-year training period was also never used for anything, which the
 original acknowledged. Here `walk_forward` accepts a `fit_fn` that sees only
 the training slice, so parameter fitting is possible without leaking.
 
+## The horizon: one to two weeks, automated
+
+That is the decision, and the cost arithmetic supports it far better than
+what you were doing before:
+
+| Holding period | Round trips/yr | Cost/yr @ 0.92bp | Sharpe drag |
+|---|---|---|---|
+| Intraday, 5/day | ~1,260 | **11.6%** | fatal |
+| **1–2 weeks** | ~25–50 | **0.23–0.46%** | ~0.03 |
+
+At this horizon costs essentially stop mattering — a 40x improvement. What
+replaces cost as the binding constraint is whether the *edge* exists at that
+speed, which is thinner territory than the 1–3 month band where most of the
+published FX trend evidence sits. That is an empirical question, so the kit
+now measures it directly.
+
+One distinction worth being precise about: **holding period is normally an
+output, not an input.** A 126-day momentum rule holds for ~36 bars because
+that is how often it changes its mind. Measured here on synthetic data:
+
+```
+tsm(126)                    ~36 bars   (7 weeks)
+donchian(20) + max_hold=10  ~9.5 bars  (2 weeks)   <- the target band
+```
+
+`strategies.with_max_hold` makes the horizon an input by forcing a flat
+position after N bars. Be honest about what that is: a constraint that can
+only reduce gross return, since it cuts winners at an arbitrary bar count. It
+earns its place only if the shorter horizon buys something back — lower
+drawdown, or capital freed for another pair. Also note it leaves you flat
+much more of the time (~30% time-in-market in the configuration above), which
+is its own kind of discipline test.
+
 ## Layout
 
 ```
 fxlab/engine.py       backtest core; the ONLY execution lag in the codebase
-fxlab/strategies.py   tsm, donchian, ma_cross, fib_pullback, random_walk
-fxlab/metrics.py      Sharpe, drawdown, t-stats, multiple-testing hurdle
+fxlab/strategies.py   tsm, donchian, ma_cross, fib_pullback, random_walk,
+                      with_max_hold
+fxlab/metrics.py      Sharpe, drawdown, t-stats, trade spans, holding period
 fxlab/data.py         csv / stooq / yfinance / synthetic loaders
-run_backtest.py       CLI
+run_backtest.py       research CLI
+signals.py            daily runner for the server — emits positions, places
+                      no orders
+config.example.json   copy to config.json and set your real cost_bps
+DEPLOYMENT.md         VPS, cron, broker APIs, and the gates before going live
 tests/test_engine.py  correctness tests — run these after any change
 ```
 
@@ -119,11 +157,16 @@ python3 tests/test_engine.py                       # always start here
 # no network required
 python3 run_backtest.py --pairs synthetic:seed=1 --strategies all
 
-# real data
+# real data, targeting the one-to-two week band
 python3 run_backtest.py \
   --pairs stooq:eurusd stooq:usdjpy stooq:gbpusd stooq:audusd \
   --strategies tsm donchian fib_pullback random_walk \
+  --params donchian.lookback=20 tsm.lookback=21 \
+  --max-hold 10 \
   --cost-sweep 0 1 3 10 --rebalance-band 0.25
+
+# what the server would do tonight
+python3 signals.py --config config.json --no-write
 ```
 
 **Note:** this environment blocks all market-data hosts at the egress proxy
@@ -149,19 +192,22 @@ hosts allowed.
 
 ## Open questions before the next step
 
-These change what gets built, so they are worth answering before more code:
+Settled: one-to-two week horizon, fully automated, running on a small VPS.
+See `DEPLOYMENT.md`.
+
+Still blocking:
 
 1. **Which broker, and what are your actual all-in costs per round trip?**
-   Everything above turns on this number and I am currently guessing it.
-2. **Account size and what fraction you would genuinely risk.** This sets
-   whether position sizing is even expressible — some strategies need a
-   minimum account to trade at sane size.
-3. **Fully automated, or you pressing the button on my calls?** Given the
-   diagnosis above I would argue for automated, but it is your money and your
-   jurisdiction's rules.
-4. **Could you actually hold a position for three months and do nothing?**
-   If the honest answer is no, we should design around that rather than
-   pretend otherwise.
+   Everything turns on this number and I am currently guessing it. It decides
+   whether the edge — if there is one — is large enough to collect.
+2. **Account size.** Sets whether position sizing is even expressible at sane
+   granularity, and whether Interactive Brokers' lower costs are worth its
+   heavier API.
+3. **Real price data.** Nothing here has run against a real quote, because
+   this environment blocks every market-data host. Until step 1 of the
+   validation gates in `DEPLOYMENT.md` passes, we do not know whether any of
+   these rules has an edge at a two-week horizon. Everything else is
+   scaffolding waiting on that answer.
 
 ## What this is not
 

@@ -129,6 +129,11 @@ def run(prices: pd.Series, signal: pd.Series, cfg: Config = Config()) -> pd.Data
             "price": prices,
             "return": rets,
             "signal": signal,
+            # What the rule wants to hold as of this bar's close. The live
+            # runner reads the last value of THIS column -- `position` is the
+            # same thing lagged, which is right for measuring P&L and wrong
+            # for deciding what to do tonight.
+            "target": target,
             "position": position,
             "traded": traded,
             "cost": cost,

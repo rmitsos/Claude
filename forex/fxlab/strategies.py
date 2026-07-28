@@ -130,6 +130,43 @@ def random_walk(prices: pd.Series, flip_every: int = 55, seed: int = 0) -> pd.Se
     return pd.Series(np.repeat(flips, flip_every)[: len(prices)], index=prices.index)
 
 
+def with_max_hold(fn, max_bars: int):
+    """Force a strategy flat after `max_bars` bars in the same direction.
+
+    Holding period is normally an *output* -- a 126-day momentum rule holds
+    for months because that is how often it changes its mind. This makes it
+    an input, so a target horizon (5-10 bars for a one-to-two week system)
+    can be tested directly rather than hoped for.
+
+    Once the cap fires, the position stays flat until the underlying rule
+    actually changes its opinion. Re-entering the next bar would make the cap
+    a no-op with extra transaction costs.
+
+    Be honest about what this is: a constraint that can only cost you gross
+    return, since it cuts winners at an arbitrary bar count. It earns its
+    place only if the shorter horizon buys something back -- lower drawdown,
+    or capital freed for another pair. The backtest will tell you which.
+    """
+
+    def wrapped(prices: pd.Series, **kwargs) -> pd.Series:
+        raw = fn(prices, **kwargs).to_numpy(dtype=float)
+        out = np.zeros(len(raw))
+
+        current, last_opinion, held = 0.0, None, 0
+        for i, opinion in enumerate(raw):
+            if opinion != last_opinion:  # the rule changed its mind: new trade
+                last_opinion, current, held = opinion, opinion, 0
+            if current != 0.0:
+                held += 1
+                if held > max_bars:
+                    current = 0.0
+            out[i] = current
+        return pd.Series(out, index=prices.index)
+
+    wrapped.__name__ = f"{fn.__name__}_max{max_bars}"
+    return wrapped
+
+
 REGISTRY = {
     "tsm": tsm,
     "ma_cross": ma_cross,

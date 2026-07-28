@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import argparse
 import sys
+from functools import partial
 from pathlib import Path
 
 import numpy as np
@@ -31,10 +32,31 @@ def _short(spec: str) -> str:
     return spec.split(":", 1)[-1].replace("=X", "").lower()
 
 
-def evaluate(prices, strategy_name, cfg, train_years, test_years):
+def parse_params(items):
+    """Turn ['tsm.lookback=21', 'donchian.lookback=20'] into nested kwargs."""
+    out: dict[str, dict] = {}
+    for item in items:
+        target, _, value = item.partition("=")
+        strat, _, key = target.partition(".")
+        if not key or not value:
+            raise ValueError(f"expected 'strategy.kwarg=value', got {item!r}")
+        out.setdefault(strat, {})[key] = float(value) if "." in value else int(value)
+    return out
+
+
+def build_signal_fn(name, params, max_hold):
+    fn = strategies.REGISTRY[name]
+    if params:
+        fn = partial(fn, **params)
+        fn.__name__ = name  # partial has no __name__, and with_max_hold wants one
+    if max_hold > 0:
+        fn = strategies.with_max_hold(fn, max_hold)
+    return fn
+
+
+def evaluate(prices, signal_fn, cfg, train_years, test_years):
     """Walk-forward one strategy on one pair. Returns (stats dict, oos returns)."""
-    fn = strategies.REGISTRY[strategy_name]
-    table, oos = walk_forward(prices, fn, cfg, train_years=train_years, test_years=test_years)
+    table, oos = walk_forward(prices, signal_fn, cfg, train_years=train_years, test_years=test_years)
     if oos.empty:
         return None, None
     stats = summary(oos["net"], oos["position"], cfg.periods_per_year)
@@ -56,6 +78,10 @@ def main():
     p.add_argument("--max-leverage", type=float, default=1.0)
     p.add_argument("--rebalance-band", type=float, default=0.0,
                    help="skip trades smaller than this fraction of notional (cuts resizing churn)")
+    p.add_argument("--params", nargs="*", default=[],
+                   help="strategy kwargs, e.g. tsm.lookback=21 donchian.lookback=20")
+    p.add_argument("--max-hold", type=int, default=0,
+                   help="force flat after N bars; 10 targets a two-week horizon (0 = no cap)")
     p.add_argument("--train-years", type=int, default=3)
     p.add_argument("--test-years", type=int, default=1)
     p.add_argument("--period", default="max", help="history length for yfinance specs")
@@ -65,6 +91,13 @@ def main():
     for n in names:
         if n not in strategies.REGISTRY:
             p.error(f"unknown strategy {n!r}; choose from {sorted(strategies.REGISTRY)}")
+    try:
+        params = parse_params(args.params)
+    except ValueError as exc:
+        p.error(str(exc))
+    for n in params:
+        if n not in names:
+            p.error(f"--params names {n!r}, which is not in --strategies")
 
     series = {}
     for spec in args.pairs:
@@ -79,7 +112,8 @@ def main():
         print(f"  {name}: {len(px)} bars, {px.index.min().date()} to {px.index.max().date()}")
 
     costs = args.cost_sweep if args.cost_sweep else [args.cost_bps]
-    cols = ["CAGR", "Vol", "Sharpe", "t_stat", "MaxDD", "Calmar", "HitRate", "Turnover", "Windows", "WorstWin"]
+    cols = ["CAGR", "Vol", "Sharpe", "t_stat", "MaxDD", "Calmar",
+            "Trades", "AvgHold", "TradeWin", "Turnover", "WorstWin"]
 
     for cost in costs:
         cfg = Config(vol_target=args.vol_target, cost_bps=cost,
@@ -89,9 +123,10 @@ def main():
 
         rows, oos_by_strategy = {}, {}
         for strat in names:
+            signal_fn = build_signal_fn(strat, params.get(strat, {}), args.max_hold)
             per_pair = []
             for pair, px in series.items():
-                stats, oos = evaluate(px, strat, cfg, args.train_years, args.test_years)
+                stats, oos = evaluate(px, signal_fn, cfg, args.train_years, args.test_years)
                 if stats is None:
                     continue
                 rows[(strat, pair)] = stats
@@ -114,8 +149,13 @@ def main():
             print(table.to_string())
 
     n_trials = len(names) * len(series) * len(costs)
-    print(f"\n{n_trials} configurations evaluated. With that much searching, a winner needs")
-    print(f"|t| above roughly {deflated_hurdle(n_trials):.1f} before it means anything, not 2.0.")
+    hurdle = deflated_hurdle(n_trials)
+    print(f"\n{n_trials} configuration(s) evaluated.", end=" ")
+    if hurdle > 2.0:
+        print(f"With that much searching, the best one needs\n|t| above roughly {hurdle:.1f} to mean anything, not the usual 2.0.")
+    else:
+        print("A winner still needs |t| above 2.0.")
+    print("Check AvgHold against the horizon you intended -- it is an output, not a setting.")
     print("Sharpe below ~0.4 out of sample is not a business. It is a hobby with variance.")
 
 
