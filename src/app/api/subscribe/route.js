@@ -64,10 +64,22 @@ export async function POST(request) {
       }),
     });
 
-    if (!res.ok && res.status !== 422) {
+    // 422 is how MailerLite reports "already subscribed" — but also how it
+    // reports a group id that does not exist, and originally both were
+    // swallowed as success. A wrong MAILERLITE_GROUP_* would have looked like
+    // a working form that silently subscribed nobody, which is the worst
+    // possible failure: invisible from the outside and invisible in the logs.
+    if (res.status === 422) {
+      const detail = await res.text();
+      console.warn(`[subscribe] MailerLite 422 (check groups):`, detail.slice(0, 300));
+    } else if (!res.ok) {
       const detail = await res.text();
       console.error(`[subscribe] MailerLite ${res.status}:`, detail.slice(0, 300));
       return NextResponse.json({ ok: false, error: "upstream" }, { status: 502 });
+    } else {
+      // No address logged: the point of the list is that we hold as little as
+      // possible, and a log line is a copy of it in a second system.
+      console.log(`[subscribe] accepted (${lang}), group ${group ? "set" : "MISSING"}`);
     }
   } catch (err) {
     console.error("[subscribe] request failed:", err?.message || err);
