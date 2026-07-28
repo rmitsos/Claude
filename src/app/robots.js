@@ -19,7 +19,9 @@ export default function robots() {
       allow: "/",
       // Endpoints, not pages: crawling them wastes budget and puts JSON in
       // search results. /api/ingest additionally does real work per request.
-      disallow: ["/api/"],
+      // /studio is the campaign tool — it needs a token to do anything, but
+      // there is no reason for it to appear in a search result.
+      disallow: ["/api/", "/studio"],
     },
     ...(baseUrl ? { sitemap: `${baseUrl}/sitemap.xml`, host: baseUrl } : {}),
   };
