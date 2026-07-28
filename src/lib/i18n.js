@@ -12,7 +12,7 @@ const STRINGS = {
     // chrome
     "nav.wire": "Ροή",
     "nav.search": "Αναζήτηση",
-    "nav.weekly": "Αυτή την εβδομάδα",
+    "nav.weekly": "Connecting the dots",
     "nav.all": "Όλα",
     "cat.finance": "Οικονομία",
     "cat.telco": "Υποδομές Τηλεπικοινωνιών",
@@ -98,6 +98,9 @@ const STRINGS = {
       "Το θέμα της εβδομάδας δεν έχει γραφτεί ακόμη.",
     "weekly.readPrevious": "Διαβάστε το προηγούμενο",
     "weekly.backToWeek": "Όλη η εβδομάδα",
+    "dots.label": "Connecting the dots",
+    "dots.note": "Ανάλυση GR Wire — πώς συνδέονται οι ειδήσεις μεταξύ τους.",
+    "dots.more": "Όλα τα κείμενα",
 
     // topic
     "topic.count": "{n} {noun} τις τελευταίες 30 ημέρες",
@@ -131,7 +134,7 @@ const STRINGS = {
   en: {
     "nav.wire": "Wire",
     "nav.search": "Search",
-    "nav.weekly": "This week",
+    "nav.weekly": "Connecting the dots",
     "nav.all": "All",
     "cat.finance": "Finance",
     "cat.telco": "Telco Infrastructure",
@@ -209,6 +212,9 @@ const STRINGS = {
     "weekly.noLead": "This week's lead piece hasn't been written yet.",
     "weekly.readPrevious": "Read the previous one",
     "weekly.backToWeek": "The whole week",
+    "dots.label": "Connecting the dots",
+    "dots.note": "GR Wire analysis — how the stories fit together.",
+    "dots.more": "All pieces",
 
     "topic.count": "{n} {noun} in the last 30 days",
     "topic.changePeriod": "change period",
