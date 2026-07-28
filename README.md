@@ -80,3 +80,18 @@ set locally, pages render with empty results rather than crashing.
 - `src/lib/ingest.js` / `src/app/api/ingest/route.js` — the cron-triggered job
 - `src/lib/articles.js` — DB reads used by pages
 - `src/app/` — Next.js App Router pages
+
+## Also in this repo: FX signals
+
+An unrelated private tool sharing the deployment. `forex/` is a Python
+research kit for testing FX trading rules out of sample; `src/lib/fx/` and
+`/fx` are a daily signal generator built on the same strategy, sharing this
+project's Neon database and cron.
+
+It is **off unless `FX_ENABLED=1`** is set — with the flag unset, `/fx` and
+`/api/fx` both return 404, so the public news site is unaffected. The page is
+additionally `noindex`. Nothing in it connects to a broker or places an order.
+
+See `forex/README.md` for what it does and `forex/DEPLOYMENT.md` for how it
+runs. Note `forex/tests/test_parity.py`, which guarantees the JavaScript in
+`src/lib/fx/` still matches the validated Python — run it if you touch either.

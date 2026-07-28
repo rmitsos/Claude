@@ -1,6 +1,74 @@
 # Running this on a server
 
-Short answer to your question: **yes, easily, for about €5/month.**
+Two ways, and you probably want the first.
+
+## Option A: Vercel, in this repo (recommended — you already have it)
+
+Yes, Vercel works, and it is the better starting point precisely because you
+asked for a signal generator rather than a bot. There is nothing to place
+orders, so there is nothing that needs to hold broker credentials or run
+continuously. A page that recomputes once a day is a perfect fit for what
+Vercel does.
+
+Everything is already wired:
+
+| Piece | Where |
+|---|---|
+| Signal math (no dependencies) | `src/lib/fx/strategy.js` |
+| Prices from stooq | `src/lib/fx/prices.js` |
+| Pairs and parameters | `src/lib/fx/config.js` |
+| Daily cron endpoint | `src/app/api/fx/route.js` |
+| The page that explains itself | `src/app/fx/page.js` |
+| Storage (your existing Neon DB) | `src/lib/fx/store.js` |
+
+To switch it on:
+
+1. Set `FX_ENABLED=1` in the Vercel project's environment variables.
+   **It is off by default on purpose** — this repo also serves a public news
+   site, and a page of trading signals has no business appearing on it by
+   accident. With the flag unset, `/fx` and `/api/fx` both return 404.
+2. Deploy. The cron in `vercel.json` runs `/api/fx` at 23:00 UTC daily.
+3. Visit `/api/fx` once by hand to populate the first day rather than waiting.
+4. Read `/fx`.
+
+Two Vercel limits worth checking against your plan before relying on it, since
+they change: Hobby restricts the **number of cron jobs per project** (this repo
+now uses two, `/api/ingest` and `/api/fx`) and caps them at **once per day**,
+with firing time approximate rather than exact. Once a day is exactly what a
+daily-bar strategy needs, so this is not a constraint here — but confirm the
+job count is allowed on your plan, or the news ingest and the signal run will
+compete for the same slot.
+
+The page is `noindex`, and `robots.js` already disallows everything while
+`SITE.allowIndexing` is false. If you ever turn indexing on for the news site,
+`/fx` stays out of search on its own.
+
+### The one real risk in this approach
+
+There are now **two implementations** of the same strategy: `forex/fxlab`
+(Python, pandas, used to decide whether the edge is real) and
+`src/lib/fx/strategy.js` (used to generate the signals you look at). Two
+copies of a trading rule is normally a mistake, because the copy that drifts
+is invariably the one making decisions.
+
+`forex/tests/test_parity.py` is what makes it safe. It pushes identical prices
+through both and requires the targets to match to 1e-12, across trending
+series, random walks, short series, and configurations with the cap off:
+
+```bash
+python3 forex/tests/test_parity.py    # needs node on PATH
+```
+
+**If you change either implementation, run this.** If it fails, the signals on
+the site are no longer the ones that were validated, and the fix is the code,
+not the tolerance.
+
+## Option B: a VPS running the Python directly
+
+Better once you want the full research kit on the same machine, or when the
+execution layer eventually exists.
+
+Short answer: **yes, easily, for about €5/month.**
 
 The reason it is easy is the reason your new horizon is a good choice. A
 strategy that holds for one to two weeks and decides once a day is not

@@ -136,9 +136,28 @@ run_backtest.py       research CLI
 signals.py            daily runner for the server — emits positions, places
                       no orders
 config.example.json   copy to config.json and set your real cost_bps
-DEPLOYMENT.md         VPS, cron, broker APIs, and the gates before going live
+DEPLOYMENT.md         Vercel, VPS, broker APIs, and the gates before going live
 tests/test_engine.py  correctness tests — run these after any change
+tests/test_parity.py  proves the web app's JS matches this Python
 ```
+
+The signal generator that renders in the browser lives in the Next.js app
+alongside it, because you asked to *see* how it works rather than trust a
+process you cannot watch:
+
+```
+src/lib/fx/strategy.js   the same math, ported, no dependencies
+src/lib/fx/prices.js     daily closes from stooq
+src/lib/fx/config.js     pairs, parameters, and the FX_ENABLED gate
+src/lib/fx/signals.js    orchestration
+src/lib/fx/store.js      daily snapshots in Neon
+src/app/api/fx/route.js  the daily cron
+src/app/fx/page.js       the page — shows the reasoning, not just the answer
+```
+
+Two implementations of one strategy is a real hazard, so it is held shut by a
+test rather than by care: `tests/test_parity.py` runs identical prices through
+both and requires agreement to 1e-12. Run it after touching either side.
 
 The design rule worth knowing: strategies return a direction decided *at the
 close of bar t*, and the engine applies the one-bar execution lag. There is
