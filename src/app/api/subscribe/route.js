@@ -92,11 +92,14 @@ export async function POST(request) {
       body: payload,
     });
 
-    // 422 is how MailerLite reports "already subscribed" — but also how it
-    // reports a group id that does not exist, and originally both were
-    // swallowed as success. A wrong MAILERLITE_GROUP_* would have looked like
-    // a working form that silently subscribed nobody, which is the worst
-    // possible failure: invisible from the outside and invisible in the logs.
+    // 422 is a validation failure — a malformed group id, an unknown custom
+    // field. It is *not* how an existing address is reported: this endpoint
+    // upserts, so re-submitting an address already on the list succeeds and
+    // updates its groups. Verified in production, against an earlier comment
+    // here that claimed otherwise.
+    //
+    // It is still logged rather than returned, because a 422 has twice meant
+    // the form was quietly subscribing nobody while showing a thank-you.
     if (res.status === 422) {
       const detail = await res.text();
       console.warn(`[subscribe] MailerLite 422 (check groups):`, detail.slice(0, 300));
@@ -114,9 +117,9 @@ export async function POST(request) {
     return NextResponse.json({ ok: false, error: "upstream" }, { status: 502 });
   }
 
-  // Always the same answer, including for an address that is already on the
-  // list — MailerLite returns 422 for that. Saying "you are already
-  // subscribed" would turn this form into a way for anyone to test whether a
-  // given person reads GR Wire.
+  // Always the same answer, whether the address was new or already on the
+  // list. Distinguishing the two would turn this form into a way for anyone
+  // to test whether a given person reads GR Wire — which stays true now that
+  // we know the endpoint upserts rather than rejecting a repeat.
   return NextResponse.json({ ok: true });
 }
