@@ -64,6 +64,28 @@ WARMUP = LOOKBACK + VOL_WINDOW + 20
 # majors, so the sweep runs further out than the FX test did.
 COST_LEVELS = [0.0, 2.0, 5.0, 15.0]
 
+# OANDA's CFD admin fee, annualised, per asset class.
+#
+# THE KEY POINT: this is a cost in BOTH directions. A long position is
+# debited (basis rate + admin fee); a short position is credited (basis rate
+# - admin fee). Either way the admin fee is money leaving, so it is a flat
+# drag on however much notional you are holding, whichever way you point.
+#
+# The basis rate itself (SOFR, ESTR and friends) is directional and roughly
+# cancels for a strategy that is long about as often as it is short, so it is
+# modelled as zero here. That assumption FAVOURS the strategy -- trend
+# following is long equities more often than short, and in a positive-rate
+# world that leg is a net cost. If the result dies even with the basis rate
+# treated as free, it is dead for certain.
+ADMIN_FEES = {
+    "metals": 0.01,        # gold and silver are the cheap ones
+    "energy": 0.025,
+    "agriculture": 0.025,
+    "equity index": 0.025,
+    "bonds": 0.025,
+    "currencies": 0.01,    # FX swap admin is smaller; it contributed nothing anyway
+}
+
 # Yahoo tickers standing in for OANDA's CFDs. Futures (=F) for commodities
 # because the commodity ETFs decay badly in contango and would understate
 # any trend; index levels for equities; futures for bonds.
@@ -136,6 +158,46 @@ def targets_for(closes, signal):
     check_strategy.MAX_LEVERAGE = MAX_LEVERAGE
     check_strategy.REBALANCE_BAND = REBALANCE_BAND
     return check_strategy.build_targets(closes, signal)
+
+
+def evaluate_financed(closes, targets, cost_bps, admin_fee):
+    """Daily net returns including OANDA's overnight admin fee.
+
+    Charged on the absolute position every day it is held, because the fee
+    applies to long and short alike. Divided by trading days so the annual
+    total comes to admin_fee x average exposure, which is the figure that
+    matters however the broker counts calendar days.
+    """
+    rets = returns_of(closes)
+    daily_admin = admin_fee / TRADING_DAYS
+
+    nets, prev = [], 0.0
+    for i in range(1, len(closes)):
+        position = targets[i - 1]
+        traded = abs(position - prev)
+        nets.append(
+            position * rets[i]
+            - traded * cost_bps / 1e4
+            - abs(position) * daily_admin
+        )
+        prev = position
+    return [None] + nets
+
+
+def financed_portfolio(data, targets, cost_bps):
+    """Equal-weight portfolio with each instrument's own admin fee applied."""
+    daily = defaultdict(list)
+    for name, (dates, closes, klass) in data.items():
+        nets = evaluate_financed(closes, targets[name], cost_bps, ADMIN_FEES[klass])
+        for i in range(WARMUP, len(nets)):
+            if nets[i] is not None:
+                daily[dates[i]].append(nets[i])
+    return [(d, statistics.fmean(v)) for d, v in sorted(daily.items())]
+
+
+def average_exposure(targets):
+    active = [abs(t) for t in targets[WARMUP:]]
+    return statistics.fmean(active) if active else 0.0
 
 
 def coin_flip(closes, flip_every, seed):
@@ -269,6 +331,34 @@ def main():
         say()
         say(f"  Profitable in {good} of {len(yearly)} years.")
 
+    # ---- the decisive test: with OANDA's financing ------------------------
+    say()
+    say("=" * 74)
+    say("  THE SAME THING, PAYING OANDA'S OVERNIGHT FINANCING")
+    say("=" * 74)
+    say()
+    say("Admin fee is charged whether you are long or short: long pays basis")
+    say("+2.5%, short receives basis -2.5%. Gold and silver are 1%. Either")
+    say("way it leaves your account every night you hold.")
+    say()
+
+    exposure = statistics.fmean([average_exposure(t) for t in targets.values()])
+    say(f"Average exposure: {exposure:.2f}x notional per instrument.")
+    say()
+    say(f"{'cost':<24}{'no financing':>14}{'WITH financing':>16}{'return/yr':>12}")
+
+    financed = {}
+    for cost in COST_LEVELS:
+        plain = by_cost.get(cost)
+        series = financed_portfolio(data, targets, cost)
+        fin = score([r for _, r in series])
+        if not plain or not fin:
+            continue
+        financed[cost] = fin
+        label = "free (impossible)" if cost == 0 else f"{cost:g} bp per trade"
+        say(f"{label:<24}{plain[0]['sharpe']:>14.2f}{fin['sharpe']:>16.2f}"
+            f"{fin['cagr']:>11.1%}")
+
     # ---- robustness ------------------------------------------------------
     say()
     say("-" * 74)
@@ -291,38 +381,46 @@ def main():
     say()
 
     realistic = by_cost.get(2.0)
-    if not realistic:
+    net = financed.get(2.0)
+    if not realistic or not net:
         say("Not enough data to conclude.")
         return 1
     strat, flip = realistic
-    edge = strat["sharpe"] - flip["sharpe"]
+    edge = net["sharpe"] - flip["sharpe"]
 
-    if strat["sharpe"] >= 0.4 and strat["t"] >= 2.0 and edge >= 0.3:
-        say("PROMISING. Beat the coin flip clearly, and unlikely to be luck.")
-        say("This has earned the next test -- not an account.")
-    elif strat["sharpe"] >= 0.2 and edge >= 0.15:
-        say("WEAK BUT REAL-ISH. A hint of an edge, too small to be confident")
-        say("about, and easily eaten by costs or a bad broker.")
+    # Judged on the financed number. The gross figure is what the strategy
+    # earns; this is what you would keep, and only one of those is yours.
+    if net["sharpe"] >= 0.4 and net["t"] >= 2.0 and edge >= 0.3:
+        say("WORTH CONTINUING. Survives the broker's financing with an edge")
+        say("still clearly ahead of a coin flip. Not proof, but it has earned")
+        say("the next test -- which is paper trading, not an account.")
+    elif net["sharpe"] >= 0.2 and edge >= 0.15:
+        say("MARGINAL. There is something there before financing, and most of")
+        say("it goes to OANDA. What is left is too thin to trade with")
+        say("confidence, and would not survive a worse broker or a bad year.")
     else:
-        say("NO EDGE FOUND. Same answer as the FX test. Worth taking seriously")
-        say("as a final answer rather than a reason to try a fifth variation.")
+        say("KILLED BY THE BROKER. The edge is real before costs and gone")
+        say("after them. The strategy works; you just would not be the one")
+        say("getting paid for it.")
 
     say()
-    say(f"  Strategy Sharpe:  {strat['sharpe']:.2f}")
-    say(f"  Coin flip Sharpe: {flip['sharpe']:.2f}")
-    say(f"  Is it luck?       t = {strat['t']:.1f}  (needs > 2)")
-    say(f"  Worst fall:       {strat['drawdown']:.1%}")
+    say(f"  Sharpe before financing: {strat['sharpe']:>6.2f}   ({strat['cagr']:.1%}/yr)")
+    say(f"  Sharpe after financing:  {net['sharpe']:>6.2f}   ({net['cagr']:.1%}/yr)")
+    say(f"  Coin flip:               {flip['sharpe']:>6.2f}")
+    say(f"  Is it luck?              t = {net['t']:.1f}  (needs > 2)")
+    say(f"  Worst fall:              {net['drawdown']:.1%}")
     say()
     say("  Configurations tried across both tests: 3. The bar for the best of")
     say("  three is |t| above about 2.1, not 2.0 -- barely moved, because we")
     say("  deliberately did not go fishing.")
 
     say()
-    say("  NOT MODELLED, AND IT MATTERS: OANDA charges overnight financing on")
-    say("  CFD positions. On a strategy holding for months this is the single")
-    say("  biggest threat to the result above -- it can run to several percent")
-    say("  a year on the notional, against an expected return of a similar")
-    say("  size. Get the real financing rates before believing any of this.")
+    say("  STILL NOT MODELLED: the basis rate (SOFR, ESTR) on top of the admin")
+    say("  fee, treated as zero on the assumption that long and short legs")
+    say("  cancel. Trend following is long equities more often than short, so")
+    say("  the real figure is likely somewhat WORSE than shown above, not")
+    say("  better. Also unmodelled: slippage, gaps, and the spread widening")
+    say("  that happens exactly when a trend breaks.")
 
     if failed:
         say()
