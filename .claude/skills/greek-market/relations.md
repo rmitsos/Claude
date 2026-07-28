@@ -77,9 +77,23 @@ Interconnection, the vehicle for the Crete–Attica link, sold **20% to State
 Grid International Development** in November 2024.
 **Source.** public
 **Edges.** `State Grid Corporation of China --owns:24%--> ΑΔΜΗΕ` · `State Grid International Development --owns:20%--> Ariadne Interconnection` · `ΑΔΜΗΕ --owns--> Ariadne Interconnection` · `ΑΔΜΗΕ --owns:100%--> Grid Telecom` · `ΑΔΜΗΕ --operates--> electricity transmission network`
-**To confirm.** The rest of the cap table — the listed holding company and
-the state's stake — and whether ΔΕΗ retains any interest post-unbundling.
-Do not state those in published text until confirmed.
+**The towers.** ΑΔΜΗΕ is the operator of the Hellenic Electricity
+Transmission System under **Law 4001/2011** — the high-voltage lines,
+towers and substations, about **11,300 km of lines and 291 substations**.
+So the towers Grid Telecom strings fibre on belong to Grid Telecom's own
+parent. *Precision note:* the statutory wording found is operation,
+exploitation, maintenance and development; before publishing the word
+"owns" about the towers specifically, check ΑΔΜΗΕ's own asset disclosures
+or the law directly, because post-unbundling asset title is exactly the
+kind of thing that is easy to state loosely and hard to defend.
+
+**Shareholders.** State Grid Corporation of China 24%, confirmed twice.
+The Greek State holds the majority and the management, with a listed
+holding company, **ΑΔΜΗΕ Συμμετοχών**, in the structure; a 51.12% figure
+appears in public sources without it being clear which entity it attaches
+to. **Do not publish a full cap table** until that is pinned down. The two
+safe statements are that State Grid holds 24% and that the Greek State
+retains control.
 **Why it matters.** Transmission and distribution are routinely conflated
 in coverage and are different businesses with different owners. When ΑΔΜΗΕ
 and ΔΕΔΔΗΕ tender jointly — as on the Rouf super-high-voltage centre — that
@@ -259,28 +273,19 @@ fibre along the Greece–Bulgaria interconnectors, and a strategy to make
 underground and subsea), public (name, ownership, scale, dark-fibre model,
 ESO EAD MoU, Crete strategy)
 
-**CONTRADICTION — unresolved, do not write about the physical build.**
-The publisher says Grid Telecom is **underground and subsea, no aerial**.
-Contemporaneous Greek coverage of the ESO EAD memorandum describes
-commercialising "τις οπτικές ίνες που διατρέχουν τις **εναέριες**
-ηλεκτρικές διασυνδέσεις Ελλάδας–Βουλγαρίας" — fibre running along the
-*aerial* interconnectors, i.e. optical ground wire on overhead towers.
-Both can be true if the domestic commercial network is buried and subsea
-while the cross-border link rides existing OPGW, but that is a guess.
+**Resolved: it is aerial, on the high-voltage towers.** The publisher first
+said underground and subsea, then reconciled it against the ESO EAD
+coverage: Grid Telecom **uses the high-voltage towers to carry fibre**.
+That is backbone — city to city, region to region — and it reaches end
+users by other means. It has **nothing to do with ΔΕΔΔΗΕ's urban
+distribution poles**. Underground and subsea runs exist alongside it; the
+towers are the long-haul spine.
+**Source.** publisher (corrected and confirmed), public (the ESO EAD
+coverage describing fibre along the aerial Greece–Bulgaria interconnectors)
 
-The distinction is not cosmetic, which is why it is flagged rather than
-averaged out:
-
-- **If underground and subsea**, Grid Telecom's advantage is *rights of
-  way* — the corridors, easements and landing rights that come with being
-  the transmission operator. It is a conventional carrier with an
-  unconventional parent.
-- **If it also monetises aerial OPGW**, then both electricity network
-  operators sell fibre strung on live infrastructure, the safety-engineering
-  gate that applies to ΔΕΔΔΗΕ's poles has a transmission-level counterpart,
-  and "fibre on the grid" is a single structural story across both networks.
-
-Ask the publisher to reconcile before either version is published.
+**Still open, and not a question for the publisher:** who owns the fibre on
+the Greece–Bulgaria interconnector — Grid Telecom's side, ESO EAD's, or
+jointly. They cannot say. Research question.
 **Edges.** `ΑΔΜΗΕ --owns:100%--> Grid Telecom` · `Grid Telecom --deploys-on--> electricity transmission network` · `Grid Telecom --sells--> dark fibre wholesale` · `Grid Telecom --mou-with--> ESO EAD` · `Grid Telecom --builds--> Crete international data gateway`
 **Why it matters.** There are **two** grid-borne fibre businesses in Greece,
 on two different electricity networks, under two different owners — and
@@ -290,13 +295,22 @@ conflating them would be an obvious error to anyone in the market.
 |---|---|---|
 | Electricity network | distribution (ΔΕΔΔΗΕ) | transmission (ΑΔΜΗΕ) |
 | Parent | ΔΕΗ | ΑΔΜΗΕ |
-| Build | aerial on poles, hybrid with underground to cabinets | underground and subsea per the publisher — see contradiction above |
-| Layer | last mile, FTTH to the home | long-haul backbone, subsea, cross-border |
+| Build | aerial on distribution poles, underground to the cabinets | aerial on high-voltage towers, plus underground and subsea |
+| Reach | urban, into the home | city to city, region to region; last stretch by other means |
+| Layer | last mile, FTTH | long-haul backbone, cross-border |
 | Sells | wholesale **and** retail today | dark fibre wholesale |
 
 They are **complementary layers, not competitors**. Backbone and last mile.
-A piece that treats "fibre on the electricity grid" as one thing is wrong
-about both.
+A piece that treats them as rivals is wrong about both.
+
+**But they are the same structure twice**, and that is the story. Each
+electricity network operator has a fibre business riding its own aerial
+infrastructure — Grid Telecom on ΑΔΜΗΕ's towers, ΔΕΗ FiberGrid on ΔΕΔΔΗΕ's
+poles. In both cases the fibreco and the infrastructure owner are inside
+the same group, so neither faces the safety-engineering gate that a rival
+fibreco pays for. Vertically, Greek fibre rides on electricity assets at
+both the backbone and the last mile, and at both levels the electricity
+group is on the inside of the gate.
 
 **The chain worth holding, and handling carefully.** State Grid Corporation
 of China holds 24% of ΑΔΜΗΕ; ΑΔΜΗΕ holds 100% of Grid Telecom; Grid Telecom
