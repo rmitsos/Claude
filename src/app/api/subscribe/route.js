@@ -52,10 +52,19 @@ export async function POST(request) {
   // So the id goes into the JSON as raw digits, unquoted, without ever
   // becoming a Number. Only digits are allowed through, which is also what
   // makes the substitution safe.
-  const group = GROUPS[lang];
-  const groupId = /^\d+$/.test(group || "") ? group : null;
-  if (group && !groupId) {
-    console.error(`[subscribe] MAILERLITE_GROUP_${lang.toUpperCase()} is not numeric`);
+  //
+  // A missing or malformed group id is a hard failure, not something to
+  // proceed without. Campaigns are sent to groups, so an ungrouped subscriber
+  // is one who confirmed, waited, and will never receive anything — and the
+  // dashboard shows an empty group while the form reports success. Better to
+  // refuse the signup and show the reader an error we can see.
+  const group = (GROUPS[lang] || "").trim();
+  const groupId = /^\d+$/.test(group) ? group : null;
+  if (!groupId) {
+    console.error(
+      `[subscribe] MAILERLITE_GROUP_${lang.toUpperCase()} is ${group ? `not numeric: "${group}"` : "not set"}`
+    );
+    return NextResponse.json({ ok: false, error: "unavailable" }, { status: 503 });
   }
 
   const payload = JSON.stringify({
@@ -65,7 +74,7 @@ export async function POST(request) {
     // own — and the first that person hears of it is unsolicited mail from
     // a named publisher.
     status: "unconfirmed",
-    ...(groupId ? { groups: ["__GROUP_ID__"] } : {}),
+    groups: ["__GROUP_ID__"],
     // No custom fields. An earlier version sent `fields: { language }`, which
     // MailerLite rejects unless a custom field of that name already exists —
     // and it was redundant anyway, because the group a subscriber lands in is
@@ -98,7 +107,7 @@ export async function POST(request) {
     } else {
       // No address logged: the point of the list is that we hold as little as
       // possible, and a log line is a copy of it in a second system.
-      console.log(`[subscribe] accepted (${lang}), group ${group ? "set" : "MISSING"}`);
+      console.log(`[subscribe] accepted (${lang}) into group ${groupId}`);
     }
   } catch (err) {
     console.error("[subscribe] request failed:", err?.message || err);
