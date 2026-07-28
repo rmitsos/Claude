@@ -2,46 +2,43 @@
 
 Two ways, and you probably want the first.
 
-## Option A: Vercel, in this repo (recommended — you already have it)
+## Option A: Vercel, from this repo (recommended)
 
-Yes, Vercel works, and it is the better starting point precisely because you
-asked for a signal generator rather than a bot. There is nothing to place
-orders, so there is nothing that needs to hold broker credentials or run
-continuously. A page that recomputes once a day is a perfect fit for what
-Vercel does.
+Vercel is the better starting point precisely because you asked for a signal
+generator rather than a bot. There is nothing to place orders, so nothing
+needs to hold broker credentials or run continuously. A page that recomputes
+once a day is a perfect fit for what Vercel does.
 
-Everything is already wired:
+This project deploys **on its own**, in its own Vercel project. It was
+briefly built inside another site's repo and moved out, for reasons worth
+stating because they apply to anyone tempted to do the same:
 
-| Piece | Where |
-|---|---|
-| Signal math (no dependencies) | `src/lib/fx/strategy.js` |
-| Prices from stooq | `src/lib/fx/prices.js` |
-| Pairs and parameters | `src/lib/fx/config.js` |
-| Daily cron endpoint | `src/app/api/fx/route.js` |
-| The page that explains itself | `src/app/fx/page.js` |
-| Storage (your existing Neon DB) | `src/lib/fx/store.js` |
+- A production site with real readers should not share a failure domain with
+  a personal experiment — a broken deploy here would have taken that down.
+- Vercel's Hobby plan limits cron jobs **per project**, so two unrelated
+  daily jobs compete for the same allowance.
+- A page showing open positions on a domain with a named publisher behind it
+  raises questions about presenting investment recommendations that are much
+  easier to simply not raise.
+- And if execution ever exists, broker API keys must not sit in the
+  environment of a public website.
 
-To switch it on:
+Setup is in the top-level `README.md`. The short version: attach Postgres,
+set `FX_ACCESS_TOKEN`, deploy, hit `/api/signals` once, then open the site
+with `?k=<token>`.
 
-1. Set `FX_ENABLED=1` in the Vercel project's environment variables.
-   **It is off by default on purpose** — this repo also serves a public news
-   site, and a page of trading signals has no business appearing on it by
-   accident. With the flag unset, `/fx` and `/api/fx` both return 404.
-2. Deploy. The cron in `vercel.json` runs `/api/fx` at 23:00 UTC daily.
-3. Visit `/api/fx` once by hand to populate the first day rather than waiting.
-4. Read `/fx`.
+### The access gate is not optional
 
-Two Vercel limits worth checking against your plan before relying on it, since
-they change: Hobby restricts the **number of cron jobs per project** (this repo
-now uses two, `/api/ingest` and `/api/fx`) and caps them at **once per day**,
-with firing time approximate rather than exact. Once a day is exactly what a
-daily-bar strategy needs, so this is not a constraint here — but confirm the
-job count is allowed on your plan, or the news ingest and the signal run will
-compete for the same slot.
+A private repo does **not** make a Vercel deployment private. The project
+gets a public `*.vercel.app` URL and anyone who learns it can read the page —
+which shows your open positions. `proxy.js` refuses every request without the
+shared secret and **fails closed** when the secret is unset, because an
+unset secret silently meaning "open to everyone" is exactly the failure this
+is meant to prevent.
 
-The page is `noindex`, and `robots.js` already disallows everything while
-`SITE.allowIndexing` is false. If you ever turn indexing on for the news site,
-`/fx` stays out of search on its own.
+`/api/*` is deliberately exempt: Vercel's scheduler carries no cookie, so a
+gated cron would simply never fire. That route guards itself with
+`CRON_SECRET` instead.
 
 ### The one real risk in this approach
 

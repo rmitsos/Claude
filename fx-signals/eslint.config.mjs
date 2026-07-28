@@ -10,9 +10,6 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
-    // A separate project staged here until it moves to its own repo. It has
-    // its own eslint config and is linted from inside its own directory.
-    "fx-signals/**",
   ]),
 ]);
 

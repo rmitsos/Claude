@@ -32,11 +32,6 @@ export const STRATEGY = {
 // places an order, so this number cannot lose you anything.
 export const DISPLAY_EQUITY = Number(process.env.FX_DISPLAY_EQUITY || 10000);
 
-// The page is off unless explicitly switched on, because this repo also
-// serves a public news site and a page of trading signals has no business
-// appearing on it by accident.
-export const FX_ENABLED = process.env.FX_ENABLED === "1";
-
 // Daily bars needed before the first signal is trustworthy: the channel
 // lookback, the volatility window, and headroom so early bars aren't decided
 // by a half-formed window.

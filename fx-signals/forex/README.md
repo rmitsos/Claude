@@ -146,13 +146,14 @@ alongside it, because you asked to *see* how it works rather than trust a
 process you cannot watch:
 
 ```
-src/lib/fx/strategy.js   the same math, ported, no dependencies
-src/lib/fx/prices.js     daily closes from stooq
-src/lib/fx/config.js     pairs, parameters, and the FX_ENABLED gate
-src/lib/fx/signals.js    orchestration
-src/lib/fx/store.js      daily snapshots in Neon
-src/app/api/fx/route.js  the daily cron
-src/app/fx/page.js       the page — shows the reasoning, not just the answer
+src/lib/fx/strategy.js     the same math, ported, no dependencies
+src/lib/fx/prices.js       daily closes from stooq
+src/lib/fx/config.js       pairs and parameters
+src/lib/fx/signals.js      orchestration
+src/lib/fx/store.js        daily snapshots in Postgres
+src/app/api/signals/       the daily cron
+src/app/page.js            the page — shows the reasoning, not just the answer
+src/proxy.js                   access gate; fails closed if the secret is unset
 ```
 
 Two implementations of one strategy is a real hazard, so it is held shut by a

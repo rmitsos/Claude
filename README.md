@@ -81,17 +81,14 @@ set locally, pages render with empty results rather than crashing.
 - `src/lib/articles.js` — DB reads used by pages
 - `src/app/` — Next.js App Router pages
 
-## Also in this repo: FX signals
+## `fx-signals/` — staging only, not part of this site
 
-An unrelated private tool sharing the deployment. `forex/` is a Python
-research kit for testing FX trading rules out of sample; `src/lib/fx/` and
-`/fx` are a daily signal generator built on the same strategy, sharing this
-project's Neon database and cron.
+An unrelated private project that was briefly built inside this repo and has
+been extracted. It is a self-contained Next.js app with its own
+`package.json`, and **nothing in it is built, deployed, or reachable from GR
+Wire** — no route, no cron, no shared code. `.vercelignore` keeps it out of
+the deployment entirely.
 
-It is **off unless `FX_ENABLED=1`** is set — with the flag unset, `/fx` and
-`/api/fx` both return 404, so the public news site is unaffected. The page is
-additionally `noindex`. Nothing in it connects to a broker or places an order.
-
-See `forex/README.md` for what it does and `forex/DEPLOYMENT.md` for how it
-runs. Note `forex/tests/test_parity.py`, which guarantees the JavaScript in
-`src/lib/fx/` still matches the validated Python — run it if you touch either.
+It is sitting here only until it is pushed to its own repository, at which
+point this directory should be deleted. See `fx-signals/README.md` for the
+two commands that do it.

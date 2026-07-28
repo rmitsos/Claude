@@ -1,14 +1,10 @@
-import { notFound } from "next/navigation";
-import { FX_ENABLED, STRATEGY, DISPLAY_EQUITY } from "@/lib/fx/config";
+import { connection } from "next/server";
+import { STRATEGY, DISPLAY_EQUITY } from "@/lib/fx/config";
 import { getLatestSignals, getRecentChanges } from "@/lib/fx/store";
 import { STALE_AFTER_DAYS } from "@/lib/fx/signals";
 
-export const metadata = {
-  title: "FX signals",
-  // A private research tool that happens to share a deployment with a public
-  // news site. It should never appear in a search result.
-  robots: { index: false, follow: false, nocache: true },
-};
+// Access is enforced in proxy.js before this ever renders; robots.js and the
+// layout's metadata keep it out of search regardless.
 
 function decimals(pair) {
   return pair.includes("JPY") ? 3 : 5;
@@ -160,7 +156,10 @@ function Row({ s }) {
 }
 
 export default async function FxPage() {
-  if (!FX_ENABLED) notFound();
+  // Stop prerendering. Without this Next serves a copy of the page frozen at
+  // build time — which for a page whose entire job is to show today's signal
+  // is worse than showing nothing, because stale positions look current.
+  await connection();
 
   const [signals, changes] = await Promise.all([
     getLatestSignals(STRATEGY.strategy),
@@ -201,7 +200,7 @@ export default async function FxPage() {
         <div className="px-4 py-10 text-sm text-ink-2">
           <p className="mb-2">No signals stored yet.</p>
           <p className="text-muted">
-            Visit <code className="font-mono">/api/fx</code> once to run the first
+            Visit <code className="font-mono">/api/signals</code> once to run the first
             update, or wait for tonight&apos;s cron. Pages read from the database
             rather than fetching prices on render, so nothing appears here until
             an update has run.
