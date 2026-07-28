@@ -1,3 +1,4 @@
+import { meta as meta2026W31, el as el2026W31, en as en2026W31 } from "./2026-w31";
 import { meta as meta2026W30, el as el2026W30, en as en2026W30 } from "./2026-w30";
 import { note as noteW30Pagio } from "./notes/2026-w30-pagio-diktyo-ina";
 
@@ -10,6 +11,11 @@ import { note as noteW30Pagio } from "./notes/2026-w30-pagio-diktyo-ina";
 // list — deliberately manual, because publishing should be a decision rather
 // than a side effect of a file appearing in a directory.
 export const WEEKS = [
+  {
+    meta: meta2026W31,
+    lead: { el: el2026W31, en: en2026W31 },
+    notes: [],
+  },
   {
     meta: meta2026W30,
     lead: { el: el2026W30, en: en2026W30 },
