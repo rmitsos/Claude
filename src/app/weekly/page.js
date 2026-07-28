@@ -11,10 +11,8 @@ import {
 import { getLang } from "@/lib/lang";
 import { t } from "@/lib/i18n";
 import Shell from "@/components/Shell";
-import Editorial from "@/components/Editorial";
-import NoteList from "@/components/NoteList";
-import LeadPending from "@/components/LeadPending";
-import { getLatestWeek, getLatestLead, weekNotes } from "@/content/editorials";
+import PieceList from "@/components/PieceList";
+import { allPieces } from "@/content/editorials";
 
 // Week-over-week figures need a full prior week to compare against. Before
 // that exists, every subject reads as surging simply because the database was
@@ -25,9 +23,9 @@ const COMPARISON_MIN_DAYS = 14;
 const BAR = { finance: "bg-fin", telco: "bg-tel", energy: "bg-enr" };
 
 export const metadata = {
-  title: "Αυτή την εβδομάδα — GR Wire",
+  title: "Connecting the dots — GR Wire",
   description:
-    "Τι κινήθηκε αυτή την εβδομάδα στην ελληνική οικονομία και στις υποδομές τηλεπικοινωνιών και ενέργειας.",
+    "Δικά μας κείμενα για την ελληνική οικονομία και τις υποδομές τηλεπικοινωνιών και ενέργειας — πώς συνδέονται οι ειδήσεις μεταξύ τους.",
 };
 
 function label(entityId) {
@@ -71,13 +69,11 @@ export default async function WeeklyPage() {
     getArchiveStart(),
   ]);
 
-  // The newest week, whatever state it is in. When its lead has not been
-  // written yet — notes can land days before it — the previous lead is still
-  // the standing argument, so the page points at it rather than opening with
-  // a gap where the week's piece should be.
-  const week = getLatestWeek();
-  const notes = weekNotes(week);
-  const standingLead = week?.lead ? null : getLatestLead();
+  // The section index rather than the latest piece. "Όλα τα κείμενα" has to
+  // lead somewhere that shows what exists — opening with one article in full
+  // promised a list and delivered a dead end, since the reader had just seen
+  // that headline on the front page.
+  const pieces = allPieces();
 
   const archiveDays = archive ? (Date.now() - archive.started.getTime()) / 86400000 : 0;
   const canCompare = archiveDays >= COMPARISON_MIN_DAYS;
@@ -89,18 +85,16 @@ export default async function WeeklyPage() {
 
   return (
     <Shell lang={lang} active="weekly">
-      {week?.lead && (
-        <Editorial meta={week.meta} el={week.lead.el} en={week.lead.en} />
-      )}
-      {standingLead && <LeadPending lang={lang} week={standingLead} />}
+      <div className="border-b border-rule px-4 pb-4 pt-6">
+        <div className="mx-auto max-w-[68ch]">
+          <h1 className="font-mono text-[11px] uppercase tracking-[0.18em] text-band">
+            {t(lang, "dots.heading")}
+          </h1>
+          <p className="mt-1 text-sm text-ink-2">{t(lang, "dots.note")}</p>
+        </div>
+      </div>
 
-      <NoteList
-        lang={lang}
-        week={week?.meta.week}
-        notes={notes}
-        heading={t(lang, "weekly.notes")}
-        note={t(lang, "weekly.notesNote")}
-      />
+      <PieceList lang={lang} pieces={pieces} />
 
       <div className="flex flex-col gap-9 px-4 pb-10 pt-7">
         <div>
