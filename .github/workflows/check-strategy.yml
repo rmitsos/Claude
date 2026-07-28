@@ -12,6 +12,7 @@ on:
   push:
     paths:
       - "fx-signals/check_strategy.py"
+      - "fx-signals/check_universe.py"
       - ".github/workflows/check-strategy.yml"
   workflow_dispatch:
 
@@ -28,8 +29,13 @@ jobs:
           python-version: "3.11"
 
       # No dependencies to install — the script is deliberately stdlib only.
-      - name: Run the strategy test
+      - name: FX breakout test
         run: python3 fx-signals/check_strategy.py
+
+      # Runs even if the FX test failed -- they are independent questions.
+      - name: Diversified trend test
+        if: always()
+        run: python3 fx-signals/check_universe.py
 
       # Kept even when the run fails, because a failure caused by a blocked
       # data source is itself the thing worth reading.
@@ -38,5 +44,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: strategy-check-result
-          path: strategy_check_output.txt
+          path: |
+            strategy_check_output.txt
+            universe_check_output.txt
           if-no-files-found: warn
