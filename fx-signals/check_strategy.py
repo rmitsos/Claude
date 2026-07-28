@@ -35,12 +35,14 @@ charges you, the strategy does not exist in the real world.
 """
 
 import argparse
+import json
 import math
 import random
 import statistics
 import sys
 import urllib.request
 from collections import defaultdict
+from datetime import datetime, timezone
 
 TRADING_DAYS = 252
 
@@ -64,7 +66,52 @@ WARMUP = max(LOOKBACK, VOL_WINDOW) + 60
 # --------------------------------------------------------------------- data
 
 def fetch(symbol):
-    """Daily closes from stooq.com. Free, no key, plain CSV."""
+    """Daily closes, trying each free source in turn.
+
+    Neither source needs an account or a key. Two of them because both
+    occasionally refuse traffic from data centres and from corporate
+    networks, and a single refusal should not end the test.
+    """
+    problems = []
+    for name, source in (("stooq", _from_stooq), ("yahoo", _from_yahoo)):
+        try:
+            dates, closes = source(symbol)
+            if len(closes) >= WARMUP + TRADING_DAYS:
+                return dates, closes
+            problems.append(f"{name}: only {len(closes)} days")
+        except Exception as exc:  # noqa: BLE001 -- try the next source
+            problems.append(f"{name}: {exc}")
+    raise RuntimeError("; ".join(problems))
+
+
+def _from_yahoo(symbol):
+    """Daily closes from Yahoo's chart endpoint. JSON, no key."""
+    url = (f"https://query1.finance.yahoo.com/v8/finance/chart/{symbol.upper()}=X"
+           "?range=20y&interval=1d")
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+    with urllib.request.urlopen(req, timeout=60) as resp:
+        payload = json.loads(resp.read().decode("utf-8"))
+
+    results = (payload.get("chart") or {}).get("result")
+    if not results:
+        raise RuntimeError("no data in response")
+    stamps = results[0].get("timestamp") or []
+    quotes = ((results[0].get("indicators") or {}).get("quote") or [{}])[0]
+    values = quotes.get("close") or []
+
+    dates, closes = [], []
+    for stamp, close in zip(stamps, values):
+        if close is None or close <= 0:
+            continue
+        dates.append(datetime.fromtimestamp(stamp, timezone.utc).strftime("%Y-%m-%d"))
+        closes.append(float(close))
+    if not closes:
+        raise RuntimeError("response contained no usable prices")
+    return dates, closes
+
+
+def _from_stooq(symbol):
+    """Daily closes from stooq.com. Plain CSV, no key."""
     url = f"https://stooq.com/q/d/l/?s={symbol}&i=d"
     req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
     with urllib.request.urlopen(req, timeout=60) as resp:
@@ -260,8 +307,6 @@ def main():
     for symbol in PAIRS:
         try:
             dates, closes = fetch(symbol)
-            if len(closes) < WARMUP + TRADING_DAYS:
-                raise RuntimeError(f"only {len(closes)} days of history")
             data[symbol] = (dates, closes)
             say(f"  {symbol.upper()}  {len(closes):>5} days  "
                 f"{dates[0]} to {dates[-1]}")
