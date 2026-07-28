@@ -48,6 +48,12 @@ async function createSchema() {
   // Declared per headline so screen readers pronounce Greek correctly and
   // browsers can offer their own translation.
   await sql`ALTER TABLE articles ADD COLUMN IF NOT EXISTS lang TEXT NOT NULL DEFAULT 'el'`;
+  // Identifies a story rather than a URL, so a publisher re-slugging its own
+  // headline does not become two articles. Nullable on purpose: rows written
+  // before this existed are backfilled by the ingest, and a row whose key
+  // cannot be derived is simply never deduplicated. See lib/dedupe.js.
+  await sql`ALTER TABLE articles ADD COLUMN IF NOT EXISTS dedupe_key TEXT`;
+  await sql`CREATE INDEX IF NOT EXISTS articles_dedupe_key_idx ON articles (dedupe_key)`;
   await sql`CREATE INDEX IF NOT EXISTS articles_pub_date_idx ON articles (pub_date DESC)`;
   await sql`CREATE INDEX IF NOT EXISTS articles_categories_idx ON articles USING GIN (categories)`;
   await sql`CREATE INDEX IF NOT EXISTS articles_entities_idx ON articles USING GIN (entities)`;
