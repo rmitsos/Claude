@@ -4,11 +4,20 @@ import { useState } from "react";
 import Link from "next/link";
 import { t } from "@/lib/i18n";
 
-// Sits at the foot of a piece, never as an overlay. A reader who has just
-// finished reading has been given a reason; a reader three seconds into the
-// page has not, and interrupting them to ask is the behaviour this site has
-// avoided everywhere else.
-export default function Subscribe({ lang }) {
+/**
+ * Never an overlay, never a popup — but it does belong on the front page.
+ * "No interruption" rules out anything standing between the reader and the
+ * news; a static block at the top of the editorial zone is not that, and most
+ * visitors never navigate deeper than the front page, so a form only on the
+ * piece pages would be seen by almost nobody.
+ *
+ * `compact` is the front-page shape: one line and the input, no body copy and
+ * no language choice, because the dots block above it already gives the reason
+ * and the reader's site language is a safe default. The full version, with the
+ * promise spelled out and the edition chosen explicitly, goes at the foot of
+ * the pieces where there is room for it.
+ */
+export default function Subscribe({ lang, compact = false }) {
   const [email, setEmail] = useState("");
   const [choice, setChoice] = useState(lang);
   const [state, setState] = useState("idle"); // idle | sending | done | error
@@ -34,7 +43,7 @@ export default function Subscribe({ lang }) {
   // subscribed and never hears from us is worse than one who never signed up.
   if (state === "done") {
     return (
-      <section className="border-t border-rule bg-tint px-4 py-6">
+      <section className={`border-rule bg-tint px-4 ${compact ? "border-b py-4" : "border-t py-6"}`}>
         <div className="mx-auto max-w-[68ch]">
           <p className="font-serif text-lg text-ink">{t(lang, "mail.thanks")}</p>
           <p className="mt-1 text-sm text-ink-2">{t(lang, "mail.confirm")}</p>
@@ -44,14 +53,22 @@ export default function Subscribe({ lang }) {
   }
 
   return (
-    <section className="border-t border-rule bg-tint px-4 py-6">
+    <section className={`border-rule bg-tint px-4 ${compact ? "border-b py-4" : "border-t py-6"}`}>
       <div className="mx-auto max-w-[68ch]">
-        <h2 className="font-serif text-lg font-bold tracking-tight text-ink">
-          {t(lang, "mail.heading")}
+        <h2
+          className={
+            compact
+              ? "font-serif text-[1.05rem] font-bold tracking-tight text-ink"
+              : "font-serif text-lg font-bold tracking-tight text-ink"
+          }
+        >
+          {t(lang, compact ? "mail.headingShort" : "mail.heading")}
         </h2>
-        <p className="mt-1 text-sm leading-relaxed text-ink-2">{t(lang, "mail.body")}</p>
+        {!compact && (
+          <p className="mt-1 text-sm leading-relaxed text-ink-2">{t(lang, "mail.body")}</p>
+        )}
 
-        <form onSubmit={submit} className="mt-4 flex flex-col gap-3">
+        <form onSubmit={submit} className={`flex flex-col gap-3 ${compact ? "mt-2.5" : "mt-4"}`}>
           <div className="flex flex-wrap items-center gap-2">
             <label htmlFor="subscribe-email" className="sr-only">
               {t(lang, "mail.emailLabel")}
@@ -76,8 +93,9 @@ export default function Subscribe({ lang }) {
           </div>
 
           {/* Which written version to send. The site can offer a toggle; an
-              email has to be one language or the other. */}
-          <fieldset className="flex flex-wrap items-center gap-x-4 gap-y-1">
+              email has to be one language or the other. Compact inherits the
+              language the reader is already browsing in. */}
+          {!compact && <fieldset className="flex flex-wrap items-center gap-x-4 gap-y-1">
             <legend className="sr-only">{t(lang, "mail.langLabel")}</legend>
             <span className="font-mono text-[11px] uppercase tracking-widest text-muted">
               {t(lang, "mail.langLabel")}
@@ -98,14 +116,14 @@ export default function Subscribe({ lang }) {
                 {label}
               </label>
             ))}
-          </fieldset>
+          </fieldset>}
 
           {state === "error" && (
             <p className="text-sm text-ink-2">{t(lang, "mail.error")}</p>
           )}
 
           <p className="text-xs text-muted">
-            {t(lang, "mail.legal")}{" "}
+            {t(lang, compact ? "mail.legalShort" : "mail.legal")}{" "}
             <Link href="/privacy" className="underline hover:no-underline">
               {t(lang, "footer.privacy")}
             </Link>

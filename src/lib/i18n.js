@@ -104,6 +104,7 @@ const STRINGS = {
 
     // subscribe
     "mail.heading": "Το εβδομαδιαίο κείμενο στο email σας",
+    "mail.headingShort": "Το εβδομαδιαίο κείμενο στο email σας",
     "mail.body":
       "Μία φορά την εβδομάδα: τι κινήθηκε στην οικονομία, τις τηλεπικοινωνίες και την ενέργεια, και ένα θέμα σε βάθος — αυτό που αλλάζει τη δομή της αγοράς, όχι απλώς την επικαιρότητα. Τίποτα άλλο· καμία άλλη αποστολή, καμία προώθηση προϊόντων.",
     "mail.emailLabel": "Διεύθυνση email",
@@ -118,6 +119,8 @@ const STRINGS = {
       "Κάτι πήγε στραβά. Δοκιμάστε ξανά, ή γράψτε μας στο contact@grwire.com.",
     "mail.legal":
       "Διαγραφή με ένα κλικ, σε κάθε μήνυμα. Καταγράφουμε αν ανοίγετε τα email και αν πατάτε τους συνδέσμους — τι σημαίνει αυτό, στο",
+    "mail.legalShort":
+      "Μία φορά την εβδομάδα. Διαγραφή με ένα κλικ. Καταγράφουμε τα ανοίγματα — δείτε το",
 
     // topic
     "topic.count": "{n} {noun} τις τελευταίες 30 ημέρες",
@@ -235,6 +238,7 @@ const STRINGS = {
     "dots.heading": "Connecting the dots",
 
     "mail.heading": "The weekly piece, by email",
+    "mail.headingShort": "The weekly piece, by email",
     "mail.body":
       "Once a week: what moved in finance, telecoms and energy, and one subject in depth — the one that shifts the structure of the market rather than the news cycle. Nothing else; no other mailings, no product promotions.",
     "mail.emailLabel": "Email address",
@@ -249,6 +253,8 @@ const STRINGS = {
       "Something went wrong. Try again, or write to contact@grwire.com.",
     "mail.legal":
       "One-click unsubscribe, in every message. We record whether you open the emails and follow their links — what that means is in the",
+    "mail.legalShort":
+      "Once a week. One-click unsubscribe. We do record opens — see the",
 
     "topic.count": "{n} {noun} in the last 30 days",
     "topic.changePeriod": "change period",
