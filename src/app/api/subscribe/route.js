@@ -42,7 +42,35 @@ export async function POST(request) {
     return NextResponse.json({ ok: false, error: "invalid" }, { status: 400 });
   }
 
+  // MailerLite rejects a quoted group id — "The groups.0 field must be a
+  // number" — but its ids are around 18 digits, past the 2^53 ceiling where
+  // JavaScript numbers stop being exact. Number("165364745857171594") comes
+  // back as a different integer, so it would be sent as a *valid* id
+  // belonging to nobody, and the request would succeed while subscribing into
+  // a group that does not exist.
+  //
+  // So the id goes into the JSON as raw digits, unquoted, without ever
+  // becoming a Number. Only digits are allowed through, which is also what
+  // makes the substitution safe.
   const group = GROUPS[lang];
+  const groupId = /^\d+$/.test(group || "") ? group : null;
+  if (group && !groupId) {
+    console.error(`[subscribe] MAILERLITE_GROUP_${lang.toUpperCase()} is not numeric`);
+  }
+
+  const payload = JSON.stringify({
+    email,
+    // "unconfirmed" is what makes MailerLite send its confirmation email.
+    // Without double opt-in, anyone could subscribe an address they do not
+    // own — and the first that person hears of it is unsolicited mail from
+    // a named publisher.
+    status: "unconfirmed",
+    ...(groupId ? { groups: ["__GROUP_ID__"] } : {}),
+    // No custom fields. An earlier version sent `fields: { language }`, which
+    // MailerLite rejects unless a custom field of that name already exists —
+    // and it was redundant anyway, because the group a subscriber lands in is
+    // what decides which edition they are sent.
+  }).replace('"__GROUP_ID__"', groupId);
 
   try {
     const res = await fetch(API, {
@@ -52,16 +80,7 @@ export async function POST(request) {
         Accept: "application/json",
         Authorization: `Bearer ${key}`,
       },
-      body: JSON.stringify({
-        email,
-        // "unconfirmed" is what makes MailerLite send its confirmation email.
-        // Without double opt-in, anyone could subscribe an address they do not
-        // own — and the first that person hears of it is unsolicited mail from
-        // a named publisher.
-        status: "unconfirmed",
-        ...(group ? { groups: [group] } : {}),
-        fields: { language: lang },
-      }),
+      body: payload,
     });
 
     // 422 is how MailerLite reports "already subscribed" — but also how it
