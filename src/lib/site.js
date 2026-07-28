@@ -32,7 +32,7 @@ export const SITE = {
 };
 
 // ISO so it can be formatted in whichever language the reader chose.
-export const LAST_UPDATED = "2026-07-27";
+export const LAST_UPDATED = "2026-07-28";
 
 // True only when every value a legal page needs has been supplied.
 export const SITE_DETAILS_COMPLETE = Boolean(

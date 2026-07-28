@@ -102,6 +102,23 @@ const STRINGS = {
     "dots.empty": "Δεν έχει δημοσιευτεί κείμενο ακόμη.",
     "dots.heading": "Connecting the dots",
 
+    // subscribe
+    "mail.heading": "Το εβδομαδιαίο κείμενο στο email σας",
+    "mail.body":
+      "Μία φορά την εβδομάδα: τι κινήθηκε στην οικονομία, τις τηλεπικοινωνίες και την ενέργεια, και ένα θέμα σε βάθος — αυτό που αλλάζει τη δομή της αγοράς, όχι απλώς την επικαιρότητα. Τίποτα άλλο· καμία άλλη αποστολή, καμία προώθηση προϊόντων.",
+    "mail.emailLabel": "Διεύθυνση email",
+    "mail.placeholder": "email@example.com",
+    "mail.langLabel": "Έκδοση",
+    "mail.action": "Εγγραφή",
+    "mail.sending": "Γίνεται…",
+    "mail.thanks": "Ελέγξτε τα email σας.",
+    "mail.confirm":
+      "Στείλαμε ένα μήνυμα επιβεβαίωσης. Μέχρι να το ανοίξετε δεν θα λάβετε τίποτα άλλο από εμάς.",
+    "mail.error":
+      "Κάτι πήγε στραβά. Δοκιμάστε ξανά, ή γράψτε μας στο contact@grwire.com.",
+    "mail.legal":
+      "Διαγραφή με ένα κλικ, σε κάθε μήνυμα. Καταγράφουμε αν ανοίγετε τα email και αν πατάτε τους συνδέσμους — τι σημαίνει αυτό, στο",
+
     // topic
     "topic.count": "{n} {noun} τις τελευταίες 30 ημέρες",
     "topic.changePeriod": "αλλαγή περιόδου",
@@ -216,6 +233,22 @@ const STRINGS = {
     "dots.lead": "Weekly",
     "dots.empty": "Nothing published yet.",
     "dots.heading": "Connecting the dots",
+
+    "mail.heading": "The weekly piece, by email",
+    "mail.body":
+      "Once a week: what moved in finance, telecoms and energy, and one subject in depth — the one that shifts the structure of the market rather than the news cycle. Nothing else; no other mailings, no product promotions.",
+    "mail.emailLabel": "Email address",
+    "mail.placeholder": "email@example.com",
+    "mail.langLabel": "Edition",
+    "mail.action": "Subscribe",
+    "mail.sending": "Sending…",
+    "mail.thanks": "Check your email.",
+    "mail.confirm":
+      "We have sent a confirmation message. Until you open it you will receive nothing else from us.",
+    "mail.error":
+      "Something went wrong. Try again, or write to contact@grwire.com.",
+    "mail.legal":
+      "One-click unsubscribe, in every message. We record whether you open the emails and follow their links — what that means is in the",
 
     "topic.count": "{n} {noun} in the last 30 days",
     "topic.changePeriod": "change period",

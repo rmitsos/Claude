@@ -10,7 +10,7 @@ import { SITE } from "@/lib/site";
 export const el = {
   title: "Απόρρητο",
   intro:
-    "Το GR Wire δεν έχει λογαριασμούς, εγγραφές, διαφημίσεις ή αναλυτικά εργαλεία. Η σελίδα αυτή περιγράφει τι σημαίνει αυτό στην πράξη, μαζί με όσα δεν είναι προφανή.",
+    "Το GR Wire δεν έχει λογαριασμούς, διαφημίσεις ούτε αναλυτικά εργαλεία στον ιστότοπο. Έχει ένα εβδομαδιαίο δελτίο, και τα μηνύματά του καταγράφουν αν τα ανοίγετε. Η σελίδα αυτή περιγράφει και τα δύο στην πράξη, μαζί με όσα δεν είναι προφανή.",
   Body: function PrivacyEl({ contact }) {
     return (
       <>
@@ -33,9 +33,64 @@ export const el = {
 
         <H2>Τι συλλέγουμε άμεσα</H2>
         <p>
-          Τίποτα. Δεν υπάρχουν λογαριασμοί, φόρμες, εγγραφή σε ενημερωτικό δελτίο
-          ή σενάρια παρακολούθησης. Δεν δημιουργούμε προφίλ και δεν έχουμε τρόπο
-          να σας ταυτοποιήσουμε.
+          Αν απλώς διαβάζετε: τίποτα. Δεν υπάρχουν λογαριασμοί, δεν υπάρχει
+          εγγραφή για να δείτε το περιεχόμενο, και καμία σελίδα αυτού του
+          ιστότοπου δεν φορτώνει σενάριο παρακολούθησης ή αναλυτικών εργαλείων.
+          Δεν δημιουργούμε προφίλ αναγνωστών.
+        </p>
+        <p>
+          Υπάρχει ένα και μόνο σημείο όπου δίνετε εσείς στοιχεία: η φόρμα
+          εγγραφής στο εβδομαδιαίο δελτίο. Αν δεν εγγραφείτε, τα παρακάτω δεν
+          σας αφορούν καθόλου.
+        </p>
+
+        <H2>Το εβδομαδιαίο δελτίο</H2>
+        <p>
+          Αν εγγραφείτε, αποθηκεύουμε τη <strong>διεύθυνση email</strong> σας,
+          την <strong>έκδοση που επιλέξατε</strong> (ελληνικά ή αγγλικά) και την{" "}
+          <strong>ημερομηνία εγγραφής</strong>. Δεν ζητάμε όνομα, εταιρεία ή
+          οτιδήποτε άλλο.
+        </p>
+        <p>
+          Νομική βάση είναι η <strong>συγκατάθεσή</strong> σας, την οποία δίνετε
+          δύο φορές: μία συμπληρώνοντας τη φόρμα και μία ανοίγοντας τον σύνδεσμο
+          επιβεβαίωσης που σας στέλνουμε. Χωρίς το δεύτερο βήμα δεν λαμβάνετε
+          τίποτα — αυτό υπάρχει ώστε να μην μπορεί κανείς να εγγράψει τη
+          διεύθυνση κάποιου άλλου.
+        </p>
+        <p>
+          Τα δεδομένα της λίστας βρίσκονται στη <strong>MailerLite</strong>{" "}
+          (UAB MailerLite, Λιθουανία), η οποία ενεργεί ως εκτελών την
+          επεξεργασία για λογαριασμό μας εντός της Ευρωπαϊκής Ένωσης.
+        </p>
+
+        <H2>Τι καταγράφουμε στα email — και γιατί το λέμε ρητά</H2>
+        <p>
+          Αυτό είναι το ένα σημείο όπου το GR Wire κάνει κάτι που αλλού
+          αποφεύγει, οπότε λέγεται καθαρά: τα μηνύματα του δελτίου{" "}
+          <strong>καταγράφουν αν τα ανοίξατε και ποιους συνδέσμους πατήσατε</strong>.
+          Τεχνικά αυτό γίνεται με μια μικρή εικόνα μέσα στο μήνυμα και με
+          συνδέσμους που περνούν πρώτα από τη MailerLite.
+        </p>
+        <p>
+          Το χρησιμοποιούμε για έναν λόγο: να ξέρουμε αν το δελτίο διαβάζεται.
+          Δεν πουλάμε αυτά τα στοιχεία, δεν τα συνδυάζουμε με τίποτα άλλο και
+          δεν τα χρησιμοποιούμε για διαφήμιση ή για προφίλ. Ισχύει{" "}
+          <em>μόνο για τα email</em>· ο ιστότοπος δεν σας παρακολουθεί.
+        </p>
+        <p>
+          Τα περισσότερα προγράμματα email σάς επιτρέπουν να μπλοκάρετε τις
+          εικόνες, οπότε η καταγραφή ανοίγματος δεν λειτουργεί καθόλου. Δεν το
+          θεωρούμε πρόβλημα.
+        </p>
+
+        <H2>Πόσο κρατάμε τα στοιχεία της εγγραφής</H2>
+        <p>
+          Όσο είστε εγγεγραμμένοι. Κάθε μήνυμα έχει σύνδεσμο διαγραφής με ένα
+          κλικ· μετά τη διαγραφή τα στοιχεία σας αφαιρούνται οριστικά εντός 30
+          ημερών. Διευθύνσεις που δεν επιβεβαιώθηκαν ποτέ διαγράφονται μετά από
+          30 ημέρες. Μπορείτε επίσης να ζητήσετε διαγραφή στέλνοντας μήνυμα στη
+          διεύθυνση επικοινωνίας.
         </p>
 
         <H2>Cookies και τοπική αποθήκευση</H2>
@@ -173,8 +228,9 @@ export const el = {
         <H2>Αλλαγές</H2>
         <p>
           Αν αλλάξει αυτό που κάνει ο ιστότοπος — αναλυτικά εργαλεία,
-          ενημερωτικό δελτίο, διαφήμιση — η σελίδα θα ενημερωθεί πριν τεθεί σε
-          ισχύ η αλλαγή και όχι μετά.
+          διαφήμιση, οτιδήποτε νέο συλλέγει στοιχεία — η σελίδα θα ενημερωθεί
+          πριν τεθεί σε ισχύ η αλλαγή και όχι μετά. Έτσι έγινε και με το
+          εβδομαδιαίο δελτίο.
         </p>
 
         <p className="border-t border-rule pt-5 text-sm text-muted">
@@ -193,7 +249,7 @@ export const el = {
 export const en = {
   title: "Privacy",
   intro:
-    "GR Wire has no accounts, no sign-up, no advertising and no analytics. This page describes what that means in practice, including the parts that aren't obvious.",
+    "GR Wire has no accounts, no advertising and no analytics on the site. It does have a weekly newsletter, and those messages record whether you open them. This page describes both in practice, including the parts that aren't obvious.",
   Body: function PrivacyEn({ contact }) {
     return (
       <>
@@ -216,9 +272,61 @@ export const en = {
 
         <H2>What we collect directly</H2>
         <p>
-          Nothing. There are no accounts, no forms, no newsletter sign-up and no
-          tracking scripts. We do not build a profile of you and have no way to
-          identify you.
+          If you are only reading: nothing. There are no accounts, nothing is
+          gated behind a sign-up, and no page on this site loads a tracking or
+          analytics script. We do not build a profile of readers.
+        </p>
+        <p>
+          There is exactly one place where you hand us anything: the form for
+          the weekly newsletter. If you do not subscribe, none of what follows
+          applies to you.
+        </p>
+
+        <H2>The weekly newsletter</H2>
+        <p>
+          If you subscribe we store your <strong>email address</strong>, the{" "}
+          <strong>edition you chose</strong> (Greek or English) and the{" "}
+          <strong>date you subscribed</strong>. We do not ask for a name, a
+          company or anything else.
+        </p>
+        <p>
+          The lawful basis is your <strong>consent</strong>, which you give
+          twice: once by submitting the form and once by opening the
+          confirmation link we send. Without the second step you receive
+          nothing — that exists so nobody can subscribe somebody else&rsquo;s
+          address.
+        </p>
+        <p>
+          The list is held at <strong>MailerLite</strong> (UAB MailerLite,
+          Lithuania), acting as our processor within the European Union.
+        </p>
+
+        <H2>What the emails record, and why we say so plainly</H2>
+        <p>
+          This is the one place where GR Wire does something it avoids
+          everywhere else, so it is stated outright: newsletter messages{" "}
+          <strong>record whether you opened them and which links you
+          followed</strong>. Technically that is a small image inside the
+          message and links that pass through MailerLite first.
+        </p>
+        <p>
+          It is there for one reason: to know whether the newsletter is being
+          read. We do not sell it, do not combine it with anything else, and do
+          not use it for advertising or profiling. It applies{" "}
+          <em>to the emails only</em> — the website does not watch you.
+        </p>
+        <p>
+          Most email clients let you block images, which stops open tracking
+          working at all. We do not regard that as a problem.
+        </p>
+
+        <H2>How long we keep subscription data</H2>
+        <p>
+          For as long as you are subscribed. Every message carries a one-click
+          unsubscribe link; after you unsubscribe your details are deleted
+          within 30 days. Addresses that are never confirmed are deleted after
+          30 days. You can also ask us to delete them by writing to the contact
+          address.
         </p>
 
         <H2>Cookies and local storage</H2>
@@ -344,8 +452,9 @@ export const en = {
 
         <H2>Changes</H2>
         <p>
-          If what the site does changes — analytics, a newsletter, advertising —
-          this page will be updated before that change goes live, not after.
+          If what the site does changes — analytics, advertising, anything new
+          that collects something — this page will be updated before that change
+          goes live, not after. That is how the newsletter was handled.
         </p>
 
         <p className="border-t border-rule pt-5 text-sm text-muted">

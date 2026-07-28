@@ -5,6 +5,7 @@ import { getLang } from "@/lib/lang";
 import { t } from "@/lib/i18n";
 import Shell from "@/components/Shell";
 import Editorial from "@/components/Editorial";
+import Subscribe from "@/components/Subscribe";
 
 // Notes nest under the week they belong to, which is what the URL says:
 // /weekly/2026-w30/<note>. A note is a shorter piece on one thread, so it is
@@ -41,6 +42,8 @@ export default async function NotePage({ params }) {
         variant="note"
         published={found.note.published}
       />
+      <Subscribe lang={lang} />
+
       <p className="px-4 py-5 text-sm text-muted">
         <Link
           href={`/weekly/${found.week.meta.week}`}

@@ -6,6 +6,7 @@ import { t } from "@/lib/i18n";
 import Shell from "@/components/Shell";
 import Editorial from "@/components/Editorial";
 import NoteList from "@/components/NoteList";
+import Subscribe from "@/components/Subscribe";
 
 // The permanent address of a week: its lead piece plus whatever notes were
 // filed against it. /weekly moves to the newest week every time one opens,
@@ -46,6 +47,8 @@ export default async function WeekPage({ params }) {
         heading={t(lang, "weekly.notes")}
         note={t(lang, "weekly.notesNote")}
       />
+
+      <Subscribe lang={lang} />
 
       <p className="px-4 py-5 text-sm text-muted">
         <Link href="/weekly" className="underline hover:no-underline">

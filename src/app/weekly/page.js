@@ -12,6 +12,7 @@ import { getLang } from "@/lib/lang";
 import { t } from "@/lib/i18n";
 import Shell from "@/components/Shell";
 import PieceList from "@/components/PieceList";
+import Subscribe from "@/components/Subscribe";
 import { allPieces } from "@/content/editorials";
 
 // Week-over-week figures need a full prior week to compare against. Before
@@ -95,6 +96,8 @@ export default async function WeeklyPage() {
       </div>
 
       <PieceList lang={lang} pieces={pieces} />
+
+      <Subscribe lang={lang} />
 
       <div className="flex flex-col gap-9 px-4 pb-10 pt-7">
         <div>

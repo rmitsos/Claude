@@ -1,0 +1,82 @@
+import { NextResponse } from "next/server";
+import { LANGS, DEFAULT_LANG } from "@/lib/i18n";
+
+export const dynamic = "force-dynamic";
+
+// Posted to from our own form rather than embedding MailerLite's. Their embed
+// loads third-party JavaScript into the page, and the site's whole privacy
+// position is that no script on grwire.com watches the reader. The API key
+// stays server-side; the browser only ever talks to this route.
+const API = "https://connect.mailerlite.com/api/subscribers";
+
+// Two groups so the weekly can go out in the language the reader chose. The
+// site has a toggle; an email cannot.
+const GROUPS = {
+  el: process.env.MAILERLITE_GROUP_EL,
+  en: process.env.MAILERLITE_GROUP_EN,
+};
+
+// Deliberately loose. Strict address validation rejects real mailboxes, and
+// the confirmation email is the real check — an address that cannot receive
+// mail never confirms and never gets sent anything.
+const LOOKS_LIKE_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+export async function POST(request) {
+  const key = process.env.MAILERLITE_API_KEY;
+  if (!key) {
+    console.error("[subscribe] MAILERLITE_API_KEY is not set");
+    return NextResponse.json({ ok: false, error: "unavailable" }, { status: 503 });
+  }
+
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ ok: false, error: "invalid" }, { status: 400 });
+  }
+
+  const email = String(body?.email || "").trim().toLowerCase();
+  const lang = LANGS.includes(body?.lang) ? body.lang : DEFAULT_LANG;
+
+  if (!LOOKS_LIKE_EMAIL.test(email)) {
+    return NextResponse.json({ ok: false, error: "invalid" }, { status: 400 });
+  }
+
+  const group = GROUPS[lang];
+
+  try {
+    const res = await fetch(API, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization: `Bearer ${key}`,
+      },
+      body: JSON.stringify({
+        email,
+        // "unconfirmed" is what makes MailerLite send its confirmation email.
+        // Without double opt-in, anyone could subscribe an address they do not
+        // own — and the first that person hears of it is unsolicited mail from
+        // a named publisher.
+        status: "unconfirmed",
+        ...(group ? { groups: [group] } : {}),
+        fields: { language: lang },
+      }),
+    });
+
+    if (!res.ok && res.status !== 422) {
+      const detail = await res.text();
+      console.error(`[subscribe] MailerLite ${res.status}:`, detail.slice(0, 300));
+      return NextResponse.json({ ok: false, error: "upstream" }, { status: 502 });
+    }
+  } catch (err) {
+    console.error("[subscribe] request failed:", err?.message || err);
+    return NextResponse.json({ ok: false, error: "upstream" }, { status: 502 });
+  }
+
+  // Always the same answer, including for an address that is already on the
+  // list — MailerLite returns 422 for that. Saying "you are already
+  // subscribed" would turn this form into a way for anyone to test whether a
+  // given person reads GR Wire.
+  return NextResponse.json({ ok: true });
+}
