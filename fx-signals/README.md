@@ -6,6 +6,22 @@ A daily FX signal generator and the research kit that validates it.
 could move money.** It computes what a fixed rule wants to hold, stores that
 every day, and shows you the reasoning.
 
+## Start here: does it actually work?
+
+```bash
+python3 check_strategy.py
+```
+
+One file, nothing to install, no pandas and no pip. It downloads ~20 years of
+daily FX prices, tests the rule, compares it against random coin flips at
+matched turnover, sweeps the cost level to find where the edge dies, and
+prints a plain-English verdict. Output is saved to
+`strategy_check_output.txt`.
+
+It is a third implementation of the same strategy, which is a hazard — so
+`forex/tests/test_parity.py` checks it against the other two and requires
+agreement to 1e-12.
+
 ## Status: unproven, and that matters
 
 The rule generating these signals has **not** been shown to have an edge. It

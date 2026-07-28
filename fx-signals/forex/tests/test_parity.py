@@ -83,6 +83,34 @@ def js_target(closes, cfg_js):
     return json.loads(proc.stdout)
 
 
+def standalone_target(closes, cfg_js):
+    """The zero-dependency check_strategy.py, which is a THIRD copy of this.
+
+    It exists so the strategy can be tested on a machine with nothing
+    installed. That convenience is only safe if it computes the same thing,
+    which is what this checks.
+    """
+    import importlib.util
+
+    path = ROOT.parent / "check_strategy.py"  # repo root, not forex/
+    spec = importlib.util.spec_from_file_location("check_strategy", path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+
+    # Match the case's config rather than the module's own constants.
+    mod.LOOKBACK = cfg_js["lookback"]
+    mod.MAX_HOLD = cfg_js["maxHold"]
+    mod.VOL_TARGET = cfg_js["volTarget"]
+    mod.VOL_WINDOW = cfg_js["volWindow"]
+    mod.MAX_LEVERAGE = cfg_js["maxLeverage"]
+    mod.REBALANCE_BAND = cfg_js["rebalanceBand"]
+
+    signal = mod.apply_max_hold(
+        mod.donchian(list(closes), cfg_js["lookback"]), cfg_js["maxHold"]
+    )
+    return np.asarray(mod.build_targets(list(closes), signal), dtype=float)
+
+
 def main():
     if shutil.which("node") is None:
         sys.exit("node is not on PATH; the parity test cannot run")
@@ -111,6 +139,19 @@ def main():
             traded = int((np.diff(actual, prepend=0.0) != 0).sum())
             print(f"PASS  {name}: {len(actual)} bars, {traded} position changes, "
                   f"worst diff {worst:.1e}")
+
+        # check_strategy.py only implements the donchian rule.
+        if cfg_js["strategy"] != "donchian":
+            continue
+        standalone = standalone_target(prices.to_numpy(), cfg_js)
+        sdiff = float(np.nanmax(np.abs(expected - standalone)))
+        if sdiff > TOLERANCE:
+            bad = int(np.argmax(np.abs(expected - standalone)))
+            print(f"FAIL  {name} [check_strategy.py]: worst diff {sdiff:.3e} at bar {bad} "
+                  f"(fxlab {expected[bad]:.9f}, standalone {standalone[bad]:.9f})")
+            failures += 1
+        else:
+            print(f"  ok  {name} [check_strategy.py]: worst diff {sdiff:.1e}")
 
     if failures:
         sys.exit(f"\n{failures} of {len(CASES)} parity cases FAILED")
