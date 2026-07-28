@@ -210,3 +210,62 @@ export const en = {
     );
   },
 };
+
+/* --------------------------------- Sweep -------------------------------- */
+
+// The "at a glance" section, and the one part of a letter that has no home on
+// the site: the wire already shows these stories, and repeating them as prose
+// would be the aggregation twice over. It lives here so the campaign can be
+// assembled from the same file as the lead rather than pasted together by
+// hand every week.
+//
+// Inline markup is deliberately tiny — **bold** and [text](url) — so a week's
+// copy stays legible as text. See lib/emailHtml.js for the parser.
+export const sweep = {
+  el: [
+    {
+      heading: "Οικονομία",
+      lines: [
+        "Ο όμιλος **AKTOR** ολοκλήρωσε άντληση 950 εκατ. ευρώ — 650 εκατ. από ΑΜΚ και [ομολογιακό 300 εκατ. με υπερκάλυψη 1,8 φορές και επιτόκιο 7,87%](https://www.naftemporiki.gr/business/2143497/aktor-yperkalypsi-18-fores-toy-omologoy-300-ekat-eyro/) — για επενδυτικό πλάνο 3 δισ.",
+        "Η πιστωτική επέκταση στην Ελλάδα [επιταχύνεται ενώ οι ευρωπαϊκές τράπεζες πατούν φρένο](https://www.ot.gr/2026/07/28/diethni/eyropaikes-trapezes-patoun-freno-sta-nea-daneia-i-elliniki-eksairesi/) — την ίδια εβδομάδα που το διαθέσιμο εισόδημα των νοικοκυριών [υποχώρησε 2,5%](https://www.ot.gr/2026/07/27/oikonomia/diathesimo-eisodima-voutia-se-apotamieysi-kai-ependyseis-sta-ellinika-noikokyria-sto-a%CE%84-trimino-2026/).",
+      ],
+    },
+    {
+      heading: "Τηλεπικοινωνίες",
+      lines: [
+        "**Vodafone Ελλάδας**: [έσοδα υπηρεσιών 248 εκατ., +12,2%](https://www.naftemporiki.gr/business/2143498/vodafone-elladas-enischymena-esoda-kata-122/), με ώθηση κυρίως από τον δημόσιο τομέα.",
+        "Ο **ΟΤΕ** φέρεται να αναλαμβάνει [μεγάλο έργο data centers του ΝΑΤΟ στην Ευρώπη](https://www.ictplus.gr/ote-pros-analipsi-megalou-ergou-data-centers-tou-nato-stin-evropi/) — δημοσίευμα βασισμένο σε πληροφορίες, χωρίς επιβεβαίωση.",
+      ],
+    },
+    {
+      heading: "Ενέργεια",
+      lines: [
+        "Ο **ΔΕΣΦΑ** προκήρυξε [διαγωνισμό 8,6 εκατ. για τις μελέτες του H2DRIA](https://news.b2green.gr/77482/), του αγωγού υδρογόνου του 1 δισ. προς τη ΝΑ και Κεντρική Ευρώπη.",
+        "Η **ΔΕΗ** μπήκε στην ουγγρική αγορά, [αγοράζοντας φωτοβολταϊκό 57,5 MW από τη Greenvolt](https://balkangreenenergynews.com/greek-ppc-group-expands-into-hungarian-renewables-market/) — ενώ η χονδρεμπορική [δείχνει αυξήσεις στα τιμολόγια ρεύματος του Αυγούστου](https://www.capital.gr/oikonomia/4007647/auxiseis-sta-timologia-reumatos-tou-augoustou-deixnei-i-xondremporiki-apo-ti-tha-exartithei-mia-kratiki-epidotisi/).",
+      ],
+    },
+  ],
+  en: [
+    {
+      heading: "Finance",
+      lines: [
+        "**AKTOR** completed a €950m raise — €650m in equity plus a [€300m bond, 1.8× covered at 7.87%](https://www.naftemporiki.gr/business/2143497/aktor-yperkalypsi-18-fores-toy-omologoy-300-ekat-eyro/) — funding a €3bn investment plan.",
+        "Greek credit expansion is [accelerating while European banks pull back](https://www.ot.gr/2026/07/28/diethni/eyropaikes-trapezes-patoun-freno-sta-nea-daneia-i-elliniki-eksairesi/), in the same week household disposable income [fell 2.5%](https://www.ot.gr/2026/07/27/oikonomia/diathesimo-eisodima-voutia-se-apotamieysi-kai-ependyseis-sta-ellinika-noikokyria-sto-a%CE%84-trimino-2026/).",
+      ],
+    },
+    {
+      heading: "Telecoms",
+      lines: [
+        "**Vodafone Greece**: [service revenue €248m, up 12.2%](https://www.naftemporiki.gr/english/2143591/vodafone-greece-reports-12-2-rise-in-q1-service-revenue/), driven largely by public sector demand.",
+        "**ΟΤΕ** is reported to be taking on a [major NATO data centre project in Europe](https://www.ictplus.gr/ote-pros-analipsi-megalou-ergou-data-centers-tou-nato-stin-evropi/) — sourced reporting, not confirmed.",
+      ],
+    },
+    {
+      heading: "Energy",
+      lines: [
+        "**ΔΕΣΦΑ** tendered [€8.6m of technical studies for H2DRIA](https://news.b2green.gr/77482/), the €1bn hydrogen backbone toward south-eastern and central Europe.",
+        "**ΔΕΗ** entered Hungary, [buying a 57.5 MW solar park from Greenvolt](https://balkangreenenergynews.com/greek-ppc-group-expands-into-hungarian-renewables-market/) — while wholesale prices [point to higher August electricity tariffs](https://www.capital.gr/oikonomia/4007647/auxiseis-sta-timologia-reumatos-tou-augoustou-deixnei-i-xondremporiki-apo-ti-tha-exartithei-mia-kratiki-epidotisi/).",
+      ],
+    },
+  ],
+};
