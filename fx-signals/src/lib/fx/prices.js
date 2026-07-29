@@ -1,52 +1,48 @@
-// Daily FX closes from stooq.com — free, no API key, plain CSV.
+// Daily closes from Yahoo's chart endpoint, for any instrument Yahoo quotes:
+// futures ("GC=F"), index levels ("^GSPC"), or FX ("EURUSD=X").
 //
 // Treat this as what it is: a convenience feed, not your broker's prices.
-// It is indicative daily data with occasional gaps and no guarantee of
-// timeliness. Good enough to generate a signal you are watching rather than
-// trading. Before real money is involved, this should be replaced by the
-// broker's own series, so the prices deciding the signal are the prices you
-// could actually deal at.
+// OANDA's own API is not available to this account -- EU retail clients were
+// migrated to OANDA TMS Brokers S.A., which does not offer API access at all
+// (see forex/DEPLOYMENT.md). Yahoo is the stand-in for now. Because the
+// strategy decides once a day from the close, an end-of-day feed is not a
+// compromise on decision quality -- only on how authoritative the exact
+// price is, and on how long the feed can be trusted to keep working
+// unannounced, since this is an undocumented endpoint.
 
-const STOOQ = "https://stooq.com/q/d/l/";
+const YAHOO = "https://query1.finance.yahoo.com/v8/finance/chart";
 
 /**
- * Fetch daily closes for one symbol, oldest first.
+ * Fetch daily closes for one Yahoo ticker, oldest first.
  * Returns { dates: string[], closes: number[] }.
  */
-export async function fetchDailyCloses(symbol, { signal } = {}) {
-  const url = `${STOOQ}?s=${encodeURIComponent(symbol)}&i=d`;
+export async function fetchDailyCloses(ticker, { signal, range = "25y" } = {}) {
+  const url = `${YAHOO}/${encodeURIComponent(ticker)}?range=${range}&interval=1d`;
   const res = await fetch(url, {
     signal,
     cache: "no-store",
-    headers: { "User-Agent": "fxlab/1.0 (daily signal generator)" },
+    headers: { "User-Agent": "Mozilla/5.0 (fxlab daily signal generator)" },
   });
 
-  if (!res.ok) throw new Error(`stooq returned ${res.status} for ${symbol}`);
+  if (!res.ok) throw new Error(`Yahoo returned ${res.status} for ${ticker}`);
 
-  const text = await res.text();
-  const lines = text.trim().split("\n");
-  const header = lines[0]?.toLowerCase() ?? "";
-  if (!header.startsWith("date")) {
-    // Stooq answers rate limiting with a plain-text body, not an error status,
-    // so a 200 is not on its own evidence that we got data.
-    throw new Error(`stooq returned no data for ${symbol}: ${text.slice(0, 120)}`);
-  }
+  const payload = await res.json();
+  const result = payload?.chart?.result?.[0];
+  if (!result) throw new Error(`Yahoo returned no data for ${ticker}`);
 
-  const cols = header.split(",");
-  const closeAt = cols.indexOf("close");
-  if (closeAt === -1) throw new Error(`stooq CSV for ${symbol} has no Close column`);
+  const stamps = result.timestamp || [];
+  const values = result.indicators?.quote?.[0]?.close || [];
 
   const dates = [];
   const closes = [];
-  for (let i = 1; i < lines.length; i++) {
-    const parts = lines[i].split(",");
-    const close = Number(parts[closeAt]);
-    if (!parts[0] || !Number.isFinite(close) || close <= 0) continue;
-    dates.push(parts[0]);
-    closes.push(close);
+  for (let i = 0; i < stamps.length; i++) {
+    const close = values[i];
+    if (close === null || close === undefined || close <= 0) continue;
+    dates.push(new Date(stamps[i] * 1000).toISOString().slice(0, 10));
+    closes.push(Number(close));
   }
 
-  if (closes.length === 0) throw new Error(`stooq CSV for ${symbol} had no usable rows`);
+  if (closes.length === 0) throw new Error(`Yahoo response for ${ticker} had no usable prices`);
   return { dates, closes };
 }
 

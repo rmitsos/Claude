@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "python3 forex/tests/test_engine.py && python3 forex/tests/test_parity.py"
+    "test": "python3 forex/tests/test_engine.py && python3 forex/tests/test_parity.py && python3 forex/tests/test_universe_parity.py"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",

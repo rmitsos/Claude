@@ -133,11 +133,19 @@ A silent cron job is how automated systems die. Two habits:
 This is the real decision, and it is still open. It sets your costs, which is
 the single number the whole strategy turns on.
 
+**Correction to what this file used to say:** OANDA's v20 API was listed
+here as the easy default. It isn't available. EU retail clients were
+migrated to OANDA TMS Brokers S.A. (Poland-regulated), which — per OANDA's
+own developer documentation — does not offer API access at all. This was
+found the hard way, hunting for a menu item that doesn't exist for this
+account type. See `fx-signals/README.md` for what the live dashboard uses
+instead (Yahoo, as a stand-in).
+
 | Broker | API | All-in cost on EURUSD | Verdict |
 |---|---|---|---|
-| **OANDA** | v20 REST, clean, good Python docs | ~0.9–1.4 bp round trip | Easiest to automate. Where I would start. |
-| **Interactive Brokers** | TWS/IB Gateway, needs a running process | ~0.2–0.4 bp round trip | Materially cheaper, materially more work. Worth it above ~€25k. |
-| **Saxo** | OpenAPI, REST, EU | ~1.0–1.6 bp | Fine, less community tooling. |
+| **Interactive Brokers** | TWS/IB Gateway, needs a running process | ~0.2–0.4 bp round trip | Full API access for EU clients. Materially more work to wire up, materially cheaper, and — because it can trade real futures, not CFDs — sidesteps the overnight financing fee entirely. Worth it above ~€25k. |
+| **Saxo** | OpenAPI, REST, EU | ~1.0–1.6 bp | Confirm API access is actually included for a retail EU account before relying on it — ask, don't assume, given what happened with OANDA. |
+| ~~OANDA~~ | ~~v20 REST~~ | — | **Not available to EU retail clients as of this writing.** Kept struck through rather than deleted, so this mistake isn't repeated. |
 | MetaTrader 5 | Python package, but needs the MT5 terminal | broker-dependent | Awkward on a Linux VPS. Avoid unless tied to a specific broker. |
 
 Two things worth knowing as an EU resident:

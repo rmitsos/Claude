@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { runSignalUpdate } from "@/lib/fx/signals";
+import { sendChangeEmail } from "@/lib/fx/email";
 
 export const maxDuration = 60;
 
@@ -11,7 +12,9 @@ export const maxDuration = 60;
 // proxy.js deliberately does not gate /api/* — Vercel's scheduler carries no
 // cookie, so the cron would never fire. This route guards itself instead.
 //
-// It computes and stores signals. It places no orders and holds no broker
+// It computes and stores signals, and emails only when at least one
+// instrument's position actually changed -- a few times a year across 22
+// instruments, not a daily digest. It places no orders and holds no broker
 // credentials — there is nothing here that can move money.
 export async function GET(request) {
   const secret = process.env.CRON_SECRET;
@@ -23,5 +26,18 @@ export async function GET(request) {
   }
 
   const result = await runSignalUpdate();
-  return NextResponse.json(result, { status: result.ok ? 200 : 500 });
+
+  let email = { sent: false, reason: "no changes" };
+  if (result.changes.length > 0 && result.portfolio) {
+    try {
+      email = await sendChangeEmail({ changes: result.changes, asof: result.portfolio.asof });
+    } catch (err) {
+      email = { sent: false, reason: err?.message || String(err) };
+    }
+  }
+
+  return NextResponse.json(
+    { ...result, changes: result.changes.length, email },
+    { status: result.ok ? 200 : 500 }
+  );
 }

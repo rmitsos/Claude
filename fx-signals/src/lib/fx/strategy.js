@@ -80,14 +80,25 @@ export function donchian(closes, lookback) {
     }
     signal[i] = Number.isFinite(last) ? last : 0;
   }
-  return { signal, upper, lower };
+  const empty = new Array(closes.length).fill(NaN);
+  return { signal, upper, lower, momentum: empty, trigger: empty };
 }
 
-/** Time-series momentum: sign of the return over the last `lookback` bars. */
+/**
+ * Time-series momentum: sign of the return over the last `lookback` bars.
+ *
+ * `trigger` is the single price this decision is measured against: the close
+ * from `lookback` bars ago. Unlike Donchian's two-sided channel, momentum has
+ * one reference level -- price above it means positive momentum, below it
+ * negative -- so the page can show "how far from flipping" the same way it
+ * does for a breakout, just with one number instead of two.
+ */
 export function tsm(closes, lookback) {
-  const change = pctChange(closes, lookback);
-  const signal = change.map((v) => (Number.isFinite(v) ? Math.sign(v) : 0));
-  return { signal, upper: new Array(closes.length).fill(NaN), lower: new Array(closes.length).fill(NaN) };
+  const momentum = pctChange(closes, lookback);
+  const signal = momentum.map((v) => (Number.isFinite(v) ? Math.sign(v) : 0));
+  const trigger = closes.map((_, i) => (i >= lookback ? closes[i - lookback] : NaN));
+  const empty = new Array(closes.length).fill(NaN);
+  return { signal, upper: empty, lower: empty, momentum, trigger };
 }
 
 /**
@@ -174,6 +185,8 @@ export function runStrategy(closes, options = {}) {
     returns,
     upper: base.upper,
     lower: base.lower,
+    momentum: base.momentum,
+    trigger: base.trigger,
     rawSignal: base.signal,
     signal: capped,
     barsHeld,
@@ -181,6 +194,31 @@ export function runStrategy(closes, options = {}) {
     scale,
     target,
   };
+}
+
+/**
+ * Net return earned on bar i by a position taken at the close of bar i-1.
+ * Mirrors fxlab's `evaluate` / `evaluate_financed` exactly -- same lag, same
+ * cost order, same admin-fee treatment -- so the paper P&L this app tracks
+ * is computed the same way the backtest's verdict was. Checked against the
+ * Python in test_universe_parity.py.
+ *
+ * `gross` is net of transaction cost only, matching check_universe.py's
+ * plain `evaluate()` (the "no financing" column). `financed` additionally
+ * deducts OANDA's admin fee, matching `evaluate_financed()` (the column the
+ * verdict was actually judged on).
+ */
+export function dailyPnl(result, index, { costBps = 0, adminFeeAnnual = 0, periodsPerYear = TRADING_DAYS } = {}) {
+  const i = index;
+  const position = i > 0 ? result.target[i - 1] : 0;
+  const prevPosition = i > 1 ? result.target[i - 2] : 0;
+  const traded = Math.abs(position - prevPosition);
+  const ret = result.returns[i];
+
+  const gross = (Number.isFinite(ret) ? position * ret : 0) - traded * (costBps / 1e4);
+  const admin = Math.abs(position) * (adminFeeAnnual / periodsPerYear);
+
+  return { gross, financed: gross - admin, position, traded };
 }
 
 /**
@@ -205,6 +243,8 @@ export function explain(result, index = result.closes.length - 1) {
     price,
     upper,
     lower,
+    momentum: result.momentum[i],
+    trigger: result.trigger[i],
     vol: result.vol[i],
     scale: result.scale[i],
     rawSignal: result.rawSignal[i],
@@ -216,6 +256,7 @@ export function explain(result, index = result.closes.length - 1) {
     barsToForcedExit: capFires ? Math.max(0, cfg.maxHold - held + 1) : null,
     distanceToLong: Number.isFinite(upper) ? upper / price - 1 : null,
     distanceToShort: Number.isFinite(lower) ? lower / price - 1 : null,
+    distanceToTrigger: Number.isFinite(result.trigger[i]) ? result.trigger[i] / price - 1 : null,
     reason: describe(result, i),
   };
 }
@@ -227,6 +268,7 @@ function describe(result, i) {
   const signal = result.signal[i];
   const raw = result.rawSignal[i];
   const held = result.barsHeld[i];
+  const momentum = result.momentum[i];
 
   if (target !== prev) {
     if (target === 0 && raw !== 0 && signal === 0) {
@@ -234,16 +276,26 @@ function describe(result, i) {
     }
     if (target === 0) return "Rule went flat.";
     const dir = target > 0 ? "long" : "short";
-    const level = target > 0 ? result.upper[i] : result.lower[i];
-    if (cfg.strategy === "donchian" && Number.isFinite(level)) {
-      return `Went ${dir}: close broke the ${cfg.lookback}-bar ${target > 0 ? "high" : "low"} of ${level.toFixed(5)}.`;
+
+    if (cfg.strategy === "donchian") {
+      const level = target > 0 ? result.upper[i] : result.lower[i];
+      if (Number.isFinite(level)) {
+        return `Went ${dir}: close broke the ${cfg.lookback}-bar ${target > 0 ? "high" : "low"} of ${level.toFixed(5)}.`;
+      }
+    }
+    if (cfg.strategy === "tsm" && Number.isFinite(momentum)) {
+      const months = Math.max(1, Math.round(cfg.lookback / 21));
+      return `Went ${dir}: the ${months}-month return turned ${target > 0 ? "positive" : "negative"} (${(momentum * 100).toFixed(1)}%).`;
     }
     return `Went ${dir} on the ${cfg.strategy} rule.`;
   }
 
   if (target === 0) {
     if (raw !== 0 && signal === 0) return "Flat — the max-hold cap is still in force.";
-    return "Flat — no breakout. Waiting.";
+    return "Flat — no trend yet. Waiting.";
   }
-  return `Holding ${target > 0 ? "long" : "short"}, bar ${held} of ${cfg.maxHold}.`;
+
+  const holdText = cfg.maxHold > 0 ? `bar ${held} of ${cfg.maxHold}` : `day ${held}`;
+  const momentumText = Number.isFinite(momentum) ? ` (${(momentum * 100).toFixed(1)}% over the lookback)` : "";
+  return `Holding ${target > 0 ? "long" : "short"}, ${holdText}${momentumText}.`;
 }
