@@ -42,6 +42,19 @@ export const FEEDS = [
   { name: "Balkan Green Energy News", url: "https://balkangreenenergynews.com/feed/" },
   { name: "PV Magazine", url: "https://www.pv-magazine.com/feed/" },
 
+  // --- Telecom trade press, added to enrich the thinnest beat (unverified —
+  // could not be reached from the build sandbox, which blocks outbound
+  // requests to arbitrary hosts the same way it blocked the AKTOR/energy
+  // note's source links. Check /api/ingest after this deploys; feedStatus
+  // reports ok/error per feed exactly as it did for the entries below that
+  // turned out to be dead ends. Prune whatever 403s or serves non-RSS.) ---
+  { name: "FierceTelecom", url: "https://www.fierce-network.com/rss.xml" },
+  { name: "Developing Telecoms", url: "https://developingtelecoms.com/feed" },
+  { name: "RCR Wireless News", url: "https://www.rcrwireless.com/feed" },
+  { name: "DataCenterDynamics", url: "https://www.datacenterdynamics.com/en/rss/" },
+  { name: "Mobile World Live", url: "https://www.mobileworldlive.com/feed" },
+  { name: "TelecomTV", url: "https://www.telecomtv.com/rss/" },
+
   // --- Confirmed unusable, do not re-add without a genuinely new URL ---
   // Sites returning 403 block cloud/datacenter IPs; a different path will
   // not help. Sites serving HTML/non-RSS had the wrong path tried.

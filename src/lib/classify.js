@@ -22,10 +22,17 @@ function normalize(text) {
 // unrelated words (e.g. a bare "εκτ" would match inside "ηλεκτρικής").
 const TOPIC_KEYWORDS = {
   finance: [
-    "χρηματιστηρι", "τραπεζ", "μετοχ", "ομολογ", "επιτοκι", "πληθωρισμ",
-    "προυπολογισμ", "φορολογ", "επενδυσ", "δημοσιονομικ", "ασφαλιστικ",
-    "ταμειο", "κεντρικη τραπεζα", "μερισμ", "κερδη εταιρ", "τζιρο",
+    "χρηματιστηρι", "τραπεζ", "μετοχ", "επιτοκι", "πληθωρισμ",
+    "προυπολογισμ", "φορολογ", "επενδυσ", "δημοσιονομικ",
+    "ασφαλιστικο συστημα", "ασφαλιστικες εισφορες", "ασφαλιστικη μεταρρυθμιση",
+    "ασφαλιστικες εταιρειες", "ασφαλιστικο ταμειο",
+    "ταμειο", "κεντρικη τραπεζα", "κερδη εταιρ", "τζιρο",
     "ισολογισμ", "ρευστοτητ", "κεφαλαιαγορ", "χρεος",
+    // Bond forms only — never the bare stem "ομολογ", which is also the root
+    // of ομολογώ/ομολόγησε (to confess). A crime report where the suspect
+    // "confessed" would otherwise classify as Finance; verified against real
+    // wire copy before narrowing this.
+    "ομολογο", "ομολογα", "ομολογιακ", "ομολογιουχ",
     "stock exchange", "bond yield", "interest rate", "inflation",
     "earnings", "ipo", "acquisition", "merger", "financial close",
     "funding round", "valuation",
@@ -45,9 +52,26 @@ const TOPIC_KEYWORDS = {
     "πετρελαι", "καυσιμ", "lng", "ρυπων", "ρυθμιστικη αρχη ενεργειας",
     "δικτυο διανομης", "υποσταθμ", "διασυνδεσ", "αποθηκευση ενεργειας",
     "grid", "renewable", "solar", "wind farm", "battery", "bess",
+    // "energy storage" as its own phrase, not just "battery"/"bess": trade
+    // press (Energy Storage News in particular) routinely writes "energy
+    // storage strategy" without the word battery anywhere in the summary.
+    // Without this, such a piece could clear only the Telco "data centre"
+    // keyword (common in AI-power-demand framing) and never tag as Energy
+    // at all — an energy story filed under Telco alone.
+    "energy storage",
     "photovoltaic", "substation", "transmission line", "interconnector",
     "power plant", "electricity", "natural gas", "hydrogen",
   ],
+};
+
+// Keywords a plain substring list cannot express safely, because a Greek
+// compound can embed an unrelated shorter word as its literal tail:
+// "διαμέρισμα" (apartment) contains "μέρισμα" (dividend) outright. A
+// negative lookbehind for the "δια" prefix keeps the dividend sense (bare
+// "Μέρισμα 0,045 ευρώ" and "μερίσματος") while excluding "διαμέρισμα" and
+// its plural "διαμερίσματα" — both common in real-estate coverage.
+const TOPIC_PATTERNS = {
+  finance: [/(?<!δια)μερισμα/u],
 };
 
 // Signals that a story is about building, deploying or operating physical
@@ -78,9 +102,11 @@ const UNIT_PATTERN =
 
 export function classify(item) {
   const text = normalize(`${item.title || ""} ${item.description || ""}`);
-  return Object.entries(TOPIC_KEYWORDS)
-    .filter(([, keywords]) => keywords.some((kw) => text.includes(normalize(kw))))
-    .map(([category]) => category);
+  return Object.keys(TOPIC_KEYWORDS).filter((category) => {
+    const byKeyword = TOPIC_KEYWORDS[category].some((kw) => text.includes(normalize(kw)));
+    const byPattern = (TOPIC_PATTERNS[category] || []).some((re) => re.test(text));
+    return byKeyword || byPattern;
+  });
 }
 
 // Whether an article belongs in a Technology sub-section rather than News.
