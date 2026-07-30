@@ -2,12 +2,13 @@ import { after } from "next/server";
 import { claimIngestSlot } from "./db";
 import { runIngest } from "./ingest";
 
-// Vercel's Hobby plan caps cron jobs at once per day, which is far too
-// slow for a news site. So the daily cron is just a floor — the real
-// refresh cadence comes from traffic: after a page finishes rendering,
-// if the last ingest was long enough ago, we run one in the background.
-// This never blocks the response (see `after`), and claimIngestSlot makes
-// the check atomic so concurrent visitors don't all trigger it at once.
+// Vercel Pro's cron (see vercel.json — every 30 minutes) is the primary
+// refresh mechanism now; this traffic-triggered path is the backstop for
+// the gaps between cron firings and for a burst of visits between them.
+// After a page finishes rendering, if the last ingest was long enough ago,
+// one runs in the background. This never blocks the response (see `after`),
+// and claimIngestSlot makes the check atomic so concurrent visitors don't
+// all trigger it at once, and so this and cron never race each other.
 const MIN_INTERVAL_MINUTES = 30;
 
 export function scheduleRefreshIfStale() {
