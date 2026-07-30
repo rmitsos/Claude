@@ -54,7 +54,8 @@ export const metadata = {
 };
 
 // Allow the background ingest kicked off by scheduleRefreshIfStale enough
-// time to fetch every feed; Hobby's ceiling is 60s.
+// time to fetch every feed — matches the ceiling set on /api/ingest and
+// /api/dashboard/scan, which run the same runIngest().
 export const maxDuration = 60;
 
 export default async function RootLayout({ children }) {
