@@ -63,6 +63,51 @@ async function createSchema() {
       value TIMESTAMPTZ NOT NULL
     )
   `;
+
+  // One row per ingest run (cron, traffic-triggered refresh, or a manual
+  // scan from the dashboard) — whatever runIngest() returns, verbatim.
+  // Gives the dashboard's health page a history to show, not just a
+  // snapshot of the most recent run.
+  await sql`
+    CREATE TABLE IF NOT EXISTS ingest_log (
+      id SERIAL PRIMARY KEY,
+      ran_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+      result JSONB NOT NULL
+    )
+  `;
+  await sql`CREATE INDEX IF NOT EXISTS ingest_log_ran_at_idx ON ingest_log (ran_at DESC)`;
+
+  // Curated from the dashboard: which articles the publisher thinks belong
+  // in the next "connecting the dots" piece, and why. Not a draft — the
+  // actual writing still happens in conversation, starting from this.
+  await sql`
+    CREATE TABLE IF NOT EXISTS editorial_briefs (
+      id SERIAL PRIMARY KEY,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+      links TEXT[] NOT NULL,
+      note TEXT,
+      status TEXT NOT NULL DEFAULT 'queued'
+    )
+  `;
+
+  // Structural facts added from the dashboard's relation map. Separate from
+  // .claude/skills/greek-market/relations.md, which stays hand-maintained —
+  // these get folded into that file (and reconciled = true) in a later
+  // session, not automatically.
+  await sql`
+    CREATE TABLE IF NOT EXISTS relations (
+      id SERIAL PRIMARY KEY,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+      section TEXT NOT NULL,
+      subject TEXT NOT NULL,
+      relation TEXT NOT NULL,
+      detail TEXT,
+      object TEXT NOT NULL,
+      source TEXT NOT NULL,
+      why TEXT,
+      reconciled BOOLEAN NOT NULL DEFAULT false
+    )
+  `;
 }
 
 // Atomically claims the right to run an ingest, returning true only if at
