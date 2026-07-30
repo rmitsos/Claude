@@ -190,8 +190,11 @@ export async function runIngest() {
 
 // Most recent ingest runs, newest first — what the dashboard's health page
 // shows instead of re-running a scan just to see the last one's outcome.
+// ensureSchema() here, not just in runIngest(): this can be the very first
+// thing to touch ingest_log after a fresh deploy, before any scan has run.
 export async function getIngestHistory(limit = 10) {
   if (!sql) return [];
+  await ensureSchema();
   const rows = await sql`
     SELECT ran_at, result FROM ingest_log ORDER BY ran_at DESC LIMIT ${limit}
   `;
