@@ -30,10 +30,14 @@ export const FEEDS = [
   { name: "Capital.gr (Οικονομία)", url: "https://www.capital.gr/api/tags/oikonomia/" },
   { name: "OT.gr", url: "https://www.ot.gr/feed/" },
 
-  // --- Greek trade / engineering (verified working) ---
-  { name: "Ypodomes", url: "https://ypodomes.com/feed/" },
-  { name: "B2Green", url: "https://news.b2green.gr/feed/" },
-  { name: "ICTplus", url: "https://www.ictplus.gr/feed/" },
+  // --- Greek trade / engineering (verified working — via each site's own
+  // WordPress REST API instead of RSS: a live comparison showed roughly
+  // double the relevant articles per site over the RSS version's item cap
+  // and short excerpt. Ypodomes in particular has no working alternative
+  // right now — its RSS endpoint intermittently 521s while the API doesn't. ---
+  { name: "Ypodomes", type: "wp-json", url: "https://ypodomes.com/wp-json/wp/v2/posts?per_page=30&_embed" },
+  { name: "B2Green", type: "wp-json", url: "https://news.b2green.gr/wp-json/wp/v2/posts?per_page=30&_embed" },
+  { name: "ICTplus", type: "wp-json", url: "https://www.ictplus.gr/wp-json/wp/v2/posts?per_page=30&_embed" },
 
   // --- International engineering trade press (verified working) ---
   { name: "Energy Storage News", url: "https://www.energy-storage.news/feed/" },
@@ -42,25 +46,25 @@ export const FEEDS = [
   { name: "Balkan Green Energy News", url: "https://balkangreenenergynews.com/feed/" },
   { name: "PV Magazine", url: "https://www.pv-magazine.com/feed/" },
 
-  // --- Telecom trade press, added to enrich the thinnest beat (unverified —
-  // could not be reached from the build sandbox, which blocks outbound
-  // requests to arbitrary hosts the same way it blocked the AKTOR/energy
-  // note's source links. Check /api/ingest after this deploys; feedStatus
-  // reports ok/error per feed exactly as it did for the entries below that
-  // turned out to be dead ends. Prune whatever 403s or serves non-RSS.) ---
+  // --- Telecom trade press, added to enrich the thinnest beat (verified via
+  // a real production ingest) ---
   { name: "FierceTelecom", url: "https://www.fierce-network.com/rss.xml" },
-  { name: "Developing Telecoms", url: "https://developingtelecoms.com/feed" },
   { name: "RCR Wireless News", url: "https://www.rcrwireless.com/feed" },
   { name: "DataCenterDynamics", url: "https://www.datacenterdynamics.com/en/rss/" },
   { name: "Mobile World Live", url: "https://www.mobileworldlive.com/feed" },
-  { name: "TelecomTV", url: "https://www.telecomtv.com/rss/" },
 
   // --- Confirmed unusable, do not re-add without a genuinely new URL ---
   // Sites returning 403 block cloud/datacenter IPs; a different path will
   // not help. Sites serving HTML/non-RSS had the wrong path tried.
-  // energypress.gr  — 403 on /rss and /index.php/rss
-  // Ecopress        — 403 on /feed/
-  // Light Reading   — 403 on /rss_simple.asp
-  // Telecoms.com    — 403 on /feed
-  // WorldEnergyNews — /feed/ served HTML; /rss not valid RSS 1 or 2
+  // energypress.gr      — 403 on /rss and /index.php/rss
+  // Ecopress            — 403 on /feed/
+  // Light Reading       — 403 on /rss_simple.asp
+  // Telecoms.com        — 403 on /feed
+  // WorldEnergyNews     — /feed/ served HTML; /rss not valid RSS 1 or 2
+  // Developing Telecoms — 404 on /feed
+  // TelecomTV           — 404 on /rss/
+  // SeeNews             — 403 on /feed, same cloud-IP blocking pattern
+  // Renewables Now      — 403 on /feed/, same pattern
+  // Euro2day            — 404 on /rss — guessed path was wrong; if you know
+  //                        their real feed/API convention, worth another try
 ];

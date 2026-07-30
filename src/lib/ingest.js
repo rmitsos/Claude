@@ -169,7 +169,7 @@ export async function runIngest() {
     }
   }
 
-  return {
+  const result = {
     ok: true,
     relevant: items.length,
     upserted,
@@ -179,4 +179,21 @@ export async function runIngest() {
     keysBackfilled: backfilled,
     feeds: feedStatus,
   };
+
+  // Logged from this one place so cron, the traffic-triggered background
+  // refresh, and a manual "Scan now" from the dashboard all get a history
+  // row with no duplicated logic at the call sites.
+  await sql`INSERT INTO ingest_log (result) VALUES (${JSON.stringify(result)})`;
+
+  return result;
+}
+
+// Most recent ingest runs, newest first — what the dashboard's health page
+// shows instead of re-running a scan just to see the last one's outcome.
+export async function getIngestHistory(limit = 10) {
+  if (!sql) return [];
+  const rows = await sql`
+    SELECT ran_at, result FROM ingest_log ORDER BY ran_at DESC LIMIT ${limit}
+  `;
+  return rows.map((r) => ({ ranAt: r.ran_at, ...r.result }));
 }
