@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, Suspense, use } from "react";
+import { useEffect, useState } from "react";
 import { useDashboardToken } from "./layout";
 import { CATEGORIES } from "@/lib/feeds";
 
@@ -14,21 +14,6 @@ const dateFmt = new Intl.DateTimeFormat("en-GB", {
 
 const button =
   "border border-band bg-band px-4 py-2 text-sm font-semibold text-band-ink hover:opacity-90 disabled:opacity-50";
-
-// Never rejects, so `use()` only ever suspends or resolves — a failed fetch
-// is a value to render ({ ok: false }), not an exception for Suspense to
-// catch. Matches the safeQuery pattern already used in lib/articles.js.
-async function fetchHealth(token) {
-  try {
-    const res = await fetch("/api/dashboard/health", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    if (!res.ok) return { ok: false, error: `HTTP ${res.status}` };
-    return await res.json();
-  } catch (err) {
-    return { ok: false, error: err?.message || String(err) };
-  }
-}
 
 function FeedRow({ feed }) {
   const ok = feed.ok;
@@ -45,14 +30,37 @@ function FeedRow({ feed }) {
   );
 }
 
-function HealthContent({ token, refreshKey, onScanned }) {
-  // refreshKey isn't read inside the fetch — it's a deliberate cache-buster
-  // so bumping it after a scan forces a refetch.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const promise = useMemo(() => fetchHealth(token), [token, refreshKey]);
-  const data = use(promise);
+export default function DashboardHealthPage() {
+  const token = useDashboardToken();
+  const [data, setData] = useState(null);
+  const [error, setError] = useState("");
   const [scanning, setScanning] = useState(false);
   const [scanResult, setScanResult] = useState("");
+
+  // Mirrors /studio's data loading exactly (plain fetch-in-effect) rather
+  // than the fancier use()+Suspense approach tried first here — that one
+  // left the dashboard's login stuck on "Checking…" in production and this
+  // pattern is proven working in this exact deployment.
+  useEffect(() => {
+    load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
+
+  async function load() {
+    setError("");
+    try {
+      const res = await fetch("/api/dashboard/health", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) {
+        setError(`Failed to load — ${res.status}${res.status === 401 ? " (wrong password)" : ""}`);
+        return;
+      }
+      setData(await res.json());
+    } catch (err) {
+      setError(err?.message || String(err));
+    }
+  }
 
   async function scanNow() {
     setScanning(true);
@@ -68,14 +76,15 @@ function HealthContent({ token, refreshKey, onScanned }) {
           body.upserted ?? 0
         } upserted, ${body.failed ?? 0} failed`
       );
-      onScanned();
+      await load();
     } catch (err) {
       setScanResult(`Failed — ${err?.message || err}`);
     }
     setScanning(false);
   }
 
-  if (!data.ok) return <p className="text-sm text-fin">Failed to load — {data.error}</p>;
+  if (error) return <p className="text-sm text-fin">{error}</p>;
+  if (!data) return <p className="text-sm text-muted">Loading…</p>;
 
   const { latest, history, volume, archive } = data;
 
@@ -170,20 +179,5 @@ function HealthContent({ token, refreshKey, onScanned }) {
         </div>
       </section>
     </div>
-  );
-}
-
-export default function DashboardHealthPage() {
-  const token = useDashboardToken();
-  const [refreshKey, setRefreshKey] = useState(0);
-
-  return (
-    <Suspense fallback={<p className="text-sm text-muted">Loading…</p>}>
-      <HealthContent
-        token={token}
-        refreshKey={refreshKey}
-        onScanned={() => setRefreshKey((n) => n + 1)}
-      />
-    </Suspense>
   );
 }

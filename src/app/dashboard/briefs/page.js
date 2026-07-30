@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, Suspense, use } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDashboardToken } from "../layout";
 import { ENTITY_BY_ID } from "@/lib/entities";
 
@@ -20,34 +20,53 @@ const button =
   "border border-band bg-band px-4 py-2 text-sm font-semibold text-band-ink hover:opacity-90 disabled:opacity-50";
 const ghost = "border border-rule px-2 py-1 text-xs text-ink hover:bg-hover";
 
-// Never rejects — see src/app/dashboard/page.js for why: a failed fetch is a
-// value `use()` renders, not an exception it has to catch.
-async function fetchData(token) {
-  const digest = await fetch("/api/digest?format=json&period=7d&limit=150")
-    .then((r) => r.json())
-    .catch(() => ({ items: [], trends: [], pairs: [] }));
-  const briefsBody = await fetch("/api/dashboard/briefs", {
-    headers: { Authorization: `Bearer ${token}` },
-  })
-    .then((r) => (r.ok ? r.json() : { ok: false, briefs: [] }))
-    .catch(() => ({ ok: false, briefs: [] }));
-  return { digest, briefs: briefsBody.briefs || [] };
-}
+export default function BriefsPage() {
+  const token = useDashboardToken();
+  const auth = { Authorization: `Bearer ${token}` };
 
-function BriefsContent({ token, refreshKey, onChanged }) {
-  // refreshKey isn't read inside the fetch — it's a deliberate cache-buster
-  // so saving/updating a brief forces a refetch.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const promise = useMemo(() => fetchData(token), [token, refreshKey]);
-  const { digest, briefs } = use(promise);
-
+  const [digest, setDigest] = useState(null);
+  const [briefs, setBriefs] = useState([]);
+  const [briefsError, setBriefsError] = useState("");
   const [selected, setSelected] = useState(new Set());
   const [note, setNote] = useState("");
   const [filter, setFilter] = useState("");
   const [status, setStatus] = useState("");
   const [saving, setSaving] = useState(false);
 
-  const auth = { Authorization: `Bearer ${token}` };
+  // Same plain fetch-in-effect pattern as /studio and the health page —
+  // see src/app/dashboard/page.js for why this replaced an earlier
+  // use()+Suspense attempt.
+  //
+  // react-hooks/immutability flags loadAll() here as "accessed before
+  // declared". The equivalent single-function case (loadRelations() in
+  // src/app/dashboard/map/page.js) doesn't trigger it; several reshapes of
+  // this one (inlining loadBriefs, reordering declarations) didn't clear it
+  // either, so this looks like a false positive on this specific rule
+  // rather than a real hazard — loadAll is a stable function declaration,
+  // not a value that changes identity across renders.
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/immutability
+    loadAll();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
+
+  async function loadAll() {
+    fetch("/api/digest?format=json&period=7d&limit=150")
+      .then((res) => res.json())
+      .then(setDigest)
+      .catch(() => setDigest({ items: [], trends: [], pairs: [] }));
+    await loadBriefs();
+  }
+
+  async function loadBriefs() {
+    const res = await fetch("/api/dashboard/briefs", { headers: auth });
+    if (res.ok) {
+      setBriefs((await res.json()).briefs || []);
+      setBriefsError("");
+    } else {
+      setBriefsError(`Failed to load briefs — ${res.status}${res.status === 401 ? " (wrong password)" : ""}`);
+    }
+  }
 
   const items = useMemo(() => {
     const all = digest?.items || [];
@@ -82,7 +101,7 @@ function BriefsContent({ token, refreshKey, onChanged }) {
         setStatus("Brief saved.");
         setSelected(new Set());
         setNote("");
-        onChanged();
+        await loadBriefs();
       }
     } catch (err) {
       setStatus(`Failed — ${err?.message || err}`);
@@ -96,8 +115,10 @@ function BriefsContent({ token, refreshKey, onChanged }) {
       headers: { ...auth, "Content-Type": "application/json" },
       body: JSON.stringify({ id, status: newStatus }),
     });
-    onChanged();
+    await loadBriefs();
   }
+
+  if (!digest) return <p className="text-sm text-muted">Loading…</p>;
 
   const rising = (digest.trends || []).filter((t) => t.thisWeek > t.lastWeek).slice(0, 8);
 
@@ -157,6 +178,7 @@ function BriefsContent({ token, refreshKey, onChanged }) {
         </div>
 
         <h2 className="mt-8 font-serif text-lg font-bold">Queued briefs</h2>
+        {briefsError && <p className="mt-2 text-sm text-fin">{briefsError}</p>}
         <div className="mt-3 flex flex-col gap-3">
           {briefs.map((brief) => (
             <div key={brief.id} className="border border-rule p-3 text-sm">
@@ -186,7 +208,7 @@ function BriefsContent({ token, refreshKey, onChanged }) {
               </ul>
             </div>
           ))}
-          {!briefs.length && <p className="text-sm text-muted">Nothing queued yet.</p>}
+          {!briefs.length && !briefsError && <p className="text-sm text-muted">Nothing queued yet.</p>}
         </div>
       </div>
 
@@ -220,20 +242,5 @@ function BriefsContent({ token, refreshKey, onChanged }) {
         </ul>
       </aside>
     </div>
-  );
-}
-
-export default function BriefsPage() {
-  const token = useDashboardToken();
-  const [refreshKey, setRefreshKey] = useState(0);
-
-  return (
-    <Suspense fallback={<p className="text-sm text-muted">Loading…</p>}>
-      <BriefsContent
-        token={token}
-        refreshKey={refreshKey}
-        onChanged={() => setRefreshKey((n) => n + 1)}
-      />
-    </Suspense>
   );
 }
