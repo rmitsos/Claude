@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, Suspense, use } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDashboardToken } from "../layout";
 import { RELATION_SECTIONS } from "@/lib/relationsData";
 
@@ -13,14 +13,6 @@ const field =
   "border border-rule bg-surface px-3 py-2 text-sm text-ink focus:border-band focus:outline-none";
 const button =
   "border border-band bg-band px-4 py-2 text-sm font-semibold text-band-ink hover:opacity-90 disabled:opacity-50";
-
-// Never rejects — see src/app/dashboard/page.js for why.
-async function fetchRelations(token) {
-  return fetch("/api/dashboard/relations", { headers: { Authorization: `Bearer ${token}` } })
-    .then((r) => (r.ok ? r.json() : { ok: false, relations: [] }))
-    .then((body) => body.relations || [])
-    .catch(() => []);
-}
 
 function layoutNodes(names) {
   const positions = new Map();
@@ -108,13 +100,12 @@ function SectionGraph({ id, label, staticEdges, dynamicEdges, onSelect, selected
   );
 }
 
-function MapContent({ token, refreshKey, onChanged }) {
-  // refreshKey isn't read inside the fetch — it's a deliberate cache-buster
-  // so adding a relation forces a refetch.
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const promise = useMemo(() => fetchRelations(token), [token, refreshKey]);
-  const relations = use(promise);
+export default function RelationMapPage() {
+  const token = useDashboardToken();
+  const auth = { Authorization: `Bearer ${token}` };
 
+  const [relations, setRelations] = useState(null);
+  const [error, setError] = useState("");
   const [selection, setSelection] = useState(null);
   const [status, setStatus] = useState("");
   const [saving, setSaving] = useState(false);
@@ -128,6 +119,28 @@ function MapContent({ token, refreshKey, onChanged }) {
     why: "",
   });
 
+  // Same plain fetch-in-effect pattern as /studio and the health page —
+  // see src/app/dashboard/page.js for why this replaced an earlier
+  // use()+Suspense attempt.
+  useEffect(() => {
+    loadRelations();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
+
+  async function loadRelations() {
+    try {
+      const res = await fetch("/api/dashboard/relations", { headers: auth });
+      if (!res.ok) {
+        setError(`Failed to load — ${res.status}${res.status === 401 ? " (wrong password)" : ""}`);
+        return;
+      }
+      setRelations((await res.json()).relations || []);
+      setError("");
+    } catch (err) {
+      setError(err?.message || String(err));
+    }
+  }
+
   async function addRelation(e) {
     e.preventDefault();
     if (!form.subject.trim() || !form.relation.trim() || !form.object.trim()) return;
@@ -136,7 +149,7 @@ function MapContent({ token, refreshKey, onChanged }) {
     try {
       const res = await fetch("/api/dashboard/relations", {
         method: "POST",
-        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+        headers: { ...auth, "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
       const body = await res.json();
@@ -145,13 +158,16 @@ function MapContent({ token, refreshKey, onChanged }) {
       } else {
         setStatus("Added — shown dashed until folded into relations.md.");
         setForm({ ...form, subject: "", relation: "", detail: "", object: "", why: "" });
-        onChanged();
+        await loadRelations();
       }
     } catch (err) {
       setStatus(`Failed — ${err?.message || err}`);
     }
     setSaving(false);
   }
+
+  if (error) return <p className="text-sm text-fin">{error}</p>;
+  if (!relations) return <p className="text-sm text-muted">Loading…</p>;
 
   const dynamicBySection = (id) =>
     relations.filter((r) => r.section === id).map((r) => ({ ...r, pending: !r.reconciled }));
@@ -279,16 +295,5 @@ function MapContent({ token, refreshKey, onChanged }) {
         </form>
       </aside>
     </div>
-  );
-}
-
-export default function RelationMapPage() {
-  const token = useDashboardToken();
-  const [refreshKey, setRefreshKey] = useState(0);
-
-  return (
-    <Suspense fallback={<p className="text-sm text-muted">Loading…</p>}>
-      <MapContent token={token} refreshKey={refreshKey} onChanged={() => setRefreshKey((n) => n + 1)} />
-    </Suspense>
   );
 }
