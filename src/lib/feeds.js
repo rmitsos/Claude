@@ -49,6 +49,27 @@ export const FEEDS = [
   { name: "DataCenterDynamics", url: "https://www.datacenterdynamics.com/en/rss/" },
   { name: "Mobile World Live", url: "https://www.mobileworldlive.com/feed" },
 
+  // --- WordPress REST API comparison for existing Greek trade sources
+  // (unverified — same reachability caveat as everywhere else in this file).
+  // A wp-json feed reads the sites' own intended API, not their RSS: no
+  // item-count cap and full content instead of a short excerpt. Running
+  // alongside the matching RSS entry above for now, since both resolve to
+  // the same article links and the DB upsert is keyed on link — no
+  // duplicates either way. Once confirmed via /api/ingest, drop the RSS
+  // entry above and keep only whichever one actually gets more/better data. ---
+  { name: "Ypodomes (WP API)", type: "wp-json", url: "https://ypodomes.com/wp-json/wp/v2/posts?per_page=30&_embed" },
+  { name: "B2Green (WP API)", type: "wp-json", url: "https://news.b2green.gr/wp-json/wp/v2/posts?per_page=30&_embed" },
+  { name: "ICTplus (WP API)", type: "wp-json", url: "https://www.ictplus.gr/wp-json/wp/v2/posts?per_page=30&_embed" },
+
+  // --- New candidate sources for Southeast Europe energy/finance trade
+  // press, a beat the current list barely touches. Found via search, not
+  // confirmed reachable from this sandbox — URLs are best-effort (Renewables
+  // Now and Euro2day's paths are a guess at their convention, not seen
+  // directly). Check /api/ingest; prune whatever 403s or 404s. ---
+  { name: "SeeNews", url: "https://seenews.com/feed" },
+  { name: "Renewables Now", url: "https://renewablesnow.com/feed/" },
+  { name: "Euro2day", url: "https://www.euro2day.gr/rss" },
+
   // --- Confirmed unusable, do not re-add without a genuinely new URL ---
   // Sites returning 403 block cloud/datacenter IPs; a different path will
   // not help. Sites serving HTML/non-RSS had the wrong path tried.
