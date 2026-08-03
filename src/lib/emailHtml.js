@@ -112,6 +112,60 @@ const COPY = {
   },
 };
 
+// Shared by both buildEmail (a week's lead) and buildNoteEmail (a single
+// note sent on its own): the head, the byline, the rendered body, and the
+// footer are identical either way — only what counts as "the piece" and
+// what surrounds it (sweep, other notes) differs.
+function renderShell({ lang, title, aboveBody, url, c }) {
+  return (
+    `<!doctype html><html lang="${lang}"><head><meta charset="utf-8">` +
+    `<meta name="viewport" content="width=device-width,initial-scale=1">` +
+    `<title>${escapeHtml(title)}</title></head>` +
+    `<body style="${S.body}"><div style="${S.wrap}">` +
+    `<div style="${S.band}">GR Wire · Connecting the dots</div>` +
+    aboveBody +
+    `<hr style="${S.rule}">` +
+    `<p style="${S.footer}"><a href="${url}" style="${S.a}">${escapeHtml(c.readOnline)}</a></p>` +
+    `<p style="${S.footer}">${escapeHtml(c.what)}<br>` +
+    `<a href="{$unsubscribe}" style="${S.a}">${lang === "en" ? "Unsubscribe" : "Διαγραφή"}</a></p>` +
+    `</div></body></html>`
+  );
+}
+
+function formatDate(lang, iso) {
+  return new Intl.DateTimeFormat(lang === "en" ? "en-GB" : "el-GR", {
+    timeZone: "Europe/Athens",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(new Date(iso));
+}
+
+/**
+ * A single note, sent on its own rather than folded into its week's letter —
+ * for news that can't wait for the week's lead and doesn't belong bundled
+ * with whatever that lead happens to be about. No sweep, no lead section:
+ * the note is the whole letter.
+ */
+export async function buildNoteEmail({ week, note, lang }) {
+  const version = note[lang] || note.el;
+  if (!version) return null;
+
+  const c = COPY[lang] || COPY.el;
+  const url = `${BASE}/weekly/${week.meta.week}/${note.slug}`;
+  const date = formatDate(lang, note.published);
+
+  const aboveBody =
+    `<h1 style="${S.h1}">${escapeHtml(version.title)}</h1>` +
+    (version.standfirst
+      ? `<p style="${S.standfirst}">${escapeHtml(version.standfirst)}</p>`
+      : "") +
+    `<div style="${S.byline}">${escapeHtml(c.by)} ${escapeHtml(week.meta.author)} · ${escapeHtml(date)}</div>` +
+    (await renderBody(version));
+
+  return { subject: version.title, html: renderShell({ lang, title: version.title, aboveBody, url, c }) };
+}
+
 /**
  * Assembles the letter: the sweep, then the lead in full, then any notes.
  * Returns null when the week has no lead — there is nothing to send.
@@ -122,12 +176,7 @@ export async function buildEmail({ week, sweep, notes = [], lang }) {
 
   const c = COPY[lang] || COPY.el;
   const url = `${BASE}/weekly/${week.meta.week}`;
-  const date = new Intl.DateTimeFormat(lang === "en" ? "en-GB" : "el-GR", {
-    timeZone: "Europe/Athens",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  }).format(new Date(week.meta.published));
+  const date = formatDate(lang, week.meta.published);
 
   const notesHtml = notes.length
     ? `<div style="${S.section}">${escapeHtml(c.notes)}</div>` +
@@ -141,12 +190,7 @@ export async function buildEmail({ week, sweep, notes = [], lang }) {
       `</ul>`
     : "";
 
-  const html =
-    `<!doctype html><html lang="${lang}"><head><meta charset="utf-8">` +
-    `<meta name="viewport" content="width=device-width,initial-scale=1">` +
-    `<title>${escapeHtml(version.title)}</title></head>` +
-    `<body style="${S.body}"><div style="${S.wrap}">` +
-    `<div style="${S.band}">GR Wire · Connecting the dots</div>` +
+  const aboveBody =
     renderSweep(sweep?.[lang], c.sweep, c.sweepNote) +
     `<div style="${S.section}">${escapeHtml(c.lead)}</div>` +
     `<p style="${S.sectionNote}">${escapeHtml(c.leadNote)}</p>` +
@@ -156,12 +200,7 @@ export async function buildEmail({ week, sweep, notes = [], lang }) {
       : "") +
     `<div style="${S.byline}">${escapeHtml(c.by)} ${escapeHtml(week.meta.author)} · ${escapeHtml(date)}</div>` +
     (await renderBody(version)) +
-    (notesHtml ? `<hr style="${S.rule}">${notesHtml}` : "") +
-    `<hr style="${S.rule}">` +
-    `<p style="${S.footer}"><a href="${url}" style="${S.a}">${escapeHtml(c.readOnline)}</a></p>` +
-    `<p style="${S.footer}">${escapeHtml(c.what)}<br>` +
-    `<a href="{$unsubscribe}" style="${S.a}">${lang === "en" ? "Unsubscribe" : "Διαγραφή"}</a></p>` +
-    `</div></body></html>`;
+    (notesHtml ? `<hr style="${S.rule}">${notesHtml}` : "");
 
-  return { subject: version.title, html };
+  return { subject: version.title, html: renderShell({ lang, title: version.title, aboveBody, url, c }) };
 }
