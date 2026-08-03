@@ -1,5 +1,6 @@
 import { meta as meta2026W31, el as el2026W31, en as en2026W31 } from "./2026-w31";
 import { meta as meta2026W30, el as el2026W30, en as en2026W30 } from "./2026-w30";
+import { note as noteW31Kalodio } from "./notes/2026-w31-kalodio-oxi-anemogennitria";
 import { note as noteW30Pagio } from "./notes/2026-w30-pagio-diktyo-ina";
 
 // A week, not a piece. The lead is the argument of the week and there is at
@@ -14,7 +15,7 @@ export const WEEKS = [
   {
     meta: meta2026W31,
     lead: { el: el2026W31, en: en2026W31 },
-    notes: [],
+    notes: [noteW31Kalodio],
   },
   {
     meta: meta2026W30,
