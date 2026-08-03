@@ -44,10 +44,7 @@ next-env.d.ts
 __pycache__/
 *.py[cod]
 
-# fxlab runtime state (account details, live positions) — while fx-signals
-# is still staged here. Goes away with the directory.
-fx-signals/forex/config.json
-fx-signals/forex/state.json
-fx-signals/forex/log/
-fx-signals/node_modules/
-fx-signals/.next/
+# fxlab runtime state (account details, live positions)
+forex/config.json
+forex/state.json
+forex/log/

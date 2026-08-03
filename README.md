@@ -80,3 +80,15 @@ set locally, pages render with empty results rather than crashing.
 - `src/lib/ingest.js` / `src/app/api/ingest/route.js` — the cron-triggered job
 - `src/lib/articles.js` — DB reads used by pages
 - `src/app/` — Next.js App Router pages
+
+## `fx-signals/` — staging only, not part of this site
+
+An unrelated private project that was briefly built inside this repo and has
+been extracted. It is a self-contained Next.js app with its own
+`package.json`, and **nothing in it is built, deployed, or reachable from GR
+Wire** — no route, no cron, no shared code. `.vercelignore` keeps it out of
+the deployment entirely.
+
+It is sitting here only until it is pushed to its own repository, at which
+point this directory should be deleted. See `fx-signals/README.md` for the
+two commands that do it.
