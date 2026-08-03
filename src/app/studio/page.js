@@ -13,6 +13,15 @@ import { useState } from "react";
 
 const WEEKS = ["2026-w31", "2026-w30"];
 
+// Slugs of notes that can be sent standalone (bypassing that week's lead
+// and sweep) rather than only as part of the whole week's letter. Kept
+// manual, like WEEKS and the editorial index itself — a note showing up
+// here is a decision, not a side effect of the file existing.
+const NOTES = {
+  "2026-w31": ["kalodio-oxi-anemogennitria"],
+  "2026-w30": ["pagio-diktyo-ina"],
+};
+
 function useToken() {
   const [token, setToken] = useState(() =>
     typeof window === "undefined" ? "" : sessionStorage.getItem("grwire-token") || ""
@@ -29,18 +38,22 @@ function useToken() {
 export default function StudioPage() {
   const [token, setToken] = useToken();
   const [week, setWeek] = useState(WEEKS[0]);
+  const [noteSlug, setNoteSlug] = useState(""); // "" = whole week's letter
   const [lang, setLang] = useState("el");
   const [html, setHtml] = useState("");
   const [status, setStatus] = useState("");
   const [busy, setBusy] = useState(false);
 
   const auth = { Authorization: `Bearer ${token}` };
+  const noteParam = noteSlug ? `&note=${noteSlug}` : "";
 
   async function preview() {
     setBusy(true);
     setStatus("");
     try {
-      const res = await fetch(`/api/campaign?week=${week}&lang=${lang}`, { headers: auth });
+      const res = await fetch(`/api/campaign?week=${week}${noteParam}&lang=${lang}`, {
+        headers: auth,
+      });
       if (!res.ok) {
         setHtml("");
         setStatus(`Preview failed — ${res.status}${res.status === 401 ? " (wrong token)" : ""}`);
@@ -58,11 +71,16 @@ export default function StudioPage() {
   // reversible but not free — it appears in MailerLite and has to be deleted
   // by hand — so it should follow having actually looked at the letter.
   async function createDrafts() {
-    if (!confirm("Create MailerLite drafts for both editions? They will not be sent.")) return;
+    const what = noteSlug ? "this note alone" : "the whole week's letter";
+    if (!confirm(`Create MailerLite drafts for both editions of ${what}? They will not be sent.`))
+      return;
     setBusy(true);
     setStatus("");
     try {
-      const res = await fetch(`/api/campaign?week=${week}`, { method: "POST", headers: auth });
+      const res = await fetch(`/api/campaign?week=${week}${noteParam}`, {
+        method: "POST",
+        headers: auth,
+      });
       const body = await res.json();
       setStatus(JSON.stringify(body, null, 2));
     } catch (err) {
@@ -104,10 +122,31 @@ export default function StudioPage() {
             <span className="font-mono text-[11px] uppercase tracking-widest text-muted">
               Week
             </span>
-            <select value={week} onChange={(e) => setWeek(e.target.value)} className={field}>
+            <select
+              value={week}
+              onChange={(e) => {
+                setWeek(e.target.value);
+                setNoteSlug(""); // a note slug from the old week won't exist on the new one
+              }}
+              className={field}
+            >
               {WEEKS.map((w) => (
                 <option key={w} value={w}>
                   {w}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          <label className="flex flex-col gap-1">
+            <span className="font-mono text-[11px] uppercase tracking-widest text-muted">
+              Send
+            </span>
+            <select value={noteSlug} onChange={(e) => setNoteSlug(e.target.value)} className={field}>
+              <option value="">Whole week (lead + notes + sweep)</option>
+              {(NOTES[week] || []).map((slug) => (
+                <option key={slug} value={slug}>
+                  Note only: {slug}
                 </option>
               ))}
             </select>

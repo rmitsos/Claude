@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { getWeek, weekNotes } from "@/content/editorials";
+import { getWeek, getNote, weekNotes } from "@/content/editorials";
 import { sweep as sweepW31 } from "@/content/editorials/2026-w31";
-import { buildEmail } from "@/lib/emailHtml";
+import { buildEmail, buildNoteEmail } from "@/lib/emailHtml";
 import { SITE } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
@@ -57,7 +57,9 @@ function authorised(request) {
  * API call — and this is the only way to see the HTML while it is still free
  * to change.
  *
- * GET /api/campaign?week=2026-w31&lang=el   with Authorization: Bearer …
+ * GET /api/campaign?week=2026-w31&lang=el                    (whole week)
+ * GET /api/campaign?week=2026-w31&note=some-slug&lang=el      (one note alone)
+ * with Authorization: Bearer …
  */
 export async function GET(request) {
   const ok = authorised(request);
@@ -70,7 +72,23 @@ export async function GET(request) {
 
   const params = new URL(request.url).searchParams;
   const id = params.get("week");
+  const noteSlug = params.get("note");
   const lang = params.get("lang") === "en" ? "en" : "el";
+
+  if (noteSlug) {
+    const found = id ? getNote(id, noteSlug) : null;
+    if (!found) {
+      return NextResponse.json({ ok: false, error: "unknown week or note" }, { status: 404 });
+    }
+    const letter = await buildNoteEmail({ week: found.week, note: found.note, lang });
+    if (!letter) {
+      return NextResponse.json({ ok: false, error: "no edition" }, { status: 404 });
+    }
+    return new Response(letter.html, {
+      headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" },
+    });
+  }
+
   const week = id ? getWeek(id) : null;
   if (!week?.lead) {
     return NextResponse.json({ ok: false, error: "unknown week or no lead" }, { status: 404 });
@@ -100,7 +118,9 @@ export async function GET(request) {
  * campaign is the tedious part and it is fully automated; pressing Send stays
  * a human act performed after looking at the thing.
  *
- * POST /api/campaign?week=2026-w31   with Authorization: Bearer CAMPAIGN_SECRET
+ * POST /api/campaign?week=2026-w31                     (whole week)
+ * POST /api/campaign?week=2026-w31&note=some-slug        (one note alone)
+ * with Authorization: Bearer CAMPAIGN_SECRET
  */
 export async function POST(request) {
   const ok = authorised(request);
@@ -117,19 +137,33 @@ export async function POST(request) {
     return NextResponse.json({ ok: false, error: "no api key" }, { status: 503 });
   }
 
-  const id = new URL(request.url).searchParams.get("week");
-  const week = id ? getWeek(id) : null;
-  if (!week) {
-    return NextResponse.json({ ok: false, error: "unknown week" }, { status: 404 });
-  }
-  if (!week.lead) {
-    return NextResponse.json(
-      { ok: false, error: "week has no lead — nothing to send" },
-      { status: 400 }
-    );
+  const params = new URL(request.url).searchParams;
+  const id = params.get("week");
+  const noteSlug = params.get("note");
+
+  let week;
+  let note = null;
+  if (noteSlug) {
+    const found = id ? getNote(id, noteSlug) : null;
+    if (!found) {
+      return NextResponse.json({ ok: false, error: "unknown week or note" }, { status: 404 });
+    }
+    week = found.week;
+    note = found.note;
+  } else {
+    week = id ? getWeek(id) : null;
+    if (!week) {
+      return NextResponse.json({ ok: false, error: "unknown week" }, { status: 404 });
+    }
+    if (!week.lead) {
+      return NextResponse.json(
+        { ok: false, error: "week has no lead — nothing to send" },
+        { status: 400 }
+      );
+    }
   }
 
-  const notes = weekNotes(week);
+  const notes = note ? [] : weekNotes(week);
   const results = [];
 
   for (const lang of ["el", "en"]) {
@@ -141,7 +175,9 @@ export async function POST(request) {
       continue;
     }
 
-    const letter = await buildEmail({ week, sweep: SWEEPS[id], notes, lang });
+    const letter = note
+      ? await buildNoteEmail({ week, note, lang })
+      : await buildEmail({ week, sweep: SWEEPS[id], notes, lang });
     if (!letter) {
       results.push({ lang, ok: false, error: "no edition in this language" });
       continue;
